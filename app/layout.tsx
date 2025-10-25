@@ -1,14 +1,14 @@
 import { GoogleAnalytics } from "@next/third-parties/google";
 import type { Metadata } from "next";
-import { Plus_Jakarta_Sans } from "next/font/google";
+import { Poppins } from "next/font/google"; // ✅ CAMBIO DE FUENTE
 import FloatingButtons from "./floating-buttons";
 import "./globals.css";
 
-const font = Plus_Jakarta_Sans({
+const font = Poppins({
   subsets: ["latin"],
   display: "swap",
-  variable: "--font-jakarta",
-  weight: ["400", "500", "600", "700"],
+  variable: "--font-poppins",
+  weight: ["400", "500", "600", "700", "800"], // Pesos más profesionales
 });
 
 // Datos de la empresa
@@ -33,7 +33,8 @@ const companyInfo = {
     longitude: -74.220991,
   },
   socialMedia: {
-    linkedin: "https://www.linkedin.com/company/casagrande-geotecnia-y-concreto/",
+    linkedin:
+      "https://www.linkedin.com/company/casagrande-geotecnia-y-concreto/",
     facebook: "https://www.facebook.com/profile.php?id=100077864046528",
     instagram: "https://www.instagram.com/casagrandegeotecnia/",
     youtube: "https://www.youtube.com/@CasagrandeGeotecnia-s5m",
@@ -223,8 +224,7 @@ const jsonLd = {
 
 export const metadata: Metadata = {
   title: {
-    default:
-      "Casagrande Bienes y Raíces | Terrenos en ayacucho ",
+    default: "Casagrande Bienes y Raíces | Terrenos en ayacucho ",
     template: "%s | Casagrande Bienes y Raíces",
   },
   description: companyInfo.description,

@@ -8,7 +8,7 @@ import {
   Variants,
 } from "framer-motion";
 
-import { LuMenu, LuX, LuMapPin } from "react-icons/lu";
+import { LuMenu, LuX } from "react-icons/lu";
 import { IconType } from "react-icons";
 
 import Image from "next/image";
@@ -100,7 +100,7 @@ const contactInfo: ContactInfoItemProps[] = [
 const ContactInfoItem = ({ text, href }: ContactInfoItemProps) => (
   <a
     href={href}
-    className="flex items-center gap-2 text-[15px] text-white transition-opacity hover:opacity-80 font-bold"
+    className="flex items-center gap-2 text-[15px] text-white hover:text-slate-400 rounded font-semibold"
     target="_blank"
     rel="noopener noreferrer"
   >
@@ -158,7 +158,7 @@ const DesktopMenu = ({
           className={`relative px-4 py-2 font-semibold text-[#01338C] transition-colors duration-300 ${
             pathname === link.href
               ? "font-bold text-[#01338C]"
-              : "hover:text-sky-950"
+              : "hover:bg-[#01338C]/8 rounded-2xl "
           }`}
         >
           {link.label}
@@ -197,7 +197,7 @@ const MobileMenuButton = ({
   toggle: () => void;
 }) => (
   <motion.button
-    className="z-[100] rounded-md p-2 text-[#01338C] transition-transform duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-red-[#373737] md:hidden"
+    className="z-100 rounded-md p-2 text-[#01338C] transition-transform duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-red-[#373737] md:hidden"
     onClick={toggle}
     aria-label={isOpen ? "Cerrar menú" : "Abrir menú"}
     whileTap={{ scale: 0.9 }}
@@ -368,7 +368,7 @@ const Navbar = () => {
                   <LuX className="h-6 w-6" />
                 </button>
               </div>
-              <nav className="flex-grow space-y-2 overflow-y-auto p-4">
+              <nav className="grow space-y-2 overflow-y-auto p-4">
                 {navLinks.map((link) => (
                   <motion.div key={link.href} variants={mobileMenuItemVariants}>
                     <Link

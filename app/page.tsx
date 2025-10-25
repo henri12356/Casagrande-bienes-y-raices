@@ -1,8 +1,9 @@
+import Comentario from "./comemtario";
 import Footer from "./footer";
 import Formulario from "./formulario";
 import HeroCarousel from "./hero";
 import Navbar from "./navbar";
-import Sobrenosotros from "./sobrenosotros";
+import Proyectos from "./proyectos";
 
 export default function Home() {
   return (
@@ -10,6 +11,8 @@ export default function Home() {
       <Navbar />
      <HeroCarousel />
      <Formulario />
+     <Proyectos />
+     <Comentario />
       <Footer />
     </div>
   );
