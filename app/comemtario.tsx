@@ -1,3 +1,4 @@
+/* eslint-disable @next/next/no-img-element */
 "use client";
 
 import React, { FC, useState, useRef } from "react";
@@ -18,8 +19,7 @@ const testimoniosData: Testimonio[] = [
     id: 1,
     nombre: "Eduardo Diaz",
     ubicacion: "Lacho Propio - Chincha",
-    testimonio:
-      "Cumplimos el sueño de la casa propia con Los Portales. En Chincha hallamos un lugar hermoso, accesible y con bono Techo Propio.",
+    testimonio: "Cumplimos el sueño de la casa propia con Los Portales. En Chincha hallamos un lugar hermoso, accesible y con bono Techo Propio.",
     titulo: "Nuestro sueño hecho realidad en Chincha",
     imagenUrl: "comentario01.webp",
   },
@@ -27,8 +27,7 @@ const testimoniosData: Testimonio[] = [
     id: 2,
     nombre: "Franklin Suarez",
     ubicacion: "HU2 - Huancarpani",
-    testimonio:
-      "Me dieron facilidades y logré cumplir el sueño de la casa propia. Todo el proceso fue transparente y sin complicaciones.",
+    testimonio: "Me dieron facilidades y logré cumplir el sueño de la casa propia. Todo el proceso fue transparente y sin complicaciones.",
     titulo: "Un hogar pensando en el futuro",
     imagenUrl: "comentario01.webp",
   },
@@ -36,8 +35,7 @@ const testimoniosData: Testimonio[] = [
     id: 3,
     nombre: "Marcial Contreras",
     ubicacion: "HU2 - Lima Bien Mirador del Prado",
-    testimonio:
-      "Compré con Los Portales para invertir y alquilar, pero también para disfrutar. Todo el proceso fue fácil y sin problemas.",
+    testimonio: "Compré con Los Portales para invertir y alquilar, pero también para disfrutar. Todo el proceso fue fácil y sin problemas.",
     titulo: "Inversión con disfrute asegurado",
     imagenUrl: "comentario01.webp",
   },
@@ -45,8 +43,7 @@ const testimoniosData: Testimonio[] = [
     id: 4,
     nombre: "Ana Torres",
     ubicacion: "San Juan de Lurigancho",
-    testimonio:
-      "La atención fue excelente y los procesos muy claros. Logré mi casa sin complicaciones y en el tiempo prometido.",
+    testimonio: "La atención fue excelente y los procesos muy claros. Logré mi casa sin complicaciones y en el tiempo prometido.",
     titulo: "Excelente atención y procesos claros",
     imagenUrl: "comentario01.webp",
   },
@@ -54,8 +51,7 @@ const testimoniosData: Testimonio[] = [
     id: 5,
     nombre: "Luis Ramirez",
     ubicacion: "Villa El Salvador",
-    testimonio:
-      "El servicio fue impecable, y toda la experiencia fue increíble. Recomiendo totalmente a Los Portales por su profesionalismo.",
+    testimonio: "El servicio fue impecable, y toda la experiencia fue increíble. Recomiendo totalmente a Los Portales por su profesionalismo.",
     titulo: "Servicio impecable y experiencia increíble",
     imagenUrl: "comentario01.webp",
   },
@@ -63,7 +59,7 @@ const testimoniosData: Testimonio[] = [
 
 const TestimonioCard: FC<{ testimonio: Testimonio }> = ({ testimonio }) => (
   <div className="flex flex-col h-full rounded-xl flex-[0_0_calc(33.333%)]">
-    <div className="relative w-full aspect-[193/248]">
+    <div className="relative w-full aspect-193/248">
       <img
         src={testimonio.imagenUrl}
         alt={testimonio.nombre}
@@ -81,7 +77,7 @@ const TestimonioCard: FC<{ testimonio: Testimonio }> = ({ testimonio }) => (
         <h3 className="text-lg font-semibold text-[#005BBB] mb-2 leading-tight">
           “{testimonio.titulo}”
         </h3>
-        <p className="text-xs text-[#005BBB]  mb-3 leading-relaxed flex-1">
+        <p className="text-xs text-[#005BBB] mb-3 leading-relaxed flex-1">
           {testimonio.testimonio}
         </p>
         <div>
@@ -122,7 +118,11 @@ const Comentario = () => {
     if (!isDragging) return;
     const diff = startX - e.clientX;
     if (Math.abs(diff) > 50) {
-      diff > 0 ? nextSlide() : prevSlide();
+      if (diff > 0) {
+        nextSlide();
+      } else {
+        prevSlide();
+      }
       setIsDragging(false);
     }
   };
@@ -134,20 +134,28 @@ const Comentario = () => {
     setIsDragging(true);
     setStartX(e.touches[0].clientX);
   };
+
   const handleTouchMove = (e: React.TouchEvent) => {
     if (!isDragging) return;
     const diff = startX - e.touches[0].clientX;
     if (Math.abs(diff) > 50) {
-      diff > 0 ? nextSlide() : prevSlide();
+      if (diff > 0) {
+        nextSlide();
+      } else {
+        prevSlide();
+      }
       setIsDragging(false);
     }
   };
+
   const handleTouchEnd = () => setIsDragging(false);
 
-  const getVisibleCards = () =>
-    Array.from({ length: 3 }, (_, i) => testimoniosData[(currentIndex + i) % testimoniosData.length]);
+  const getVisibleCards = () => 
+    Array.from({ length: 3 }, (_, i) => 
+      testimoniosData[(currentIndex + i) % testimoniosData.length]
+    );
 
-  // Animación más suave
+  // Animación corregida - sin transiciones específicas en las variantes
   const variants = {
     enter: (dir: number) => ({
       x: dir > 0 ? 100 : -100,
@@ -158,13 +166,11 @@ const Comentario = () => {
       x: 0,
       opacity: 1,
       scale: 1,
-      transition: { duration: 0.6, ease: "easeInOut" },
     },
     exit: (dir: number) => ({
       x: dir < 0 ? 100 : -100,
       opacity: 0,
       scale: 0.97,
-      transition: { duration: 0.5, ease: "easeInOut" },
     }),
   };
 
@@ -176,12 +182,10 @@ const Comentario = () => {
     center: {
       x: 0,
       opacity: 1,
-      transition: { duration: 0.6, ease: "easeInOut" },
     },
     exit: (dir: number) => ({
       x: dir < 0 ? 200 : -200,
       opacity: 0,
-      transition: { duration: 0.5, ease: "easeInOut" },
     }),
   };
 
@@ -193,7 +197,7 @@ const Comentario = () => {
         </h2>
 
         {/* Desktop Carousel */}
-        <div
+        <div 
           className="hidden lg:flex relative items-center gap-6 overflow-hidden"
           ref={carouselRef}
           onMouseDown={handleMouseDown}
@@ -201,7 +205,7 @@ const Comentario = () => {
           onMouseUp={handleMouseUp}
           onMouseLeave={handleMouseUp}
         >
-          <button
+          <button 
             onClick={prevSlide}
             className="cursor-pointer absolute left-0 top-1/2 -translate-y-1/2 bg-white p-4 rounded-full shadow-xl hover:shadow-2xl z-10 hover:scale-110 transition-all duration-300 hover:bg-blue-50 border border-gray-200"
           >
@@ -218,6 +222,10 @@ const Comentario = () => {
                   initial="enter"
                   animate="center"
                   exit="exit"
+                  transition={{
+                    duration: 0.6,
+                    ease: "easeInOut"
+                  }}
                 >
                   <TestimonioCard testimonio={t} />
                 </motion.div>
@@ -225,7 +233,7 @@ const Comentario = () => {
             </AnimatePresence>
           </div>
 
-          <button
+          <button 
             onClick={nextSlide}
             className="absolute right-0 top-1/2 -translate-y-1/2 bg-white p-4 rounded-full shadow-xl hover:shadow-2xl z-10 hover:scale-110 transition-all duration-300 hover:bg-blue-50 border border-gray-200 cursor-pointer"
           >
@@ -253,7 +261,7 @@ const Comentario = () => {
 
         {/* Tablet */}
         <div className="hidden md:flex lg:hidden relative items-center gap-4 overflow-hidden cursor-grab active:cursor-grabbing">
-          <button
+          <button 
             onClick={prevSlide}
             className="absolute left-0 top-1/2 -translate-y-1/2 bg-white p-3 rounded-full shadow-xl hover:shadow-2xl z-10 hover:scale-110 transition-all duration-300 hover:bg-blue-50 border border-gray-200"
           >
@@ -274,7 +282,7 @@ const Comentario = () => {
             ))}
           </div>
 
-          <button
+          <button 
             onClick={nextSlide}
             className="absolute right-0 top-1/2 -translate-y-1/2 bg-white p-3 rounded-full shadow-xl hover:shadow-2xl z-10 hover:scale-110 transition-all duration-300 hover:bg-blue-50 border border-gray-200"
           >
@@ -301,7 +309,7 @@ const Comentario = () => {
         </div>
 
         {/* Mobile */}
-        <div
+        <div 
           className="md:hidden relative overflow-hidden"
           onTouchStart={handleTouchStart}
           onTouchMove={handleTouchMove}
@@ -315,6 +323,10 @@ const Comentario = () => {
               initial="enter"
               animate="center"
               exit="exit"
+              transition={{
+                duration: 0.6,
+                ease: "easeInOut"
+              }}
             >
               <TestimonioCard testimonio={testimoniosData[currentIndex]} />
             </motion.div>
