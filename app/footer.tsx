@@ -243,21 +243,21 @@ const Footer = () => {
 
         {/* Copyright and Legal Links */}
         <div className="flex flex-col md:flex-row justify-between items-center pt-2 sm:pt-4">
-          <div className="text-gray-600 text-xs sm:text-sm mb-3 md:mb-0 text-center md:text-left leading-relaxed">
+          <div className="text-white text-xs sm:text-sm mb-3 md:mb-0 text-center md:text-left leading-relaxed">
             © {new Date().getFullYear()} Casagrande Geotecnia. Todos los
             derechos reservados.
           </div>
           <nav className="flex flex-wrap justify-center gap-x-3 sm:gap-x-4 gap-y-1 sm:gap-y-2 items-center">
             <Link
               href="/terminos"
-              className="text-gray-600 hover:text-[#0a5c8a] text-xs sm:text-sm whitespace-nowrap"
+              className="text-white hover:text-[#0a5c8a] text-xs sm:text-sm whitespace-nowrap"
             >
               Términos de servicio
             </Link>
             <span className="hidden sm:inline text-gray-400">|</span>
             <Link
               href="/politica"
-              className="text-gray-600 hover:text-[#0a5c8a] text-xs sm:text-sm whitespace-nowrap"
+              className="text-white hover:text-[#0a5c8a] text-xs sm:text-sm whitespace-nowrap"
             >
               Política de privacidad
             </Link>
