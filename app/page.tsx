@@ -1,4 +1,5 @@
 import Blog from "./blog";
+import Casas from "./casas";
 import Comentario from "./comemtario";
 import Footer from "./footer";
 import Formulario from "./formulario";
@@ -13,9 +14,10 @@ export default function Home() {
       <Navbar />
       <HeroCarousel />
       <Proyectos />
-      <Formulario />
+      <Casas />
       <Comentario />
       <Gana />
+      <Formulario />
       <Blog />
       <Footer />
     </div>
