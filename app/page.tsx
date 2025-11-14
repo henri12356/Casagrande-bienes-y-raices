@@ -12,8 +12,8 @@ export default function Home() {
     <div>
       <Navbar />
       <HeroCarousel />
-      <Formulario />
       <Proyectos />
+      <Formulario />
       <Comentario />
       <Gana />
       <Blog />

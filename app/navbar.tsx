@@ -42,11 +42,10 @@ interface ContactInfoItemProps {
 }
 
 const navLinks: NavLink[] = [
-  { href: "/proyectos", label: " Proyectos" },
-  { href: "/terrenos", label: "Terrenos" },
+   { href: "/terrenos", label: "Terrenos" }, 
   { href: "/casas", label: "Casas" },
-  { href: "/nosotros", label: "Nosotros" },
-  { href: "/contacto", label: "Refiere y Gana" },
+  { href: "/nosotros", label: "Alquileres" },
+  { href: "/contacto", label: "Vende tu terreno" },
 ];
 
 const socialLinks: SocialLink[] = [
@@ -83,7 +82,7 @@ const contactInfo: ContactInfoItemProps[] = [
     href: "/blog",
   },
   {
-    text: "Vende tu Terreno",
+    text: "Refiere y Gana",
     href: "https://wa.me/51945513323?text=Quiero%20mayor%20información",
   },
   {

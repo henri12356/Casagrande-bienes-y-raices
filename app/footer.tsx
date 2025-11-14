@@ -4,13 +4,7 @@ import { motion } from "framer-motion";
 import Image from "next/image";
 import Link from "next/link";
 import { FaChevronUp, FaInstagram, FaLinkedin, FaTiktok, FaYoutube } from "react-icons/fa";
-import {
-  PiFacebookLogo,
-  PiInstagramLogo,
-  PiLinkedinLogo,
-  PiYoutubeLogo,
-  PiTiktokLogo,
-} from "react-icons/pi";
+
 import { SiFacebook } from "react-icons/si";
 
 const Footer = () => {
