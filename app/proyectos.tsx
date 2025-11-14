@@ -143,8 +143,8 @@ const IconSale: FC = () => (
 const ProjectCard: FC<{ proyecto: Proyecto }> = ({ proyecto }) => {
   return (
     <motion.div
-      initial={{ opacity: 0, y: 50 }}
-      whileInView={{ opacity: 1, y: 0 }}
+      initial={{ opacity: 0,  }}
+      whileInView={{ opacity: 1,  }}
       viewport={{ once: true, amount: 0.3 }}
       transition={{ duration: 0.5, ease: "easeOut" }}
       className="rounded-xl overflow-hidden relative group h-full flex flex-col w-full"
@@ -327,9 +327,7 @@ const Proyectos = () => {
               className="bg-[#005BBB] text-white px-4 sm:px-6 py-2 sm:py-3 rounded-full font-semibold hover:bg-[#004a9b] transition-all duration-300 shadow-lg flex items-center gap-2 hover:scale-105 text-sm sm:text-base whitespace-nowrap"
             >
               <span>Ver más recomendaciones</span>
-              <svg className="w-3 h-3 sm:w-4 sm:h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7"/>
-              </svg>
+            
             </Link>
           </div>
         </div>
