@@ -42,8 +42,9 @@ interface ContactInfoItemProps {
 }
 
 const navLinks: NavLink[] = [
-   { href: "/terrenos", label: "Terrenos" }, 
+  { href: "/terrenos", label: "Terrenos" }, 
   { href: "/casas", label: "Casas" },
+  { href: "/nosotros", label: "Nosotros" }, 
   { href: "/nosotros", label: "Alquileres" },
   { href: "/contacto", label: "Vende tu terreno" },
 ];
