@@ -1,0 +1,26 @@
+[
+  {
+    "slug": "asia-alameda-lima-sur",
+    "tipo": "proyecto",
+    "titulo": "Asia",
+    "subtitulo": "Alameda Lima Sur",
+    "categoria": "Condominio",
+    "ubicacion": "KM 61.5 Panamericana Sur",
+    "precioDesdeSol": "S/ 459",
+    "precioDesdeDolar": "$ 1,790",
+    "imagen": "/proyecto.webp",
+    "etiquetas": ["Crédito directo", "PRE VENTA"]
+  },
+  {
+    "slug": "ica-el-refugio",
+    "tipo": "proyecto",
+    "titulo": "Ica",
+    "subtitulo": "El Refugio de Ica",
+    "categoria": "Condominio",
+    "ubicacion": "KM 298 Panamericana Sur",
+    "precioDesdeSol": "S/ 499",
+    "precioDesdeDolar": "$ 1,946",
+    "imagen": "/proyecto.webp",
+    "etiquetas": ["Crédito directo", "PRE VENTA"]
+  }
+]

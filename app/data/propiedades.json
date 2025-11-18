@@ -1,0 +1,26 @@
+[
+  {
+    "slug": "casa-centro-ayacucho",
+    "tipo": "propiedad",
+    "titulo": "Casa en el Centro",
+    "subtitulo": "Ayacucho",
+    "categoria": "Casa",
+    "ubicacion": "Jr. Quinua 570, Ayacucho",
+    "precioDesdeSol": "S/ 420,000",
+    "precioDesdeDolar": "$ 110,000",
+    "imagen": "/proyecto.webp",
+    "etiquetas": ["Listo para habitar", "Oportunidad"]
+  },
+  {
+    "slug": "departamento-magdalena",
+    "tipo": "propiedad",
+    "titulo": "Departamento en Magdalena",
+    "subtitulo": "Lima",
+    "categoria": "Departamento",
+    "ubicacion": "Av. Brasil, Magdalena",
+    "precioDesdeSol": "S/ 580,000",
+    "precioDesdeDolar": "$ 152,000",
+    "imagen": "/proyecto.webp",
+    "etiquetas": ["Vista ciudad", "Entrega inmediata"]
+  }
+]

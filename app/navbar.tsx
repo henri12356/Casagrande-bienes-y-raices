@@ -42,11 +42,11 @@ interface ContactInfoItemProps {
 }
 
 const navLinks: NavLink[] = [
-  { href: "/terrenos", label: "Terrenos" }, 
-  { href: "/casas", label: "Casas" },
-  { href: "/nosotros", label: "Nosotros" }, 
-  { href: "/nosotros", label: "Alquileres" },
+  { href: "/terrenos", label: "Proyectos" }, 
+  { href: "/casas", label: "Propiedades" },
+  { href: "/d", label: "Alquileres" },
   { href: "/contacto", label: "Vende tu terreno" },
+  { href: "/nosotros", label: "Nosotros" }, 
 ];
 
 const socialLinks: SocialLink[] = [

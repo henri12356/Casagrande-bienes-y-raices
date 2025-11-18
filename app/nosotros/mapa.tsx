@@ -140,9 +140,9 @@ const Mapa = () => {
             <Image
               src="/mapa.svg" 
               alt="Mapa de cobertura nacional"
-              width={800} // Proporción 4:3 (ajusta si es necesario)
-              height={600} // Proporción 4:3
-              className="w-full h-auto" // Se ajustará al contenedor
+              width={450} // Proporción 4:3 (ajusta si es necesario)
+              height={200} // Proporción 4:3
+              className="  h-auto" // Se ajustará al contenedor
             />
 
             {/* --- 4. MARCADORES (SEÑALES) --- */}

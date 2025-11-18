@@ -1,0 +1,27 @@
+[
+  {
+    "slug": "alquiler-departamento-ayacucho",
+    "tipo": "alquiler",
+    "titulo": "Departamento en alquiler",
+    "subtitulo": "Ayacucho",
+    "categoria": "Alquiler",
+    "ubicacion": "Urb. Los Olivos, Ayacucho",
+    "precioDesdeSol": "S/ 1,600 / mes",
+    "precioDesdeDolar": "$ 420 / mes",
+    "imagen": "/proyecto.webp",
+    "etiquetas": ["Amoblado", "Cerca al centro"]
+  },
+  {
+    "slug": "oficina-alquiler-lima",
+    "tipo": "alquiler",
+    "titulo": "Oficina en alquiler",
+    "subtitulo": "San Isidro",
+    "categoria": "Oficina",
+    "ubicacion": "Av. Javier Prado, San Isidro",
+    "precioDesdeSol": "S/ 3,500 / mes",
+    "precioDesdeDolar": "$ 900 / mes",
+    "imagen": "/proyecto.webp",
+    "etiquetas": ["Zona empresarial", "Listo para usar"]
+  }
+]
+    
