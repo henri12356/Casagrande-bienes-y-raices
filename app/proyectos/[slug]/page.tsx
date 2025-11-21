@@ -1,4 +1,5 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
+
 import React from "react";
 import { notFound } from "next/navigation";
 import Image from "next/image";
@@ -6,12 +7,14 @@ import Image from "next/image";
 import proyectosData from "@/app/data/proyectos.json";
 
 interface PageProps {
-  params: { slug: string };
+  params: Promise<{ slug: string }>;
 }
 
-const ProyectoPage = ({ params }: PageProps) => {
+const ProyectoPage = async ({ params }: PageProps) => {
+  const { slug } = await params;
+
   const proyecto = (proyectosData as any[]).find(
-    (p) => p.slug === params.slug
+    (p) => p.slug === slug
   );
 
   if (!proyecto) {
@@ -41,7 +44,8 @@ const ProyectoPage = ({ params }: PageProps) => {
             <p className="mt-1 text-sm text-slate-600">{proyecto.subtitulo}</p>
 
             <p className="mt-4 text-sm text-slate-700">
-              Ubicación: <span className="font-semibold">{proyecto.ubicacion}</span>
+              Ubicación:{" "}
+              <span className="font-semibold">{proyecto.ubicacion}</span>
             </p>
 
             <div className="mt-4 rounded-2xl bg-slate-50 p-4 text-sm">
@@ -62,7 +66,7 @@ const ProyectoPage = ({ params }: PageProps) => {
 
 export default ProyectoPage;
 
-// opcional: para SSG
+// SSG opcional
 export async function generateStaticParams() {
   return (proyectosData as any[]).map((p) => ({ slug: p.slug }));
 }

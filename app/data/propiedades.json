@@ -6,10 +6,21 @@
     "subtitulo": "Ayacucho",
     "categoria": "Casa",
     "ubicacion": "Jr. Quinua 570, Ayacucho",
+    "departamento": "Ayacucho",
+    "provincia": "Huamanga",
+    "distrito": "Ayacucho",
     "precioDesdeSol": "S/ 420,000",
     "precioDesdeDolar": "$ 110,000",
+    "monedaPrincipal": "PEN",
     "imagen": "/proyecto.webp",
-    "etiquetas": ["Listo para habitar", "Oportunidad"]
+    "etiquetas": ["Listo para habitar", "Oportunidad"],
+    "tipoOperacion": "comprar",
+    "tipoInmueble": "casa",
+    "areaM2": 150,
+    "dormitorios": 4,
+    "banos": 3,
+    "cocheras": 1,
+    "resumen": "Casa amplia en pleno centro de Ayacucho, ideal para familia o negocio."
   },
   {
     "slug": "departamento-magdalena",
@@ -18,9 +29,20 @@
     "subtitulo": "Lima",
     "categoria": "Departamento",
     "ubicacion": "Av. Brasil, Magdalena",
+    "departamento": "Lima",
+    "provincia": "Lima",
+    "distrito": "Magdalena",
     "precioDesdeSol": "S/ 580,000",
     "precioDesdeDolar": "$ 152,000",
+    "monedaPrincipal": "USD",
     "imagen": "/proyecto.webp",
-    "etiquetas": ["Vista ciudad", "Entrega inmediata"]
+    "etiquetas": ["Vista ciudad", "Entrega inmediata"],
+    "tipoOperacion": "comprar",
+    "tipoInmueble": "departamento",
+    "areaM2": 90,
+    "dormitorios": 3,
+    "banos": 2,
+    "cocheras": 1,
+    "resumen": "Departamento con vista a la ciudad a pocas cuadras del malecón."
   }
 ]

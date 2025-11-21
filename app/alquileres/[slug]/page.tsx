@@ -1,4 +1,5 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
+
 import React from "react";
 import { notFound } from "next/navigation";
 import Image from "next/image";
@@ -6,12 +7,14 @@ import Image from "next/image";
 import alquileresdata from "@/app/data/alquileres.json";
 
 interface PageProps {
-  params: { slug: string };
+  params: Promise<{ slug: string }>;
 }
 
-const ProyectoPage = ({ params }: PageProps) => {
+const ProyectoPage = async ({ params }: PageProps) => {
+  const { slug } = await params;
+
   const proyecto = (alquileresdata as any[]).find(
-    (p) => p.slug === params.slug
+    (p) => p.slug === slug
   );
 
   if (!proyecto) {
@@ -33,7 +36,7 @@ const ProyectoPage = ({ params }: PageProps) => {
 
           <div>
             <p className="text-xs font-semibold uppercase tracking-[0.2em] text-[#FFB200]">
-              Proyecto
+              Alquiler
             </p>
             <h1 className="mt-2 text-3xl font-extrabold text-[#01338C]">
               {proyecto.titulo}
@@ -41,11 +44,12 @@ const ProyectoPage = ({ params }: PageProps) => {
             <p className="mt-1 text-sm text-slate-600">{proyecto.subtitulo}</p>
 
             <p className="mt-4 text-sm text-slate-700">
-              Ubicación: <span className="font-semibold">{proyecto.ubicacion}</span>
+              Ubicación:{" "}
+              <span className="font-semibold">{proyecto.ubicacion}</span>
             </p>
 
             <div className="mt-4 rounded-2xl bg-slate-50 p-4 text-sm">
-              <p className="text-slate-500">Cuota desde</p>
+              <p className="text-slate-500">Renta desde</p>
               <p className="text-xl font-bold text-[#01338C]">
                 {proyecto.precioDesdeSol}{" "}
                 <span className="text-sm text-slate-500">
@@ -62,7 +66,7 @@ const ProyectoPage = ({ params }: PageProps) => {
 
 export default ProyectoPage;
 
-// opcional: para SSG
+// SSG opcional
 export async function generateStaticParams() {
   return (alquileresdata as any[]).map((p) => ({ slug: p.slug }));
 }
