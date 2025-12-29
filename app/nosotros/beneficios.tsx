@@ -90,7 +90,7 @@ const Beneficios = () => {
               <div className="flex-shrink-0 bg-[#FFB200] rounded-full w-16 h-16 sm:w-20 sm:h-20 flex items-center justify-center shadow-md">
                 <item.icon className="text-[#01338C] text-3xl sm:text-4xl" />
               </div>
-              
+                  
               {/* Contenido de texto */}
               <div className="flex-grow pt-1">
                 <h3 className="text-2xl font-bold text-[#01338C] mb-2">

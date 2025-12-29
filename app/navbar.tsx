@@ -45,7 +45,7 @@ const navLinks: NavLink[] = [
   { href: "/inmuebles#proyectos", label: "Proyectos" },
   { href: "/inmuebles#propiedades", label: "Propiedades" },
   { href: "/inmuebles#alquileres", label: "Alquileres" },
-  { href: "/a", label: "Vende tu terreno" },
+  { href: "/venta-terreno", label: "Vende tu terreno" },
   { href: "/nosotros", label: "Nosotros" },
 ];
 
