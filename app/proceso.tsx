@@ -53,7 +53,7 @@ const Proceso = () => {
         <h2 
           className="text-4xl sm:text-5xl font-extrabold text-[#01338C] text-center mb-16 relative"
         >
-          <span className="relative z-10">Te acompañamos en cada paso</span>
+          <span className="relative z-10">Te acompañamos en cada pasoo</span>
           <span className="absolute bottom-0 left-1/2 w-3/4 h-3 bg-[#FFB200] opacity-50 transform -translate-x-1/2 z-0 rounded-full"></span>
         </h2>
 
