@@ -9,7 +9,7 @@ export default function DescuentoBanner({
 }) {
   return (
     <section className="pt-10">
-      <h2 className="text-3xl font-extrabold text-[#0B6FB6]">
+      <h2 className="text-3xl font-extrabold text-[#01338C]">
         ¡Grandes descuentos solo por pocos días!
       </h2>
 

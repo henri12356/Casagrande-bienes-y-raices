@@ -21,20 +21,15 @@ type Promo = { titulo: string; detalle?: string };
 
 type BloquePlanos = {
   titulo?: string;
-  imagen: string; // ✅ SOLO UNA FOTO
-  nota?: string; // opcional
-};
-
-type BloqueLotes = {
-  titulo?: string;
-  imagen: string; // ✅ SOLO UNA FOTO
-  nota?: string; // opcional
+  imagen: string; // ✅ IMAGEN (NO SE TOCA)
+  pdf?: string; // ✅ NUEVO: PDF a abrir al hacer click
+  nota?: string;
 };
 
 type BloqueFuturo = {
   titulo?: string;
-  imagen: string; // ✅ SOLO UNA FOTO
-  nota?: string; // opcional
+  imagen: string;
+  nota?: string;
 };
 
 type Proyecto = {
@@ -47,7 +42,7 @@ type Proyecto = {
   ubicacion: string;
 
   precioDesdeSol: string;
-  precioDesdeDolar?: string; // existe en JSON pero NO se muestra
+  precioDesdeDolar?: string;
   pagoContado?: string;
 
   imagen: string;
@@ -59,11 +54,10 @@ type Proyecto = {
   promociones?: Promo[];
   equipamiento?: string[];
 
-  // ✅ SOLO FOTO + TITULO
+  // ✅ SOLO PLANO GENERAL (sin disponibilidad)
   planos?: BloquePlanos;
-  lotes?: BloqueLotes;
 
-  // ✅ NUEVO: FUTURO (solo foto + titulo)
+  // ✅ FUTURO (proyección)
   futuro?: BloqueFuturo;
 
   galeria: {
@@ -94,7 +88,7 @@ function softReq(ok: boolean, msg: string) {
 }
 
 function onlyNumber(v: string) {
-  return String(v ?? "").replace(/s\/|S\/|\s/gi, "").trim();
+  return String(v ?? "").replace(/s\/|S\/|\s|,/gi, "").trim();
 }
 
 export default async function ProyectoPage({
@@ -130,9 +124,13 @@ export default async function ProyectoPage({
   const promos = proyecto.promociones ?? [];
   const precioNum = onlyNumber(proyecto.precioDesdeSol);
 
-  // ✅ SOLO UNA FOTO POR BLOQUE
+  // ✅ SOLO UNA FOTO: PLANO GENERAL (VISIBLE)
   const planoImg = proyecto.planos?.imagen;
-  const lotesImg = proyecto.lotes?.imagen;
+
+  // ✅ LINK PDF (AL CLICK) — si no hay pdf, cae a la imagen
+  const planoHref = proyecto.planos?.pdf ?? proyecto.planos?.imagen;
+
+  // ✅ FUTURO (proyección)
   const futuroImg = proyecto.futuro?.imagen;
 
   return (
@@ -197,10 +195,18 @@ export default async function ProyectoPage({
                     </h2>
 
                     <div className="mt-5 flex flex-col gap-3 text-sm text-slate-900 sm:flex-row sm:items-center sm:gap-8">
-                      <div className="flex items-center gap-2">
+                      {/* ✅ UBICACION: link a Maps */}
+                      <a
+                        href={proyecto.mapsUrl}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="flex items-center gap-2 hover:underline"
+                        aria-label="Abrir ubicación en Maps"
+                        title="Abrir en Maps"
+                      >
                         <MapPin className="h-4 w-4" />
                         <span className="font-bold">{proyecto.ubicacion}</span>
-                      </div>
+                      </a>
 
                       {proyecto.contacto.horario ? (
                         <div className="flex items-center gap-2">
@@ -309,91 +315,72 @@ export default async function ProyectoPage({
               ) : null}
 
               {/* =========================
-                  ✅ SOLO TITULOS + FOTOS (PLANOS / LOTES) - MÁS GRANDES
+                  ✅ PLANOS (SOLO PLANO GENERAL)
+                  ✅ CLICK ABRE PDF (SIN TOCAR IMAGEN)
+                  ✅ MEJOR DISEÑO (NO “cuadrado”)
               ========================= */}
-              {proyecto.tipo === "proyecto" && (planoImg || lotesImg) ? (
+              {proyecto.tipo === "proyecto" && planoImg ? (
                 <SectionAnimation>
                   <div className="pt-10">
                     <h2 className="text-3xl font-extrabold text-[#0B6FB6]">
-                      Planos y disponibilidad
+                      Plano del proyecto
                     </h2>
 
-                    <div className="mt-6 grid gap-6 md:grid-cols-2">
-                      {/* PLANOS */}
-                      {planoImg ? (
-                        <Card className="rounded-3xl border border-slate-200 bg-white p-8 shadow-[0_16px_45px_rgba(2,6,23,0.06)]">
+                    <Card className="mt-6 rounded-3xl border border-slate-200 bg-white p-8 shadow-[0_16px_45px_rgba(2,6,23,0.06)]">
+                      <div className="flex flex-col gap-2 sm:flex-row sm:items-end sm:justify-between">
+                        <div>
                           <p className="text-xl font-black text-slate-900">
-                            {proyecto.planos?.titulo ?? "Plano del proyecto"}
+                            {proyecto.planos?.titulo ?? "Plano general"}
                           </p>
                           {proyecto.planos?.nota ? (
                             <p className="mt-2 text-sm text-slate-600">
                               {proyecto.planos.nota}
                             </p>
                           ) : null}
+                        </div>
 
-                          <div className="mt-6 overflow-hidden rounded-2xl border border-slate-200 bg-slate-50">
-                            <a
-                              href={planoImg}
-                              target="_blank"
-                              rel="noreferrer"
-                              className="group block"
-                              title="Abrir en tamaño completo"
-                            >
-                              <div className="relative aspect-16/9 w-full">
-                                <Image
-                                  src={planoImg}
-                                  alt={`Plano - ${proyecto.titulo}`}
-                                  fill
-                                  className="object-cover transition-transform duration-300 group-hover:scale-[1.02]"
-                                  sizes="(max-width: 768px) 100vw, 50vw"
-                                />
-                              </div>
-                            </a>
+                        {/* etiqueta sutil */}
+                        <span className="mt-2 inline-flex w-fit items-center rounded-full bg-slate-100 px-4 py-2 text-xs font-extrabold text-slate-800">
+                          Abrir PDF
+                        </span>
+                      </div>
+
+                      <div className="mt-6 overflow-hidden rounded-3xl border border-slate-200 bg-slate-50">
+                        <a
+                          href={planoHref}
+                          target="_blank"
+                          rel="noreferrer"
+                          className="group block"
+                          title="Abrir plano en PDF"
+                        >
+                          {/* ✅ aspecto más “portal” y no cuadrado */}
+                          <div className="relative aspect-[16/7] w-full">
+                            {/* overlay suave */}
+                            <div className="absolute inset-0 z-10 bg-gradient-to-t from-black/25 via-transparent to-transparent opacity-0 transition-opacity duration-300 group-hover:opacity-100" />
+
+                            <Image
+                              src={planoImg}
+                              alt={`Plano del proyecto - ${proyecto.titulo}`}
+                              fill
+                              className="object-cover transition-transform duration-500 group-hover:scale-[1.03]"
+                              sizes="100vw"
+                            />
+
+                            {/* label flotante (sutil) */}
+                            <div className="absolute bottom-4 left-4 z-20 inline-flex items-center rounded-full bg-white/90 px-4 py-2 text-xs font-extrabold text-slate-900 shadow-sm ring-1 ring-black/5">
+                              Ver plano (PDF)
+                            </div>
                           </div>
-                        </Card>
-                      ) : null}
-
-                      {/* LOTES */}
-                      {lotesImg ? (
-                        <Card className="rounded-3xl border border-slate-200 bg-white p-8 shadow-[0_16px_45px_rgba(2,6,23,0.06)]">
-                          <p className="text-xl font-black text-slate-900">
-                            {proyecto.lotes?.titulo ??
-                              "Mapa de lotes (disponibilidad)"}
-                          </p>
-                          {proyecto.lotes?.nota ? (
-                            <p className="mt-2 text-sm text-slate-600">
-                              {proyecto.lotes.nota}
-                            </p>
-                          ) : null}
-
-                          <div className="mt-6 overflow-hidden rounded-2xl border border-slate-200 bg-slate-50">
-                            <a
-                              href={lotesImg}
-                              target="_blank"
-                              rel="noreferrer"
-                              className="group block"
-                              title="Abrir en tamaño completo"
-                            >
-                              <div className="relative aspect-16/9 w-full">
-                                <Image
-                                  src={lotesImg}
-                                  alt={`Mapa de lotes - ${proyecto.titulo}`}
-                                  fill
-                                  className="object-cover transition-transform duration-300 group-hover:scale-[1.02]"
-                                  sizes="(max-width: 768px) 100vw, 50vw"
-                                />
-                              </div>
-                            </a>
-                          </div>
-                        </Card>
-                      ) : null}
-                    </div>
+                        </a>
+                      </div>
+                    </Card>
                   </div>
                 </SectionAnimation>
               ) : null}
 
               {/* =========================
-                  ✅ FUTURO (SOLO TITULO + FOTO) - MÁS GRANDE Y PANORÁMICO
+                  ✅ FUTURO (PROYECCIÓN)
+                  ✅ MEJOR DISEÑO (NO “cuadrado”)
               ========================= */}
               {proyecto.tipo === "proyecto" && futuroImg ? (
                 <SectionAnimation>
@@ -424,12 +411,14 @@ export default async function ProyectoPage({
                           className="group block"
                           title="Abrir en tamaño completo"
                         >
-                          <div className="relative aspect-21/9 w-full">
+                          {/* ✅ panorámico */}
+                          <div className="relative aspect-[21/9] w-full">
+                            <div className="absolute inset-0 z-10 bg-gradient-to-t from-black/25 via-transparent to-transparent opacity-0 transition-opacity duration-300 group-hover:opacity-100" />
                             <Image
                               src={futuroImg}
                               alt={`Vista futura - ${proyecto.titulo}`}
                               fill
-                              className="object-cover transition-transform duration-300 group-hover:scale-[1.02]"
+                              className="object-cover transition-transform duration-500 group-hover:scale-[1.03]"
                               sizes="100vw"
                             />
                           </div>
@@ -466,30 +455,49 @@ export default async function ProyectoPage({
                 </SectionAnimation>
               ) : null}
 
+              {/* =========================
+                  ✅ UBICACIÓN: todo el bloque clickeable (Maps)
+                  ✅ MEJOR DISEÑO (NO “cuadrado”)
+              ========================= */}
               <SectionAnimation>
                 <div className="pt-10">
                   <h2 className="text-3xl font-extrabold text-[#0B6FB6]">
                     Ubicación Perfecta
                   </h2>
-                  <div className="mt-6 overflow-hidden rounded-3xl border border-slate-200 bg-[#F3F7FB] shadow-[0_16px_45px_rgba(2,6,23,0.06)]">
-                    <div className="relative aspect-16/8 w-full">
-                      <Image
-                        src={proyecto.ubicacionImagen ?? proyecto.imagen}
-                        alt={`Mapa - ${proyecto.titulo}`}
-                        fill
-                        className="object-cover"
-                        sizes="100vw"
-                      />
-                    </div>
-                    <div className="px-6 py-5 text-sm text-slate-800">
-                      <div className="flex items-center gap-2">
-                        <MapPin className="h-4 w-4 text-[#0B6FB6]" />
-                        <span className="font-extrabold">
-                          {proyecto.ubicacion}
-                        </span>
+
+                  <a
+                    href={proyecto.mapsUrl}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="group block"
+                    aria-label="Ver ubicación en Google Maps"
+                    title="Abrir en Maps"
+                  >
+                    <div className="mt-6 overflow-hidden rounded-3xl border border-slate-200 bg-[#F3F7FB] shadow-[0_16px_45px_rgba(2,6,23,0.06)]">
+                      <div className="relative aspect-[16/7] w-full">
+                        <div className="absolute inset-0 z-10 bg-gradient-to-t from-black/20 via-transparent to-transparent opacity-0 transition-opacity duration-300 group-hover:opacity-100" />
+                        <Image
+                          src={proyecto.ubicacionImagen ?? proyecto.imagen}
+                          alt={`Mapa - ${proyecto.titulo}`}
+                          fill
+                          className="object-cover transition-transform duration-500 group-hover:scale-[1.02]"
+                          sizes="100vw"
+                        />
+                      </div>
+
+                      <div className="px-6 py-5 text-sm text-slate-800">
+                        <div className="flex items-center gap-2">
+                          <MapPin className="h-4 w-4 text-[#0B6FB6]" />
+                          <span className="font-extrabold">
+                            {proyecto.ubicacion}
+                          </span>
+                          <span className="ml-auto text-xs font-bold text-[#0B6FB6] underline">
+                            Ver en Maps
+                          </span>
+                        </div>
                       </div>
                     </div>
-                  </div>
+                  </a>
                 </div>
               </SectionAnimation>
             </div>

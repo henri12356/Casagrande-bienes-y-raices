@@ -1,6 +1,6 @@
 import { GoogleAnalytics } from "@next/third-parties/google";
 import type { Metadata } from "next";
-import { Poppins } from "next/font/google"; // ✅ CAMBIO DE FUENTE
+import { Poppins } from "next/font/google";
 import FloatingButtons from "./floating-buttons";
 import "./globals.css";
 
@@ -8,47 +8,48 @@ const font = Poppins({
   subsets: ["latin"],
   display: "swap",
   variable: "--font-poppins",
-  weight: ["400", "500", "600", "700", "800"], // Pesos más profesionales
+  weight: ["400", "500", "600", "700", "800"],
 });
 
-// Datos de la empresa
+// ✅ Datos del negocio (Marca SEO principal)
 const companyInfo = {
-  name: "Casagrande Bienes y raices ",
+  name: "Compra y Venta de Terrenos Ayacucho",
+  legalName: "Compra y Venta de Terrenos Ayacucho",
+  alternateName: "Casagrande Bienes y Raíces",
   description:
-    "Consultora líder en ingeniería civil y estudios geotécnicos en Perú. Especialistas en mecánica de suelos, laboratorio certificado, estudios de cimentación y control de calidad. Certificaciones ISO 9001, 14001 y 37001. Más de 20 años de experiencia.",
-  url: "https://www.casagrandegeotecnia.com.pe",
-  logo: "https://www.casagrandegeotecnia.com.pe/logocasagrande.svg",
-  phone: "+51962835652",
-  email: "comercial@casagrandegeotecnia.com.pe",
+    "Compra y venta de terrenos en Ayacucho y lotes en Qorihuillca con asesoría completa y procesos seguros. Más de 400 lotes vendidos en Huamanga – Ayacucho. Ideal para vivienda, casa de campo o inversión.",
+  url: "https://www.ayacuchoterrenos.com/", // 👈 CAMBIA ESTO
+  logo: "https://www.ayacuchoterrenos.com/logo.svg", // 👈 CAMBIA ESTO
+  phone: "+51916194372",
+  email: "u19217724@gmail.com",
   address: {
     street: "Jirón Quinua 570",
-    city: "Ayacucho",
+    city: "Huamanga",
     region: "Ayacucho",
     postalCode: "05003",
     country: "PE",
   },
-  // Coordenadas aproximadas - Verifica en Google Maps
   coordinates: {
     latitude: -13.155749,
     longitude: -74.220991,
   },
   socialMedia: {
-    linkedin:
-      "https://www.linkedin.com/company/casagrande-geotecnia-y-concreto/",
-    facebook: "https://www.facebook.com/profile.php?id=100077864046528",
-    instagram: "https://www.instagram.com/casagrandegeotecnia/",
-    youtube: "https://www.youtube.com/@CasagrandeGeotecnia-s5m",
-    tiktok: "https://www.tiktok.com/@casagrandegeotecnia",
+    facebook: "https://www.facebook.com/profile.php?id=61584966996472",
+    instagram: "https://www.instagram.com/henriinmobiliaria/",
+    tiktok: "https://www.tiktok.com/@henriinmobiliaria",
+    youtube: "https://www.youtube.com/",
+    linkedin: "https://www.linkedin.com/in/henri-avenda%C3%B1o-4bab663a0/",
   },
 };
 
-// Schema.org - Structured Data Optimizado
+// ✅ Schema.org optimizado para inmobiliaria
 const jsonLd = {
   "@context": "https://schema.org",
-  "@type": "ProfessionalService",
+  "@type": "RealEstateAgent",
   "@id": `${companyInfo.url}#organization`,
   name: companyInfo.name,
-  alternateName: "Casagrande Geotecnia y Concreto",
+  legalName: companyInfo.legalName,
+  alternateName: companyInfo.alternateName,
   description: companyInfo.description,
   url: companyInfo.url,
   logo: {
@@ -57,7 +58,11 @@ const jsonLd = {
     width: "512",
     height: "512",
   },
-  image: [companyInfo.logo, `${companyInfo.url}/og-image.jpg`],
+  image: [
+    companyInfo.logo,
+    `${companyInfo.url}/og-image.jpg`,
+    `${companyInfo.url}/assets/terrenos-ayacucho.jpg`,
+  ],
   telephone: companyInfo.phone,
   email: companyInfo.email,
   priceRange: "$$",
@@ -76,167 +81,81 @@ const jsonLd = {
   },
   sameAs: Object.values(companyInfo.socialMedia),
   areaServed: [
-    {
-      "@type": "Country",
-      name: "Perú",
-    },
-    {
-      "@type": "City",
-      name: "Lima",
-    },
-    {
-      "@type": "City",
-      name: "Arequipa",
-    },
-    {
-      "@type": "City",
-      name: "Cusco",
-    },
-    {
-      "@type": "City",
-      name: "Ayacucho",
-    },
+    { "@type": "City", name: "Huamanga" },
+    { "@type": "City", name: "Ayacucho" },
+    { "@type": "Country", name: "Perú" },
   ],
-  // Servicios ofrecidos - Esto ayuda MUCHO al SEO
   hasOfferCatalog: {
     "@type": "OfferCatalog",
-    name: "Servicios de Geotecnia e Ingeniería Civil",
+    name: "Compra y venta de terrenos en Ayacucho y servicios inmobiliarios",
     itemListElement: [
       {
         "@type": "Offer",
         itemOffered: {
           "@type": "Service",
-          name: "Estudios Geotécnicos",
+          name: "Compra y venta de terrenos en Ayacucho",
           description:
-            "Estudios de mecánica de suelos, análisis geotécnico completo para proyectos de construcción, evaluación de capacidad portante y estudios de cimentación.",
-          provider: {
-            "@type": "Organization",
-            name: companyInfo.name,
-          },
+            "Terrenos y lotes en Huamanga – Ayacucho (Qorihuillca y alrededores). Opciones para vivienda, casa de campo e inversión.",
+          provider: { "@type": "Organization", name: companyInfo.name },
         },
       },
       {
         "@type": "Offer",
         itemOffered: {
           "@type": "Service",
-          name: "Laboratorio de Suelos",
+          name: "Venta de lotes en Qorihuillca",
           description:
-            "Ensayos de laboratorio certificados: granulometría, límites de Atterberg, proctor, CBR, corte directo y más. Laboratorio certificado ISO 9001.",
-          provider: {
-            "@type": "Organization",
-            name: companyInfo.name,
-          },
+            "Lotes con alto potencial de valorización, accesos vehiculares y entorno natural. Acompañamiento en visita y proceso de compra.",
+          provider: { "@type": "Organization", name: companyInfo.name },
         },
       },
       {
         "@type": "Offer",
         itemOffered: {
           "@type": "Service",
-          name: "Estudios de Cimentación",
+          name: "Asesoría inmobiliaria y documentación",
           description:
-            "Análisis de capacidad portante, diseño de fundaciones, estudios de suelos para edificios y estructuras.",
-          provider: {
-            "@type": "Organization",
-            name: companyInfo.name,
-          },
+            "Acompañamiento para compra/venta, revisión de documentación, estrategia comercial y soporte legal-comunitario.",
+          provider: { "@type": "Organization", name: companyInfo.name },
         },
       },
       {
         "@type": "Offer",
         itemOffered: {
           "@type": "Service",
-          name: "Control de Calidad en Construcción",
+          name: "Lotización, valorización y estrategia de venta",
           description:
-            "Supervisión técnica, control de compactación, ensayos de concreto, verificación de especificaciones técnicas.",
-          provider: {
-            "@type": "Organization",
-            name: companyInfo.name,
-          },
-        },
-      },
-      {
-        "@type": "Offer",
-        itemOffered: {
-          "@type": "Service",
-          name: "Estudios Geofísicos",
-          description:
-            "Prospección geofísica, refracción sísmica, estudios de resistividad eléctrica.",
-          provider: {
-            "@type": "Organization",
-            name: companyInfo.name,
-          },
-        },
-      },
-      {
-        "@type": "Offer",
-        itemOffered: {
-          "@type": "Service",
-          name: "Estabilidad de Taludes",
-          description:
-            "Análisis de estabilidad, diseño de sistemas de contención, estudios de riesgo geotécnico.",
-          provider: {
-            "@type": "Organization",
-            name: companyInfo.name,
-          },
+            "Asesoría a propietarios: lotización, valorización, documentación y estrategia para vender o alquilar.",
+          provider: { "@type": "Organization", name: companyInfo.name },
         },
       },
     ],
   },
-  // Certificaciones
-  hasCredential: [
-    {
-      "@type": "EducationalOccupationalCredential",
-      credentialCategory: "certification",
-      name: "ISO 9001:2015 - Sistemas de Gestión de Calidad",
-    },
-    {
-      "@type": "EducationalOccupationalCredential",
-      credentialCategory: "certification",
-      name: "ISO 14001:2015 - Sistemas de Gestión Ambiental",
-    },
-    {
-      "@type": "EducationalOccupationalCredential",
-      credentialCategory: "certification",
-      name: "ISO 37001:2016 - Sistemas de Gestión Antisoborno",
-    },
-  ],
-  // Agrega esto si tienes reseñas reales
-  aggregateRating: {
-    "@type": "AggregateRating",
-    ratingValue: "4.8",
-    reviewCount: "45",
-    bestRating: "5",
-    worstRating: "1",
-  },
-  foundingDate: "2005",
+  foundingDate: "2023",
   knowsAbout: [
-    "Geotecnia",
-    "Mecánica de Suelos",
-    "Ingeniería Civil",
-    "Estudios Geotécnicos",
-    "Laboratorio de Suelos",
-    "Control de Calidad",
-    "Estudios de Cimentación",
-    "Estabilidad de Taludes",
-    "Geofísica",
+    "compra y venta de terrenos ayacucho",
+    "venta de terrenos en Ayacucho",
+    "lotes en Ayacucho",
+    "terrenos en Qorihuillca",
+    "lotes en Qorihuillca",
+    "inversión inmobiliaria",
+    "valorización de terrenos",
+    "lotización",
   ],
 };
 
 export const metadata: Metadata = {
   title: {
-    default: "Casagrande Bienes y Raíces | Terrenos en ayacucho ",
-    template: "%s | Casagrande Bienes y Raíces",
+    default: "Compra y Venta de Terrenos Ayacucho | Lotes en Qorihuillca",
+    template: "%s | Compra y Venta de Terrenos Ayacucho",
   },
   description: companyInfo.description,
 
-  // ✅ SIN keywords - Google las ignora
-  // En su lugar, el contenido de tus páginas debe tener estas palabras naturalmente
-
-  authors: [{ name: "Casagrande Geotecnia" }],
-  creator: "Casagrande Geotecnia",
-  publisher: "Casagrande Geotecnia",
-  category: "Engineering Services",
-  classification: "Consultoría en Ingeniería Civil y Geotecnia",
+  authors: [{ name: companyInfo.name }],
+  creator: companyInfo.name,
+  publisher: companyInfo.name,
+  category: "Real Estate",
+  classification: "Inmobiliaria – Compra y venta de terrenos y lotes en Ayacucho",
 
   robots: {
     index: true,
@@ -250,10 +169,9 @@ export const metadata: Metadata = {
     },
   },
 
-  // Completa después de verificar en Google Search Console
+  // ⚠️ Esto NO es verificación de Search Console (ese token es distinto).
   verification: {
-    google: "G-HSYFNDRHDW",
-    // Obtén en: https://search.google.com/search-console
+    google: "G-7TJCWC5JMR",
   },
 
   icons: {
@@ -282,16 +200,14 @@ export const metadata: Metadata = {
   },
   manifest: "/site.webmanifest",
 
-  // Open Graph - Optimizado
   openGraph: {
     type: "website",
     locale: "es_PE",
     url: companyInfo.url,
     siteName: companyInfo.name,
-    title:
-      "Casagrande Geotecnia | Estudios Geotécnicos y Laboratorio de Suelos Certificado",
+    title: "Compra y Venta de Terrenos Ayacucho | Lotes en Qorihuillca",
     description:
-      "Consultora especializada en estudios geotécnicos, mecánica de suelos y control de calidad en Perú. Laboratorio certificado ISO 9001. Más de 20 años de experiencia.",
+      "Compra terrenos en Ayacucho y lotes en Qorihuillca con asesoría completa. Opciones para vivienda, casa de campo e inversión con alta valorización.",
     emails: [companyInfo.email],
     phoneNumbers: [companyInfo.phone],
     images: [
@@ -299,21 +215,18 @@ export const metadata: Metadata = {
         url: `${companyInfo.url}/og-image.jpg`,
         width: 1200,
         height: 630,
-        alt: "Casagrande Geotecnia - Estudios Geotécnicos y Laboratorio de Suelos en Perú",
+        alt: "Compra y Venta de Terrenos Ayacucho - Lotes en Qorihuillca",
         type: "image/jpeg",
       },
     ],
   },
 
-  // Twitter Cards
   twitter: {
     card: "summary_large_image",
-    title: "Casagrande Geotecnia | Estudios Geotécnicos Perú",
+    title: "Compra y Venta de Terrenos Ayacucho | Lotes en Qorihuillca",
     description:
-      "Especialistas en estudios geotécnicos, laboratorio de suelos certificado y control de calidad en construcción. ISO 9001, 14001, 37001.",
+      "Terrenos y lotes en Ayacucho (Qorihuillca) para vivienda o inversión. Acompañamiento y procesos seguros.",
     images: [`${companyInfo.url}/og-image.jpg`],
-    creator: "@CasagrandeGeo",
-    site: "@CasagrandeGeo",
   },
 
   alternates: {
@@ -334,7 +247,7 @@ export const metadata: Metadata = {
   appleWebApp: {
     capable: true,
     statusBarStyle: "default",
-    title: "Casagrande Geotecnia",
+    title: companyInfo.name,
   },
 
   other: {
@@ -343,7 +256,6 @@ export const metadata: Metadata = {
   },
 };
 
-// Structured Data Component
 function StructuredData() {
   return (
     <script
@@ -353,23 +265,18 @@ function StructuredData() {
   );
 }
 
-export default function RootLayout({
-  children,
-}: {
-  children: React.ReactNode;
-}) {
+export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="es-PE" suppressHydrationWarning className={font.variable}>
       <head>
         <StructuredData />
-        {/* Preconnects para performance */}
         <link rel="preconnect" href="https://www.google-analytics.com" />
         <link rel="dns-prefetch" href="https://www.google-analytics.com" />
       </head>
       <body className={`${font.className} antialiased`}>
         {children}
         <FloatingButtons />
-        <GoogleAnalytics gaId="G-HSYFNDRHDW" />
+        <GoogleAnalytics gaId="G-7TJCWC5JMR" />
       </body>
     </html>
   );

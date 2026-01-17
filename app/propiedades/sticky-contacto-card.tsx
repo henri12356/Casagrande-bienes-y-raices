@@ -68,7 +68,7 @@ Email: ${email}`;
       {/* ✅ NOTA: quitamos lg:sticky aquí. El sticky debe vivir SOLO en page.tsx */}
       <Card
         className={[
-          "relative overflow-hidden rounded-3xl border-0 bg-[#0B6FB6] text-white",
+          "relative overflow-hidden rounded-3xl border-0 bg-[#01338C] text-white",
           "shadow-[0_24px_70px_rgba(2,6,23,0.30)]",
           // ✅ clave para que NO SE CORTE:
           // el card nunca supera la altura de pantalla

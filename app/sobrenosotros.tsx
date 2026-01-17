@@ -27,7 +27,7 @@ const Sobrenosotros = () => {
               ¿Quiénes Somos?
             </h2>
             <h3 className="text-3xl font-bold text-[#182C45] mb-6">
-              Casagrande Geotecnia
+              Casagrande Bienes y Raíces
             </h3>
             
             <p className="text-gray-600 leading-relaxed mb-6">

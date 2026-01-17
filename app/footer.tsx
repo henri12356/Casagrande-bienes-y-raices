@@ -87,7 +87,7 @@ const Footer = () => {
             >
               <Image
                 src="/logofooter.svg"
-                alt="Logo de casagrande geotecnia"
+                alt="Logo de casagrande inmobiliaria"
                 fill
                 sizes="(max-width: 768px) 192px, (max-width: 1200px) 256px, 384px"
                 className="object-contain object-left transition-transform group-hover:scale-105"
@@ -120,7 +120,7 @@ const Footer = () => {
               >
                 <Image
                   src="/logofooter.svg"
-                  alt="logo de casagrande geotecnia"
+                  alt="logo de casagrande inmobiliaria"
                   fill
                   sizes="100vw"
                   className="object-contain px-2 transition-transform group-hover:scale-105"
@@ -238,7 +238,7 @@ const Footer = () => {
         {/* Copyright and Legal Links */}
         <div className="flex flex-col md:flex-row justify-between items-center pt-2 sm:pt-4">
           <div className="text-white text-xs sm:text-sm mb-3 md:mb-0 text-center md:text-left leading-relaxed">
-            © {new Date().getFullYear()} Casagrande Geotecnia. Todos los
+            © {new Date().getFullYear()} Casagrande Bienes y raices. Todos los
             derechos reservados.
           </div>
           <nav className="flex flex-wrap justify-center gap-x-3 sm:gap-x-4 gap-y-1 sm:gap-y-2 items-center">

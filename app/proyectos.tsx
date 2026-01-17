@@ -195,7 +195,7 @@ const Proyectos = () => {
       <div className="2xl:max-w-[1650px] max-w-[1550px] mx-auto px-4 sm:px-6">
         <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4 mb-6">
           <h2 className="text-2xl sm:text-3xl md:text-4xl font-extrabold text-[#005BBB] border-l-4 border-[#FFD100] pl-4">
-            Nuestras recomendaciones para ti
+            Nuestros Proyectos para ti
           </h2>
 
           <Link

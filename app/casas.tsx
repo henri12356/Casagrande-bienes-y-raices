@@ -133,22 +133,22 @@ const ProjectCard: FC<{ p: Proyecto }> = ({ p }) => (
           }}
         />
         <div className="absolute inset-0 bg-gradient-to-t from-black/35 via-black/0 to-black/0" />
-        <div className="absolute left-3 top-3 inline-flex items-center rounded-full bg-[#FFD100] px-3 py-1.5 text-[11px] font-extrabold uppercase text-[#005BBB] shadow">
+        <div className="absolute left-3 top-3 inline-flex items-center rounded-full bg-[#FFB200] px-3 py-1.5 text-[11px] font-extrabold uppercase text-[#005BBB] shadow">
           {p.etiqueta}
         </div>
       </div>
 
-      <div className="p-4 sm:p-5">
+      <div className="p-4 sm:p-5 bg-[#01338C]">
         <div className="min-w-0">
-          <h3 className="text-lg sm:text-xl font-extrabold text-slate-900 leading-tight truncate">{p.nombre}</h3>
-          <p className="text-sm font-semibold text-[#005BBB]">{p.subtitulo}</p>
+          <h3 className="text-lg sm:text-xl font-extrabold text-white leading-tight truncate">{p.nombre}</h3>
+          <p className="text-sm font-semibold text-[#FFB200]">{p.subtitulo}</p>
         </div>
 
         <div className="mt-3 flex items-start gap-2 text-sm text-slate-600">
-          <span className="mt-0.5 text-[#005BBB]">
+          <span className="mt-0.5 text-[#FFB200]">
             <SvgIcon path={ICON.location} className="w-4 h-4" />
           </span>
-          <p className="line-clamp-2">{p.ubicacion}</p>
+          <p className="line-clamp-2 text-white">{p.ubicacion}</p>
         </div>
 
         <div className="mt-3 flex flex-wrap gap-2">
@@ -158,7 +158,7 @@ const ProjectCard: FC<{ p: Proyecto }> = ({ p }) => (
         </div>
 
         <div className="mt-4 flex items-center justify-end">
-          <span className="inline-flex items-center gap-2 rounded-full bg-[#FFD100] px-4 py-2 text-sm font-extrabold text-[#005BBB] shadow hover:brightness-95 transition">
+          <span className="inline-flex items-center gap-2 rounded-full bg-[#FFB200] px-4 py-2 text-sm font-extrabold text-[#005BBB] shadow hover:brightness-95 transition">
             Desde: <span className="tabular-nums">{p.precioDesdeSol}</span>
           </span>
         </div>
@@ -238,11 +238,10 @@ const Casas = () => {
 
   return (
     <section className="py-12 md:py-16 bg-slate-50">
-      <div className="max-w-[1550px] mx-auto px-4 sm:px-6">
+      <div className="max-w-[1600px] mx-auto px-4 sm:px-6">
         <div className="flex flex-col md:flex-row md:items-end md:justify-between gap-4 mb-6">
           <div>
-            <h2 className="text-3xl sm:text-4xl font-extrabold text-[#005BBB] leading-tight">Proyectos en Ayacucho</h2>
-            <p className="mt-1 text-slate-600 text-sm sm:text-base">Opciones disponibles según el proyecto.</p>
+            <h2 className="text-3xl sm:text-4xl font-extrabold text-[#005BBB] leading-tight">Lotes en Ayacucho</h2>
           </div>
 
           <div className="flex items-center gap-2">

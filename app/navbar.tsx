@@ -44,34 +44,34 @@ interface ContactInfoItemProps {
 const navLinks: NavLink[] = [
   { href: "/inmuebles#proyectos", label: "Proyectos" },
   { href: "/inmuebles#propiedades", label: "Propiedades" },
-  { href: "/inmuebles#alquileres", label: "Alquileres" },
+  // { href: "/inmuebles#alquileres", label: "Alquileres" },
   { href: "/venta-terreno", label: "Vende tu terreno" },
   { href: "/nosotros", label: "Nosotros" },
 ];
 
 const socialLinks: SocialLink[] = [
   {
-    href: "https://www.facebook.com/profile.php?id=100077864046528&locale=es_LA",
+    href: "https://www.facebook.com/Casagrande.Bienes.R",
     label: "Facebook",
     Icon: FaFacebook,
   },
   {
-    href: "https://www.linkedin.com/in/david-guerra-4a9b44385/",
+    href: "https://www.linkedin.com/company/casagrande-bienes-y-raices/",
     label: "LinkedIn",
     Icon: FaLinkedin,
   },
+  // {
+  //   href: "https://www.youtube.com/channel/UCIuOx9lfSBKoJ5QsRlQjA7Q",
+  //   label: "YouTube",
+  //   Icon: FaYoutube,
+  // },
   {
-    href: "https://www.youtube.com/channel/UCIuOx9lfSBKoJ5QsRlQjA7Q",
-    label: "YouTube",
-    Icon: FaYoutube,
-  },
-  {
-    href: "https://www.instagram.com/casagrandegeotecnia/",
+    href: "https://www.instagram.com/casagrandeinmobilaria/",
     label: "Instagram",
     Icon: FaInstagram,
   },
   {
-    href: "https://www.tiktok.com/@casagrandegeotecnia?lang=es-419",
+    href: "https://www.tiktok.com/@casagrandeinmb.24",
     label: "TikTok",
     Icon: FaTiktok,
   },
@@ -570,7 +570,7 @@ const Navbar = () => {
                     >
                     <Image
                         src="/logo.svg"
-                        alt="Logo de Casagrande Geotecnia"
+                        alt="Logo de Casagrande inmobiliaria"
                         width={100}
                         height={48}
                         className="h-11 w-auto md:h-12 max-md:px-2"
