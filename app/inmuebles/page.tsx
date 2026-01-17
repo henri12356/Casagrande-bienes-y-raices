@@ -1,17 +1,17 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 "use client";
 
-import React, { useMemo, useState, FC, useEffect } from "react";
 import Image from "next/image";
 import Link from "next/link";
-import { FaMapMarkerAlt, FaBed, FaBath, FaRulerCombined } from "react-icons/fa";
+import { FC, useEffect, useMemo, useState } from "react";
+import { FaBath, FaBed, FaMapMarkerAlt, FaRulerCombined } from "react-icons/fa";
 
-import proyectosData from "@/app/data/proyectos.json";
-import propiedadesData from "@/app/data/propiedades.json";
 import alquileresData from "@/app/data/alquileres.json";
+import propiedadesData from "@/app/data/propiedades.json";
+import proyectosData from "@/app/data/proyectos.json";
 
-import Navbar from "../navbar";
 import Footer from "../footer";
+import Navbar from "../navbar";
 import HeroInmuebles from "./HeroInmuebles";
 
 // --- TIPOS ---
@@ -27,21 +27,18 @@ type TipoInmueble =
 
 interface ItemBase {
   slug: string;
-  tipo: Tipo;
+  tipo: Exclude<Tipo, "todos">;
 
   titulo: string;
   subtitulo: string;
   categoria: string;
 
+  // ✅ solo usaremos ubicacion real del JSON
   ubicacion: string;
-  departamento?: string;
-  provincia?: string;
-  distrito?: string;
 
   precioDesdeSol: string;
   precioDesdeDolar: string;
   monedaPrincipal?: "USD" | "PEN";
-  /** Precio normalizado a soles para filtros numéricos */
   precioNumero?: number;
 
   imagen: string;
@@ -58,23 +55,26 @@ interface ItemBase {
   resumen?: string;
 }
 
-const TABS: { id: Tipo; label: string }[] = [
-  { id: "todos", label: "Todos" },
-  { id: "proyecto", label: "Proyectos" },
-  { id: "propiedad", label: "Propiedades" },
-  { id: "alquiler", label: "Alquileres" },
-];
-
-type OrderBy = "relevancia" | "precio-asc" | "precio-desc";
+// ✅ ZONAS reales donde vendes (amplía cuando quieras)
+const ZONAS_AYACUCHO = [
+  "Todos",
+  "Ayacucho",
+  "Huamanga",
+  "Qorihuillca",
+  "Quinua",
+] as const;
 
 const PAGE_SIZE = 12;
 const USD_TO_PEN = 3.8;
 
 // --- HELPERS ---
-const inferOperacion = (tipo: Tipo): TipoOperacion =>
+const inferOperacion = (tipo: Exclude<Tipo, "todos">): TipoOperacion =>
   tipo === "alquiler" ? "alquilar" : "comprar";
 
-const inferInmueble = (categoria: string, tipo: Tipo): TipoInmueble => {
+const inferInmueble = (
+  categoria: string,
+  tipo: Exclude<Tipo, "todos">
+): TipoInmueble => {
   const c = (categoria || "").toLowerCase();
   if (c.includes("lote") || c.includes("terreno") || c.includes("condominio"))
     return "terreno";
@@ -112,15 +112,33 @@ const tabToHash = (tab: Tipo): string | undefined => {
   return undefined;
 };
 
+// ✅ filtro por zona: revisa ubicacion + subtitulo + titulo + etiquetas
+const matchesZona = (item: ItemBase, zona: string) => {
+  if (!zona || zona === "Todos") return true;
+
+  const hay = [
+    item.ubicacion,
+    item.subtitulo,
+    item.titulo,
+    item.categoria,
+    ...(item.etiquetas ?? []),
+  ]
+    .filter(Boolean)
+    .join(" ")
+    .toLowerCase();
+
+  return hay.includes(zona.toLowerCase());
+};
+
+type OrderBy = "relevancia" | "precio-asc" | "precio-desc";
+
 const InmueblesPage = () => {
   const [tab, setTab] = useState<Tipo>("todos");
 
-  // ESTADOS DEL HERO
   const [searchTerm, setSearchTerm] = useState("");
-  const [selectedCity, setSelectedCity] = useState("Todos");
+  const [selectedCity, setSelectedCity] = useState<string>("Todos");
   const [orderBy, setOrderBy] = useState<OrderBy>("relevancia");
 
-  // visibilidad incremental
   const [visibleBySection, setVisibleBySection] = useState<{
     proyectos: number;
     propiedades: number;
@@ -133,7 +151,6 @@ const InmueblesPage = () => {
 
   const [visibleTabCount, setVisibleTabCount] = useState<number>(PAGE_SIZE);
 
-  // Scroll a resultados (llamado desde el Hero)
   const scrollToResults = () => {
     const el = document.getElementById("resultados-anchor");
     if (el) el.scrollIntoView({ behavior: "smooth", block: "start" });
@@ -149,7 +166,7 @@ const InmueblesPage = () => {
     setVisibleTabCount(PAGE_SIZE);
   }, [searchTerm, selectedCity, orderBy]);
 
-  // --- SYNC TAB + SCROLL CON HASH (NAVBAR, LINKS, ETC.) ---
+  // --- SYNC TAB + SCROLL CON HASH ---
   useEffect(() => {
     if (typeof window === "undefined") return;
 
@@ -163,16 +180,12 @@ const InmueblesPage = () => {
       const newTab = hashToTab(hash);
       setTab(newTab);
 
-      // pequeño delay para asegurar que el DOM ya se renderizó
       setTimeout(() => {
         const element = document.getElementById(hash);
-        if (element) {
-          element.scrollIntoView({ behavior: "smooth", block: "start" });
-        }
+        if (element) element.scrollIntoView({ behavior: "smooth", block: "start" });
       }, 80);
     };
 
-    // Al cargar la página
     const initialHash = window.location.hash.replace("#", "");
     if (initialHash) applyHash(initialHash);
 
@@ -202,9 +215,26 @@ const InmueblesPage = () => {
     };
   }, []);
 
-  // Normalizamos los 3 JSON
+  // ✅ Tabs dinámicos
+  // ✅ NO TOCAR LABELS: "Lotes" y "Proyectos" se quedan igual
+  // ✅ SOLO CAMBIO: orden -> primero "Proyectos" (id: propiedad), luego "Lotes" (id: proyecto)
+  const TABS_DYNAMIC: { id: Tipo; label: string }[] = useMemo(() => {
+    const tabs: { id: Tipo; label: string }[] = [{ id: "todos", label: "Todos" }];
+
+    // ✅ PRIMERO "Proyectos" (que viene del JSON de propiedades)
+    if ((propiedadesData as any[])?.length) tabs.push({ id: "propiedad", label: "Proyectos" });
+
+    // ✅ DESPUÉS "Lotes" (que viene del JSON de proyectos)
+    if ((proyectosData as any[])?.length) tabs.push({ id: "proyecto", label: "Lotes" });
+
+    // if ((alquileresData as any[])?.length) tabs.push({ id: "alquiler", label: "Alquileres" });
+
+    return tabs;
+  }, []);
+
+  // Normalizamos JSONs
   const items: ItemBase[] = useMemo(() => {
-    const norm = (arr: any[], tipo: Tipo): ItemBase[] =>
+    const norm = (arr: any[], tipo: Exclude<Tipo, "todos">): ItemBase[] =>
       arr.map((raw) => {
         const monedaPrincipal: "USD" | "PEN" = raw.monedaPrincipal ?? "PEN";
 
@@ -223,30 +253,34 @@ const InmueblesPage = () => {
         return {
           slug: raw.slug,
           tipo,
-          titulo: raw.titulo,
+
+          titulo: raw.titulo ?? "",
           subtitulo: raw.subtitulo ?? "",
-          categoria: raw.categoria ?? "",
+          categoria: raw.categoria ?? (tipo === "proyecto" ? "Lotes" : ""),
           ubicacion: raw.ubicacion ?? "",
-          departamento: raw.departamento,
-          provincia: raw.provincia,
-          distrito: raw.distrito,
+
           precioDesdeSol: raw.precioDesdeSol ?? "",
           precioDesdeDolar: raw.precioDesdeDolar ?? "",
           monedaPrincipal,
           precioNumero,
+
           imagen: raw.imagen ?? "/proyecto.webp",
           etiquetas: raw.etiquetas ?? [],
+
           tipoOperacion: raw.tipoOperacion ?? inferOperacion(tipo),
           tipoInmueble:
             raw.tipoInmueble ?? inferInmueble(raw.categoria ?? "", tipo),
+
           areaM2: raw.areaM2,
           dormitorios: raw.dormitorios,
           banos: raw.banos,
           cocheras: raw.cocheras,
+
           resumen: raw.resumen,
         };
       });
 
+    // ✅ NO TOCAR LÓGICA DE DATA: se mantiene igual
     return [
       ...norm(proyectosData as any[], "proyecto"),
       ...norm(propiedadesData as any[], "propiedad"),
@@ -254,21 +288,19 @@ const InmueblesPage = () => {
     ];
   }, []);
 
+  // ✅ ESTA FUNCIÓN DEFINE A QUÉ PÁGINA TE LLEVA EL CLICK
   const getHref = (item: ItemBase) => {
     if (item.tipo === "proyecto") return `/proyectos/${item.slug}`;
     if (item.tipo === "propiedad") return `/propiedades/${item.slug}`;
     return `/alquileres/${item.slug}`;
   };
 
-  // Limpiar filtros
   const clearFilters = () => {
     setSearchTerm("");
     setSelectedCity("Todos");
     setOrderBy("relevancia");
     setTab("todos");
-    if (typeof window !== "undefined") {
-      window.history.pushState({}, "", "/inmuebles");
-    }
+    if (typeof window !== "undefined") window.history.pushState({}, "", "/inmuebles");
   };
 
   // FILTRO GLOBAL + ORDEN
@@ -276,41 +308,26 @@ const InmueblesPage = () => {
     const term = searchTerm.trim().toLowerCase();
 
     let result = items.filter((item) => {
-      // Filtro por ciudad
-      if (selectedCity !== "Todos") {
-        const fullLocation = [
-          item.departamento,
-          item.provincia,
-          item.distrito,
+      if (!matchesZona(item, selectedCity)) return false;
+
+      if (term) {
+        const hay = [
+          item.titulo,
+          item.subtitulo,
           item.ubicacion,
+          item.categoria,
+          ...(item.etiquetas ?? []),
         ]
           .filter(Boolean)
           .join(" ")
           .toLowerCase();
-        if (!fullLocation.includes(selectedCity.toLowerCase())) return false;
-      }
 
-      // Filtro por texto
-      if (term) {
-        const zona = [item.departamento, item.provincia, item.distrito]
-          .filter(Boolean)
-          .join(" ")
-          .toLowerCase();
-
-        const match =
-          item.titulo.toLowerCase().includes(term) ||
-          item.subtitulo.toLowerCase().includes(term) ||
-          item.ubicacion.toLowerCase().includes(term) ||
-          item.categoria.toLowerCase().includes(term) ||
-          zona.includes(term);
-
-        if (!match) return false;
+        if (!hay.includes(term)) return false;
       }
 
       return true;
     });
 
-    // Orden por precio
     if (orderBy === "precio-asc") {
       result = [...result].sort((a, b) => {
         const pa = a.precioNumero ?? Number.POSITIVE_INFINITY;
@@ -342,7 +359,7 @@ const InmueblesPage = () => {
     return filteredItems.filter((i) => i.tipo === tab);
   }, [filteredItems, tab]);
 
-  const activeTabLabel = TABS.find((t) => t.id === tab)?.label;
+  const activeTabLabel = TABS_DYNAMIC.find((t) => t.id === tab)?.label;
 
   const handleTabChange = (newTab: Tipo) => {
     setTab(newTab);
@@ -352,10 +369,7 @@ const InmueblesPage = () => {
         window.history.pushState({}, "", `/inmuebles#${hash}`);
         const el = document.getElementById(hash);
         if (el) {
-          setTimeout(
-            () => el.scrollIntoView({ behavior: "smooth", block: "start" }),
-            50
-          );
+          setTimeout(() => el.scrollIntoView({ behavior: "smooth", block: "start" }), 50);
         }
       } else {
         window.history.pushState({}, "", "/inmuebles");
@@ -364,32 +378,37 @@ const InmueblesPage = () => {
   };
 
   // ---------- CARD ----------
-  const Card: FC<{ item: ItemBase }> = ({ item }) => (
-    <Link href={getHref(item)} className="group h-full">
+  const InmuebleCard: FC<{ item: ItemBase }> = ({ item }) => (
+    <Link href={getHref(item)} className="group block h-full">
       <article className="flex h-full flex-col overflow-hidden rounded-3xl border border-slate-100 bg-white shadow-sm transition-all duration-200 hover:-translate-y-1 hover:shadow-2xl">
         {/* IMAGEN */}
-        <div className="relative w-full aspect-[16/9] overflow-hidden">
+        <div className="relative aspect-[16/9] w-full overflow-hidden">
           <Image
             src={item.imagen}
             alt={item.titulo}
             fill
             className="object-cover transition-transform duration-300 group-hover:scale-105"
           />
-          <div className="absolute top-3 left-3">
+          <div className="absolute left-3 top-3">
             <div className="rounded-full bg-white/90 px-4 py-1 text-xs font-extrabold uppercase tracking-wide text-[#005BBB] shadow-md">
-              {item.categoria}
+              {item.categoria || "Lotes"}
             </div>
           </div>
+
           <div className="absolute bottom-3 left-3 rounded-full bg-[#005BBB]/90 px-3 py-1 text-[11px] font-semibold text-white">
-            {item.tipoOperacion === "alquilar" ? "Alquiler" : "Compra"}
+            {item.tipo === "proyecto"
+              ? "Lotes en venta"
+              : item.tipoOperacion === "alquilar"
+              ? "Alquiler"
+              : "Compra"}
           </div>
         </div>
 
         {/* BLOQUE INFERIOR */}
-        <div className="flex flex-1 flex-col justify-between px-5 pb-5 pt-4 bg-white">
+        <div className="flex flex-1 flex-col justify-between bg-white px-5 pb-5 pt-4">
           <div className="space-y-2">
             <div>
-              <h3 className="text-base md:text-lg font-extrabold text-slate-900 leading-snug">
+              <h3 className="text-base font-extrabold leading-snug text-slate-900 md:text-lg">
                 {item.titulo}
               </h3>
               {item.subtitulo && (
@@ -399,15 +418,11 @@ const InmueblesPage = () => {
               )}
             </div>
 
-            <div className="mt-1 flex items-start gap-2 text-xs md:text-[13px] leading-snug text-slate-600">
+            <div className="mt-1 flex items-start gap-2 text-xs leading-snug text-slate-600 md:text-[13px]">
               <IconLocation />
-              <p>
-                {item.ubicacion}
-                {item.distrito && `, ${item.distrito}`}
-              </p>
+              <p>{item.ubicacion}</p>
             </div>
 
-            {/* chips de área / dorms / baños */}
             <div className="mt-2 flex flex-wrap gap-2 text-[11px] font-semibold text-slate-700">
               {item.areaM2 && (
                 <span className="inline-flex items-center gap-1 rounded-full bg-slate-100 px-3 py-1">
@@ -429,49 +444,34 @@ const InmueblesPage = () => {
               )}
             </div>
 
-            {/* resumen o etiquetas */}
             <p className="mt-2 line-clamp-2 text-[11px] text-slate-500">
               {item.resumen ?? item.etiquetas.slice(0, 2).join(" • ")}
             </p>
           </div>
 
-          {/* precio */}
           <div className="mt-4 flex items-center justify-between">
             <div className="flex flex-col text-xs text-slate-600">
-              <span className="font-medium">
-                {item.tipoOperacion === "alquilar"
-                  ? "Renta desde"
-                  : "Precio desde"}
-              </span>
+              <span className="font-medium">Precio desde</span>
               <span className="text-sm font-extrabold text-[#005BBB]">
                 {item.monedaPrincipal === "USD"
                   ? item.precioDesdeDolar
                   : item.precioDesdeSol}
               </span>
-              <span className="text-[11px]">
-                {item.precioDesdeDolar} • {item.precioDesdeSol}
-              </span>
             </div>
 
-            <button
-              type="button"
-              className="rounded-full bg-[#FFB200] px-4 py-2 text-xs font-bold uppercase tracking-wide text-[#01338C] shadow-md transition-colors group-hover:bg-[#01338C] group-hover:text-white"
-            >
+            <span className="rounded-full bg-[#FFB200] px-4 py-2 text-xs font-bold uppercase tracking-wide text-[#01338C] shadow-md transition-colors group-hover:bg-[#01338C] group-hover:text-white">
               Ver detalle
-            </button>
+            </span>
           </div>
         </div>
       </article>
     </Link>
   );
 
-  // ----------------------------------------------
-
   return (
     <>
       <Navbar />
 
-      {/* HERO CON BUSCADOR */}
       <HeroInmuebles
         searchTerm={searchTerm}
         setSearchTerm={setSearchTerm}
@@ -481,15 +481,12 @@ const InmueblesPage = () => {
       />
 
       <section className="bg-white pb-20">
-        <div
-          className="mx-auto max-w-[1500px] px-4 pt-6"
-          id="resultados-anchor"
-        >
-          {/* TABS + ORDEN */}
+        <div className="mx-auto max-w-[1500px] px-4 pt-6" id="resultados-anchor">
+          {/* barra superior */}
           <div className="mb-8 flex flex-col gap-4 border-b border-slate-100 pb-6 md:flex-row md:items-center md:justify-between">
             {/* Tabs */}
             <div className="flex flex-wrap items-center justify-center gap-3 md:justify-start">
-              {TABS.map((t) => {
+              {TABS_DYNAMIC.map((t) => {
                 const active = t.id === tab;
                 return (
                   <button
@@ -507,12 +504,27 @@ const InmueblesPage = () => {
               })}
             </div>
 
-            {/* Ordenar + limpiar */}
-            <div className="flex items-center justify-end gap-3">
+            {/* filtros derecha */}
+            <div className="flex flex-col items-end justify-end gap-3 sm:flex-row sm:items-center">
+              {/* ZONA */}
               <div className="flex items-center gap-2">
-                <span className="text-xs font-semibold text-slate-500">
-                  Ordenar
-                </span>
+                <span className="text-xs font-semibold text-slate-500">Zona</span>
+                <select
+                  value={selectedCity}
+                  onChange={(e) => setSelectedCity(e.target.value)}
+                  className="rounded-full border border-slate-200 bg-white px-3 py-1.5 text-xs font-semibold text-slate-700 outline-none hover:bg-slate-50"
+                >
+                  {ZONAS_AYACUCHO.map((z) => (
+                    <option key={z} value={z}>
+                      {z}
+                    </option>
+                  ))}
+                </select>
+              </div>
+
+              {/* Ordenar */}
+              <div className="flex items-center gap-2">
+                <span className="text-xs font-semibold text-slate-500">Ordenar</span>
                 <select
                   value={orderBy}
                   onChange={(e) => setOrderBy(e.target.value as OrderBy)}
@@ -537,12 +549,9 @@ const InmueblesPage = () => {
           {/* CONTENIDO */}
           {tab === "todos" ? (
             <div className="space-y-16">
-              {/* PROYECTOS */}
-              {groupedItems.proyectos.length > 0 && (
-                <section
-                  className="scroll-mt-40"
-                  id="proyectos"
-                >
+              {/* ✅ PRIMERO: PROPIEDADES (Label: Proyectos) */}
+              {groupedItems.propiedades.length > 0 && (
+                <section className="scroll-mt-40" id="propiedades">
                   <div className="mb-3 flex flex-wrap items-center justify-between gap-2">
                     <div>
                       <h2 className="text-2xl font-extrabold text-[#005BBB] sm:text-3xl">
@@ -554,79 +563,20 @@ const InmueblesPage = () => {
                         )}
                       </h2>
                       <p className="text-xs text-slate-500">
-                        {groupedItems.proyectos.length} resultados
-                      </p>
-                    </div>
-                    <Link
-                      href="/proyectos"
-                      className="text-sm font-semibold text-[#005BBB] hover:underline"
-                    >
-                      Ver todos
-                    </Link>
-                  </div>
-                  <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-4">
-                    {groupedItems.proyectos
-                      .slice(0, visibleBySection.proyectos)
-                      .map((item) => (
-                        <Card key={item.slug} item={item} />
-                      ))}
-                  </div>
-                  {groupedItems.proyectos.length >
-                    visibleBySection.proyectos && (
-                    <div className="mt-6 flex justify-center">
-                      <button
-                        type="button"
-                        className="rounded-full border border-[#005BBB] px-6 py-2 text-sm font-semibold text-[#005BBB] hover:bg-[#005BBB] hover:text-white"
-                        onClick={() =>
-                          setVisibleBySection((prev) => ({
-                            ...prev,
-                            proyectos: prev.proyectos + PAGE_SIZE,
-                          }))
-                        }
-                      >
-                        Ver más proyectos
-                      </button>
-                    </div>
-                  )}
-                </section>
-              )}
-
-              {/* PROPIEDADES */}
-              {groupedItems.propiedades.length > 0 && (
-                <section
-                  className="scroll-mt-40"
-                  id="propiedades"
-                >
-                  <div className="mb-3 flex flex-wrap items-center justify-between gap-2">
-                    <div>
-                      <h2 className="text-2xl font-extrabold text-[#005BBB] sm:text-3xl">
-                        Propiedades
-                        {selectedCity !== "Todos" && (
-                          <span className="ml-2 text-lg font-medium text-slate-400">
-                            en {selectedCity}
-                          </span>
-                        )}
-                      </h2>
-                      <p className="text-xs text-slate-500">
                         {groupedItems.propiedades.length} resultados
                       </p>
                     </div>
-                    <Link
-                      href="/propiedades"
-                      className="text-sm font-semibold text-[#005BBB] hover:underline"
-                    >
-                      Ver todas
-                    </Link>
                   </div>
+
                   <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-4">
                     {groupedItems.propiedades
                       .slice(0, visibleBySection.propiedades)
                       .map((item) => (
-                        <Card key={item.slug} item={item} />
+                        <InmuebleCard key={item.slug} item={item} />
                       ))}
                   </div>
-                  {groupedItems.propiedades.length >
-                    visibleBySection.propiedades && (
+
+                  {groupedItems.propiedades.length > visibleBySection.propiedades && (
                     <div className="mt-6 flex justify-center">
                       <button
                         type="button"
@@ -638,23 +588,20 @@ const InmueblesPage = () => {
                           }))
                         }
                       >
-                        Ver más propiedades
+                        Ver más proyectos
                       </button>
                     </div>
                   )}
                 </section>
               )}
 
-              {/* ALQUILERES */}
-              {groupedItems.alquileres.length > 0 && (
-                <section
-                  className="scroll-mt-40"
-                  id="alquileres"
-                >
+              {/* ✅ DESPUÉS: PROYECTOS (Label: Lotes en venta) */}
+              {groupedItems.proyectos.length > 0 && (
+                <section className="scroll-mt-40" id="proyectos">
                   <div className="mb-3 flex flex-wrap items-center justify-between gap-2">
                     <div>
                       <h2 className="text-2xl font-extrabold text-[#005BBB] sm:text-3xl">
-                        Alquileres
+                        Lotes en venta
                         {selectedCity !== "Todos" && (
                           <span className="ml-2 text-lg font-medium text-slate-400">
                             en {selectedCity}
@@ -662,25 +609,20 @@ const InmueblesPage = () => {
                         )}
                       </h2>
                       <p className="text-xs text-slate-500">
-                        {groupedItems.alquileres.length} resultados
+                        {groupedItems.proyectos.length} resultados
                       </p>
                     </div>
-                    <Link
-                      href="/alquileres"
-                      className="text-sm font-semibold text-[#005BBB] hover:underline"
-                    >
-                      Ver todos
-                    </Link>
                   </div>
+
                   <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-4">
-                    {groupedItems.alquileres
-                      .slice(0, visibleBySection.alquileres)
+                    {groupedItems.proyectos
+                      .slice(0, visibleBySection.proyectos)
                       .map((item) => (
-                        <Card key={item.slug} item={item} />
+                        <InmuebleCard key={item.slug} item={item} />
                       ))}
                   </div>
-                  {groupedItems.alquileres.length >
-                    visibleBySection.alquileres && (
+
+                  {groupedItems.proyectos.length > visibleBySection.proyectos && (
                     <div className="mt-6 flex justify-center">
                       <button
                         type="button"
@@ -688,11 +630,11 @@ const InmueblesPage = () => {
                         onClick={() =>
                           setVisibleBySection((prev) => ({
                             ...prev,
-                            alquileres: prev.alquileres + PAGE_SIZE,
+                            proyectos: prev.proyectos + PAGE_SIZE,
                           }))
                         }
                       >
-                        Ver más alquileres
+                        Ver más lotes
                       </button>
                     </div>
                   )}
@@ -700,11 +642,7 @@ const InmueblesPage = () => {
               )}
             </div>
           ) : (
-            // Vista filtrada por tab concreto
-            <section
-              className="mt-4 scroll-mt-40"
-              id={tabToHash(tab)}
-            >
+            <section className="mt-4 scroll-mt-40" id={tabToHash(tab)}>
               <div className="mb-3 flex flex-wrap items-center justify-between gap-2">
                 <div>
                   <h2 className="text-2xl font-extrabold text-[#005BBB] sm:text-3xl">
@@ -722,11 +660,9 @@ const InmueblesPage = () => {
               </div>
 
               <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-4">
-                {filtradosPorTab
-                  .slice(0, visibleTabCount)
-                  .map((item) => (
-                    <Card key={item.slug} item={item} />
-                  ))}
+                {filtradosPorTab.slice(0, visibleTabCount).map((item) => (
+                  <InmuebleCard key={item.slug} item={item} />
+                ))}
               </div>
 
               {filtradosPorTab.length > visibleTabCount && (
@@ -734,9 +670,7 @@ const InmueblesPage = () => {
                   <button
                     type="button"
                     className="rounded-full border border-[#005BBB] px-6 py-2 text-sm font-semibold text-[#005BBB] hover:bg-[#005BBB] hover:text-white"
-                    onClick={() =>
-                      setVisibleTabCount((prev) => prev + PAGE_SIZE)
-                    }
+                    onClick={() => setVisibleTabCount((prev) => prev + PAGE_SIZE)}
                   >
                     Ver más {activeTabLabel?.toLowerCase()}
                   </button>

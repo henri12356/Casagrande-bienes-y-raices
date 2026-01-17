@@ -1,48 +1,77 @@
 [
   {
-    "slug": "casa-centro-ayacucho",
-    "tipo": "propiedad",
-    "titulo": "Casa en el Centro",
-    "subtitulo": "Ayacucho",
-    "categoria": "Casa",
-    "ubicacion": "Jr. Quinua 570, Ayacucho",
-    "departamento": "Ayacucho",
-    "provincia": "Huamanga",
-    "distrito": "Ayacucho",
-    "precioDesdeSol": "S/ 420,000",
-    "precioDesdeDolar": "$ 110,000",
-    "monedaPrincipal": "PEN",
-    "imagen": "/proyecto.webp",
-    "etiquetas": ["Listo para habitar", "Oportunidad"],
-    "tipoOperacion": "comprar",
-    "tipoInmueble": "casa",
-    "areaM2": 150,
-    "dormitorios": 4,
-    "banos": 3,
-    "cocheras": 1,
-    "resumen": "Casa amplia en pleno centro de Ayacucho, ideal para familia o negocio."
-  },
-  {
-    "slug": "departamento-magdalena",
-    "tipo": "propiedad",
-    "titulo": "Departamento en Magdalena",
-    "subtitulo": "Lima",
-    "categoria": "Departamento",
-    "ubicacion": "Av. Brasil, Magdalena",
-    "departamento": "Lima",
-    "provincia": "Lima",
-    "distrito": "Magdalena",
-    "precioDesdeSol": "S/ 580,000",
-    "precioDesdeDolar": "$ 152,000",
-    "monedaPrincipal": "USD",
-    "imagen": "/proyecto.webp",
-    "etiquetas": ["Vista ciudad", "Entrega inmediata"],
-    "tipoOperacion": "comprar",
-    "tipoInmueble": "departamento",
-    "areaM2": 90,
-    "dormitorios": 3,
-    "banos": 2,
-    "cocheras": 1,
-    "resumen": "Departamento con vista a la ciudad a pocas cuadras del malecón."
+    "slug": "villa-sol-2-qorihuillca",
+    "tipo": "proyecto",
+    "titulo": "Villa Sol 2",
+    "subtitulo": "Qorihuillca",
+    "categoria": "Lotes",
+    "ubicacion": "Qorihuillca, Huamanga – Ayacucho",
+
+    "precioDesdeSol": "S/ 16000",
+    "precioDesdeDolar": "",
+    "pagoContado": "S/ 2,000",
+
+    "imagen": "/banner.webp",
+    "etiquetas": [
+      "Ayacucho",
+      "Alta plusvalía",
+      "Acceso vehicular",
+      "Servicios en expansión"
+    ],
+
+    "descripcion": "Villa Sol 2 es un proyecto de lotes en Qorihuillca – Ayacucho, ideal para vivienda, casa de campo o inversión. Zona con crecimiento sostenido, accesos en mejora y alta proyección de valorización. Compra segura con respaldo y acompañamiento en el proceso.",
+
+    "equipamiento": ["Titulo de Propiedad", "Servicios completos", "Agua", "Luz", "Accesos"],
+
+    "planos": {
+      "titulo": "Plano del proyecto",
+      "imagen": "/prueba01.png",
+      "nota": "Plano referencial"
+    },
+
+    "lotes": {
+      "titulo": "Mapa de lotes (disponibilidad)",
+      "imagen": "/prueba01.png",
+      "nota": "Actualizado: 16/01/2026"
+    },
+
+    "futuro": {
+      "titulo": "Así se verá el proyecto a futuro",
+      "imagen": "/prueba01.png",
+      "nota": "Vista referencial (render/imagen conceptual)"
+    },
+
+    "caracteristicas": [
+      { "label": "Área", "value": "200 m²" },
+      { "label": "Tipo", "value": "Vivienda / casa de campo / inversión" },
+      { "label": "Documentación", "value": "Acta de transferencia + contrato privado (legalizable)" },
+      { "label": "Valorización", "value": "Zona con proyección y crecimiento" }
+    ],
+
+    "galeria": {
+      "fotos": [
+        "/banner.webp",
+        "/prueba01.png",
+        "/banner.webp",
+        "/prueba01.png",
+        "/prueba01.webp"
+      ],
+      "youtubeId": "uWzgyrh_UTI"
+    },
+
+    "ubicacionImagen": "/prueba01.png",
+    "mapsUrl": "https://www.google.com/maps?q=Qorihuillca+Huamanga+Ayacucho",
+
+    "descuento": {
+      "titulo": "Campaña activa: separa tu lote hoy y asegura precio preferencial",
+      "imagen": "/prueba01.webp"
+    },
+
+    "contacto": {
+      "whatsapp": "51970993246",
+      "telefono": "+51 970 993 246",
+      "direccion": "Jr. Quinua N° 570, Ayacucho",
+      "horario": "Lun–Dom 9:00 AM – 6:00 PM"
+    }
   }
 ]

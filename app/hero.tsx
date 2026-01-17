@@ -1,9 +1,9 @@
 "use client";
 
-import { AnimatePresence, motion, Variants, Transition } from "framer-motion";
-import Link from "next/link";
-import {  useEffect, useState, useCallback } from "react";
+import { AnimatePresence, motion, Transition, Variants } from "framer-motion";
 import Image from "next/image";
+import Link from "next/link";
+import { useCallback, useEffect, useState } from "react";
 
 // --- DATOS DE LOS SLIDES ---
 const slidesData: { 
@@ -14,17 +14,17 @@ const slidesData: {
   { 
     id: 1, 
     imageSrc: "/hero01.webp", 
-    buttonLink: "tel:989900609", 
+    buttonLink: "/inmuebles", 
   },
   { 
     id: 2, 
     imageSrc: "/hero02.webp", 
-    buttonLink: "/servicios", 
+    buttonLink: "/inmuebles", 
   },
   { 
     id: 3, 
     imageSrc: "/hero03.webp", 
-    buttonLink: "/proyectos", 
+    buttonLink: "/inmuebles", 
   },
 ];
 
@@ -86,7 +86,7 @@ export default function HeroCarousel() {
   return (
     <div className="md:py-20">
 
-    <main className="relative w-full h-[80vh]  overflow-hidden ">
+    <main className="relative w-full 2xl:h-[90vh] h-[75vh] max-md:h-[32vh] overflow-hidden ">
       <AnimatePresence initial={false} custom={direction}>
         <motion.div
           key={page}
@@ -112,7 +112,7 @@ export default function HeroCarousel() {
               fill
               priority={slideIndex === 0}
               sizes="100vw"
-              className="object-cover w-full h-full cursor-pointer"
+              className="object-cover w-full h-full cursor-pointer max-md:pt-16 md:pt-15"
               quality={85}
             />
           </Link>
