@@ -1,9 +1,14 @@
 "use client";
 
 import { AnimatePresence, motion } from "framer-motion";
-import { useState, useEffect } from "react";
-import { FaArrowRight, FaWhatsapp, FaLinkedinIn } from "react-icons/fa";
-import { HiOutlineDotsVertical, HiOutlineMail } from "react-icons/hi";
+import { useEffect, useState } from "react";
+import {
+  FaArrowRight,
+  FaFacebookF,
+  FaLinkedinIn,
+  FaWhatsapp,
+} from "react-icons/fa";
+import { HiOutlineDotsVertical } from "react-icons/hi";
 
 interface SocialFloatingButtonProps {
   icon: React.ReactNode;
@@ -106,11 +111,9 @@ const FloatingButtons: React.FC = () => {
 
   const moreOptionsData: MoreOption[] = [
     { text: "Inicio", href: "/", icon: <FaArrowRight /> },
+    { text: "Proyectos", href: "inmuebles#propiedades", icon: <FaArrowRight /> },
+    { text: "Lotes", href: "/inmuebles#proyectos", icon: <FaArrowRight /> },
     { text: "Nosotros", href: "/nosotros", icon: <FaArrowRight /> },
-    { text: "Servicios", href: "/servicios", icon: <FaArrowRight /> },
-    { text: "Proyectos", href: "/proyectos", icon: <FaArrowRight /> },
-    { text: "Blog", href: "/blog", icon: <FaArrowRight /> },
-    { text: "Contacto", href: "/contacto", icon: <FaArrowRight /> },
   ];
 
   const containerVariants = {
@@ -142,7 +145,7 @@ const FloatingButtons: React.FC = () => {
         <SocialFloatingButton
           icon={<FaWhatsapp />}
           label="Necesitas Asesoría?"
-          href="https://api.whatsapp.com/send?phone=51945513323&text=Hola!%20Estoy%20interesado%20en%20sus%20servicios."
+          href="https://api.whatsapp.com/send/?phone=51934027727&text=Hola%2C+quiero+una+cotizaci%C3%B3n&type=phone_number&app_absent=0"
           bgColor="bg-green-400"
           hoverBgColor="hover:bg-green-500"
         />
@@ -155,12 +158,13 @@ const FloatingButtons: React.FC = () => {
           hoverBgColor="hover:bg-[#0A66C2]"
         />
 
+        {/* Facebook (reemplaza Correo) */}
         <SocialFloatingButton
-          icon={<HiOutlineMail />}
-          label="Correo"
-          href="mailto:comercial@casagrandegeotecnia.com.pe"
-          bgColor="bg-red-500"
-          hoverBgColor="hover:bg-red-600"
+          icon={<FaFacebookF />}
+          label="Facebook"
+          href="https://www.facebook.com/" // <-- pon aquí tu link real
+          bgColor="bg-[#1877F2]"
+          hoverBgColor="hover:bg-[#166FE5]"
         />
 
         {/* Botón Más opciones */}
@@ -171,6 +175,7 @@ const FloatingButtons: React.FC = () => {
           >
             <HiOutlineDotsVertical />
           </motion.button>
+
           <AnimatePresence>
             {showMoreOptions && (
               <motion.div
@@ -201,6 +206,7 @@ const FloatingButtons: React.FC = () => {
           hoverBgColor="hover:bg-green-500"
           className="w-10 h-10 text-lg"
         />
+
         <SocialFloatingButton
           icon={<FaLinkedinIn />}
           label="LinkedIn"
@@ -209,14 +215,17 @@ const FloatingButtons: React.FC = () => {
           hoverBgColor="hover:bg-blue-800"
           className="w-10 h-10 text-lg"
         />
+
+        {/* Facebook (reemplaza Correo) */}
         <SocialFloatingButton
-          icon={<HiOutlineMail />}
-          label="Correo"
-          href="mailto:comercial@casagrandegeotecnia.com.pe"
-          bgColor="bg-red-500"
-          hoverBgColor="hover:bg-red-600"
+          icon={<FaFacebookF />}
+          label="Facebook"
+          href="https://www.facebook.com/" // <-- pon aquí tu link real
+          bgColor="bg-[#1877F2]"
+          hoverBgColor="hover:bg-[#166FE5]"
           className="w-10 h-10 text-lg"
         />
+
         <motion.div className="relative">
           <motion.button
             className="flex items-center justify-center w-10 h-10 rounded-full shadow-lg text-white text-lg bg-gray-700 hover:bg-gray-800 transition-all duration-300"
@@ -224,6 +233,7 @@ const FloatingButtons: React.FC = () => {
           >
             <HiOutlineDotsVertical />
           </motion.button>
+
           <AnimatePresence>
             {showMoreOptions && (
               <motion.div

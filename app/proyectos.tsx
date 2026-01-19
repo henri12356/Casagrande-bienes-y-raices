@@ -1,9 +1,9 @@
 /* eslint-disable @next/next/no-img-element */
 "use client";
 
-import React, { FC, useRef } from "react";
 import { motion } from "framer-motion";
 import Link from "next/link";
+import { FC, useRef } from "react";
 
 interface Proyecto {
   id: number;
@@ -22,68 +22,16 @@ interface Proyecto {
 const proyectosData: Proyecto[] = [
   {
     id: 1,
-    nombre: "Villa Sol 2",
+    nombre: "MACHAYHUYCCO",
     subtitulo: "Qorihuillca",
-    ubicacion: "Huamanga – Ayacucho",
-    precioDesdeSol: "S/ 16,000",
+    ubicacion: "Huamanga – Qorihuillca",
+    precioDesdeSol: "S/ 20,000",
     precioDesdeDolar: "",
-    imagenSrc: "villasol01.webp",
+    imagenSrc: "/MACHAYHUYCCOHERO.webp",
     etiqueta: "Proyecto",
     metrosLote: "200 m²",
     servicios: ["Agua", "Luz", "Acceso vehicular", "Entorno bioambiental"],
-    link: "/proyectos/villa-sol-2-qorihuillca",
-  },
-  {
-    id: 2,
-    nombre: "Pampaqocha",
-    subtitulo: "Qorihuillca",
-    ubicacion: "Huamanga – Ayacucho",
-    precioDesdeSol: "S/ 45,000",
-    precioDesdeDolar: "",
-    imagenSrc: "Pampaqocha01.webp",
-    etiqueta: "Proyecto",
-    metrosLote: "170 m²",
-    servicios: ["Agua", "Luz", "Acceso vehicular", "Entorno bioambiental"],
-    link: "/proyectos/pampaqocha-qorihuillca-170m2",
-  },
-  {
-    id: 3,
-    nombre: "Pampaqocha",
-    subtitulo: "Qorihuillca",
-    ubicacion: "Huamanga – Ayacucho",
-    precioDesdeSol: "S/ 68,000",
-    precioDesdeDolar: "",
-    imagenSrc: "Pampaqochasegundo03.webp",
-    etiqueta: "Proyecto",
-    metrosLote: "300 m²",
-    servicios: ["Agua", "Luz", "Acceso vehicular", "Entorno bioambiental"],
-    link: "/proyectos/pampaqocha-qorihuillca-300m2",
-  },
-  {
-    id: 4,
-    nombre: "Ccasera Qorihuillca",
-    subtitulo: "Qorihuillca",
-    ubicacion: "Huamanga – Ayacucho",
-    precioDesdeSol: "S/ 33,000",
-    precioDesdeDolar: "",
-    imagenSrc: "Ccasera04.webp",
-    etiqueta: "Proyecto",
-    metrosLote: "200 m²",
-    servicios: ["Agua", "Luz", "Acceso vehicular", "Entorno bioambiental"],
-    link: "/proyectos/casera-qorihuillca-200m2",
-  },
-  {
-    id: 5,
-    nombre: "Ccahuiñayoq",
-    subtitulo: "Qorihuillca",
-    ubicacion: "Huamanga, Ayacucho",
-    precioDesdeSol: "S/ 30,000",
-    precioDesdeDolar: "",
-    imagenSrc: "Ccahuiñayoq04.webp",
-    etiqueta: "Proyecto",
-    metrosLote: "1,200 m²",
-    servicios: ["Agua", "Luz", "Acceso vehicular", "Entorno bioambiental"],
-    link: "/proyectos/ccahuinnayoq-qorihuillca-1200m2",
+    link: "/propiedades/machayhuycco-ayacucho",
   },
 ];
 
