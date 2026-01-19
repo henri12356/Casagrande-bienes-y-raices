@@ -47,7 +47,7 @@
 
     "futuro": {
       "titulo": "Proyección del proyecto a futuro",
-      "imagen": "/prueba01.webp",
+      "imagen": "/MACHAYHUYCCOPROYECCION.jpg",
       "nota": "Vista referencial"
     },
 
@@ -67,10 +67,9 @@
 
     "galeria": {
       "fotos": [
-        "/MACHAYHUYCCOHERO.webp",
-        "/banner.webp",
-        "/prueba01.png",
-        "/prueba01.webp"
+        "/MACHAYHUYCCO01.jpg",
+        "/MACHAYHUYCCO02.jpg",
+        "/MACHAYHUYCCO03.jpg"
       ],
       "youtubeId": "uWzgyrh_UTI"
     },

@@ -443,7 +443,7 @@ export default async function ProyectoPage({
                   </div>
                 </div>
               </SectionAnimation>
-
+{/* 
               {proyecto.descuento?.imagen ? (
                 <SectionAnimation>
                   <div className="pt-10">
@@ -453,7 +453,7 @@ export default async function ProyectoPage({
                     />
                   </div>
                 </SectionAnimation>
-              ) : null}
+              ) : null} */}
 
               {/* =========================
                   ✅ UBICACIÓN: todo el bloque clickeable (Maps)
