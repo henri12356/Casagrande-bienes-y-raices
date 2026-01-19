@@ -328,21 +328,9 @@ export default async function ProyectoPage({
 
                     <Card className="mt-6 rounded-3xl border border-slate-200 bg-white p-8 shadow-[0_16px_45px_rgba(2,6,23,0.06)]">
                       <div className="flex flex-col gap-2 sm:flex-row sm:items-end sm:justify-between">
-                        <div>
-                          <p className="text-xl font-black text-slate-900">
-                            {proyecto.planos?.titulo ?? "Plano general"}
-                          </p>
-                          {proyecto.planos?.nota ? (
-                            <p className="mt-2 text-sm text-slate-600">
-                              {proyecto.planos.nota}
-                            </p>
-                          ) : null}
-                        </div>
+                      
 
-                        {/* etiqueta sutil */}
-                        <span className="mt-2 inline-flex w-fit items-center rounded-full bg-slate-100 px-4 py-2 text-xs font-extrabold text-slate-800">
-                          Abrir PDF
-                        </span>
+                       
                       </div>
 
                       <div className="mt-6 overflow-hidden rounded-3xl border border-slate-200 bg-slate-50">
