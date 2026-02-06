@@ -1,23 +1,32 @@
+// app/propiedades/[slug]/layout.tsx
 import type { Metadata } from "next";
-import { GoogleAnalytics } from "@next/third-parties/google";
+
+/**
+ * ✅ IMPORTANTE
+ * - NO incluyas GoogleAnalytics aquí (debe estar SOLO en app/layout.tsx)
+ * - Este layout es para SEO por propiedad: /propiedades/[slug]
+ */
 
 interface PropertyLayoutProps {
   children: React.ReactNode;
   params: Promise<{ slug: string }>;
 }
 
-// ✅ sin "/" al final
-const SITE_URL = "https://www.ayacuchoterrenos.com";
+// ✅ TU DOMINIO REAL (INMOBILIARIA)
+const SITE_URL = "https://www.casagrande-inmobilaria.com";
 
-const BRAND_NAME = "Compra y Venta de Terrenos Ayacucho";
-const ALT_BRAND = "Casagrande Bienes y Raíces";
+const BRAND_NAME = "Casagrande Bienes y Raíces";
+const ALT_BRAND = "Casagrande Inmobiliaria Ayacucho";
 const WHATSAPP = "+51916194372";
 const EMAIL = "u19217724@gmail.com";
+
+// ✅ OG fallback (debe existir en /public)
+const FALLBACK_OG = `${SITE_URL}/og-propiedades.jpg`;
 
 type PropertyMeta = {
   title: string;
   description: string;
-  keywords: string;
+  keywords: string | string[];
   image: string; // debe empezar con "/"
   canonical: string; // URL absoluta
   locationText: string;
@@ -30,7 +39,7 @@ type PropertyMeta = {
   };
   areaM2?: number;
   pricePEN?: number;
-  availability?: string;
+  availability?: string; // schema.org url
 };
 
 // ✅ Las llaves deben ser EXACTAMENTE el slug real (/propiedades/[slug])
@@ -38,12 +47,21 @@ const propiedadesMetadata = {
   "villa-sol-2-qorihuillca": {
     title: "Villa Sol 2 | Lotes en Qorihuillca, Ayacucho (desde 200 m²)",
     description:
-      "Villa Sol 2: lotes en Qorihuillca – Ayacucho desde 200 m². Ideal para vivienda, casa de campo o inversión. Agenda tu visita y conoce disponibilidad.",
-    keywords:
-      "lotes en qorihuillca, terrenos en ayacucho, venta de terrenos ayacucho, lotes ayacucho, terrenos en huamanga, comprar terreno ayacucho",
+      "Villa Sol 2: lotes en Ccorihuillca/Qorihuillca – Ayacucho desde 200 m². Ideal para vivienda, casa de campo o inversión. Agenda tu visita y revisa disponibilidad.",
+    keywords: [
+      "villa sol 2",
+      "lotes en qorihuillca",
+      "terrenos en ayacucho",
+      "venta de terrenos ayacucho",
+      "lotes ayacucho",
+      "terrenos en huamanga",
+      "comprar terreno ayacucho",
+      "inmobiliaria en ayacucho",
+      "casagrande bienes y raices",
+    ],
     image: "/villasol01.webp",
     canonical: `${SITE_URL}/propiedades/villa-sol-2-qorihuillca`,
-    locationText: "Qorihuillca, Huamanga – Ayacucho",
+    locationText: "Ccorihuillca / Qorihuillca, Huamanga – Ayacucho",
     address: {
       addressLocality: "Huamanga",
       addressRegion: "Ayacucho",
@@ -58,8 +76,15 @@ const propiedadesMetadata = {
     title: "Proyecto Esperanza | Terrenos en Ayacucho (Huamanga)",
     description:
       "Proyecto Esperanza: terrenos en Ayacucho con alta proyección de valorización. Opciones para inversión, vivienda o casa de campo. Solicita información y agenda visita.",
-    keywords:
-      "proyecto de terrenos en ayacucho, terrenos ayacucho, venta de lotes ayacucho, comprar terreno huamanga, lotes para casa de campo ayacucho",
+    keywords: [
+      "proyecto esperanza",
+      "terrenos ayacucho",
+      "venta de lotes ayacucho",
+      "comprar terreno huamanga",
+      "lotes para casa de campo ayacucho",
+      "inmobiliaria en ayacucho",
+      "casagrande bienes y raices",
+    ],
     image: "/images/proyectos/proyecto-esperanza.webp",
     canonical: `${SITE_URL}/propiedades/proyecto-esperanza`,
     locationText: "Huamanga – Ayacucho",
@@ -76,12 +101,19 @@ const propiedadesMetadata = {
   "casera-qorihuillca-200m2": {
     title: "Casera Qorihuillca 200 m² | Lotes en Ayacucho (Qorihuillca)",
     description:
-      "Lote Casera Qorihuillca de 200 m² en Ayacucho. Acceso vehicular y entorno tranquilo. Ideal para inversión o vivienda. Consulta precio y disponibilidad.",
-    keywords:
-      "casera qorihuillca, lote 200 m2 ayacucho, terrenos en qorihuillca, venta de terrenos en ayacucho, lotes huamanga",
+      "Lote Casera Ccorihuillca/Qorihuillca de 200 m² en Ayacucho. Acceso vehicular y entorno tranquilo. Ideal para inversión o vivienda. Consulta precio y disponibilidad.",
+    keywords: [
+      "casera qorihuillca",
+      "lote 200 m2 ayacucho",
+      "terrenos en qorihuillca",
+      "venta de terrenos en ayacucho",
+      "lotes huamanga",
+      "inmobiliaria en ayacucho",
+      "casagrande bienes y raices",
+    ],
     image: "/images/proyectos/casera-qorihuillca.webp",
     canonical: `${SITE_URL}/propiedades/casera-qorihuillca-200m2`,
-    locationText: "Qorihuillca, Huamanga – Ayacucho",
+    locationText: "Ccorihuillca / Qorihuillca, Huamanga – Ayacucho",
     address: {
       addressLocality: "Huamanga",
       addressRegion: "Ayacucho",
@@ -105,7 +137,8 @@ export async function generateMetadata({
     return {
       title: `Propiedad no encontrada | ${BRAND_NAME}`,
       description:
-        "La propiedad que buscas no está disponible. Revisa terrenos y lotes en Ayacucho (Qorihuillca y alrededores).",
+        "La propiedad que buscas no está disponible. Revisa terrenos y lotes en Ayacucho (Ccorihuillca/Qorihuillca y alrededores).",
+      alternates: { canonical: `${SITE_URL}/propiedades` },
       robots: { index: false, follow: false },
     };
   }
@@ -121,6 +154,11 @@ export async function generateMetadata({
     creator: BRAND_NAME,
     publisher: BRAND_NAME,
     category: "Real Estate",
+
+    alternates: {
+      canonical: data.canonical,
+      languages: { "es-PE": data.canonical },
+    },
 
     openGraph: {
       title: data.title,
@@ -146,10 +184,6 @@ export async function generateMetadata({
       title: data.title,
       description: data.description,
       images: [imageUrl],
-    },
-
-    alternates: {
-      canonical: data.canonical,
     },
 
     robots: {
@@ -184,7 +218,7 @@ export default async function PropertyLayout({
   const canonical = data?.canonical ?? `${SITE_URL}/propiedades/${slug}`;
   const imageUrl = data?.image
     ? `${SITE_URL}${data.image}`
-    : `${SITE_URL}/og-propiedades.jpg`;
+    : FALLBACK_OG;
 
   const schemaWebPage = {
     "@context": "https://schema.org",
@@ -205,7 +239,7 @@ export default async function PropertyLayout({
     "@context": "https://schema.org",
     "@type": "BreadcrumbList",
     itemListElement: [
-      { "@type": "ListItem", position: 1, name: "Inicio", item: SITE_URL },
+      { "@type": "ListItem", position: 1, name: BRAND_NAME, item: SITE_URL },
       {
         "@type": "ListItem",
         position: 2,
@@ -240,9 +274,8 @@ export default async function PropertyLayout({
           telephone: WHATSAPP,
           email: EMAIL,
           areaServed: [
+            { "@type": "AdministrativeArea", name: "Ayacucho" },
             { "@type": "City", name: "Huamanga" },
-            { "@type": "City", name: "Ayacucho" },
-            { "@type": "Country", name: "Perú" },
           ],
         },
 
@@ -274,7 +307,6 @@ export default async function PropertyLayout({
   return (
     <>
       {children}
-      <GoogleAnalytics gaId="G-7TJCWC5JMR" />
 
       <script
         type="application/ld+json"

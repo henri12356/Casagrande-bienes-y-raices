@@ -1,22 +1,28 @@
+// app/propiedades/layout.tsx
 import type { Metadata } from "next";
-import { GoogleAnalytics } from "@next/third-parties/google";
 
-const SITE_URL = "https://www.ayacuchoterrenos.com"; // ✅ sin "/" al final
-const CATALOG_PATH = "/propiedades"; // cambia a "/proyectos" si tu catálogo es /proyectos
+/**
+ * ✅ IMPORTANTE
+ * - NO pongas GoogleAnalytics aquí si ya lo tienes en app/layout.tsx
+ * - Este layout solo debe encargarse del SEO de /propiedades
+ */
+
+const SITE_URL = "https://www.casagrande-inmobilaria.com"; // ✅ tu dominio real
+const CATALOG_PATH = "/propiedades";
 const CANONICAL = `${SITE_URL}${CATALOG_PATH}`;
 
-const BRAND_NAME = "Compra y Venta de Terrenos Ayacucho";
-const ALT_BRAND = "Casagrande Bienes y Raíces";
+const BRAND_NAME = "Casagrande Bienes y Raíces"; // ✅ marca real
+const ALT_BRAND = "Casagrande Inmobiliaria Ayacucho";
 const WHATSAPP = "+51916194372";
 const EMAIL = "u19217724@gmail.com";
 
-// ✅ Imagen OG del catálogo (recomendado crearla en /public)
+// ✅ crea esta imagen en /public/og-propiedades.jpg (1200x630)
 const OG_IMAGE = `${SITE_URL}/og-propiedades.jpg`;
 
 export const metadata: Metadata = {
   title: "Propiedades en Ayacucho | Lotes, Terrenos y Proyectos",
   description:
-    "Catálogo de propiedades en Ayacucho: lotes y terrenos en Huamanga y Qorihuillca, proyectos para vivienda, casa de campo o inversión. Asesoría completa y procesos seguros. Agenda tu visita por WhatsApp.",
+    "Catálogo de propiedades en Ayacucho: lotes y terrenos en Huamanga y Ccorihuillca/Qorihuillca, proyectos para vivienda, casa de campo o inversión. Asesoría completa y procesos seguros. Agenda tu visita por WhatsApp.",
   keywords: [
     "propiedades ayacucho",
     "terrenos ayacucho",
@@ -25,7 +31,8 @@ export const metadata: Metadata = {
     "lotes en qorihuillca",
     "terrenos en huamanga",
     "proyectos inmobiliarios ayacucho",
-    "compra y venta de terrenos ayacucho",
+    "inmobiliaria en ayacucho",
+    "casagrande bienes y raices",
   ],
 
   authors: [{ name: BRAND_NAME }],
@@ -87,14 +94,18 @@ function clean<T>(obj: T): T {
   return JSON.parse(JSON.stringify(obj)) as T;
 }
 
-export default function PropiedadesLayout({ children }: { children: React.ReactNode }) {
+export default function PropiedadesLayout({
+  children,
+}: {
+  children: React.ReactNode;
+}) {
   const schemaCollectionPage = {
     "@context": "https://schema.org",
     "@type": "CollectionPage",
     "@id": `${CANONICAL}#collection`,
     name: "Propiedades en Ayacucho | Lotes, Terrenos y Proyectos",
     description:
-      "Catálogo de propiedades en Ayacucho: lotes, terrenos y proyectos en Huamanga y Qorihuillca para vivienda, casa de campo o inversión.",
+      "Catálogo de propiedades en Ayacucho: lotes, terrenos y proyectos en Huamanga y Ccorihuillca/Qorihuillca para vivienda, casa de campo o inversión.",
     url: CANONICAL,
     inLanguage: "es-PE",
     isPartOf: {
@@ -102,6 +113,11 @@ export default function PropiedadesLayout({ children }: { children: React.ReactN
       url: SITE_URL,
       name: BRAND_NAME,
     },
+    about: [
+      { "@type": "Thing", name: "Terrenos en Ayacucho" },
+      { "@type": "Thing", name: "Lotes en Qorihuillca" },
+      { "@type": "Thing", name: "Proyectos inmobiliarios en Ayacucho" },
+    ],
     mainEntity: {
       "@type": "RealEstateAgent",
       "@id": `${SITE_URL}#organization`,
@@ -111,10 +127,22 @@ export default function PropiedadesLayout({ children }: { children: React.ReactN
       telephone: WHATSAPP,
       email: EMAIL,
       areaServed: [
+        { "@type": "AdministrativeArea", name: "Ayacucho" },
         { "@type": "City", name: "Huamanga" },
-        { "@type": "City", name: "Ayacucho" },
-        { "@type": "Country", name: "Perú" },
       ],
+      address: {
+        "@type": "PostalAddress",
+        streetAddress: "Jirón Quinua 570",
+        addressLocality: "Huamanga",
+        addressRegion: "Ayacucho",
+        addressCountry: "PE",
+      },
+      contactPoint: {
+        "@type": "ContactPoint",
+        contactType: "sales",
+        telephone: WHATSAPP,
+        availableLanguage: ["es"],
+      },
     },
   };
 
@@ -122,17 +150,26 @@ export default function PropiedadesLayout({ children }: { children: React.ReactN
     "@context": "https://schema.org",
     "@type": "BreadcrumbList",
     itemListElement: [
-      { "@type": "ListItem", position: 1, name: "Inicio", item: SITE_URL },
-      { "@type": "ListItem", position: 2, name: "Propiedades", item: CANONICAL },
+      {
+        "@type": "ListItem",
+        position: 1,
+        name: BRAND_NAME,
+        item: SITE_URL,
+      },
+      {
+        "@type": "ListItem",
+        position: 2,
+        name: "Propiedades",
+        item: CANONICAL,
+      },
     ],
   };
 
   return (
     <>
       {children}
-      <GoogleAnalytics gaId="G-7TJCWC5JMR" />
 
-      {/* Schema Markup - CollectionPage */}
+      {/* ✅ Schema Markup - CollectionPage */}
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{
@@ -140,7 +177,7 @@ export default function PropiedadesLayout({ children }: { children: React.ReactN
         }}
       />
 
-      {/* Schema para Breadcrumb */}
+      {/* ✅ Schema Markup - BreadcrumbList */}
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{

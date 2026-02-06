@@ -1,9 +1,9 @@
 /* eslint-disable @next/next/no-img-element */
 "use client";
 
-import React, { FC, useEffect, useRef, useState } from "react";
 import { motion } from "framer-motion";
 import Link from "next/link";
+import React, { FC, useEffect, useRef, useState } from "react";
 
 interface Proyecto {
   id: number;
@@ -239,7 +239,7 @@ const Casas = () => {
   return (
     <section className="py-12 md:py-16 bg-slate-50">
       <div className="max-w-[1600px] mx-auto px-4 sm:px-6">
-        <div className="flex flex-col md:flex-row md:items-end md:justify-between gap-4 mb-6">
+        {/* <div className="flex flex-col md:flex-row md:items-end md:justify-between gap-4 mb-6">
           <div>
             <h2 className="text-3xl sm:text-4xl font-extrabold text-[#005BBB] leading-tight">Lotes en Ayacucho</h2>
           </div>
@@ -275,7 +275,7 @@ const Casas = () => {
               Ver más
             </Link>
           </div>
-        </div>
+        </div> */}
 
         <div
           ref={scrollContainerRef}

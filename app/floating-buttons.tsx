@@ -145,7 +145,7 @@ const FloatingButtons: React.FC = () => {
         <SocialFloatingButton
           icon={<FaWhatsapp />}
           label="Necesitas Asesoría?"
-          href="https://api.whatsapp.com/send/?phone=51934027727&text=Hola%2C+quiero+una+cotizaci%C3%B3n&type=phone_number&app_absent=0"
+          href="https://api.whatsapp.com/send/?phone=51916461291&text=Hola%2C+quiero+una+cotizaci%C3%B3n&type=phone_number&app_absent=0"
           bgColor="bg-green-400"
           hoverBgColor="hover:bg-green-500"
         />

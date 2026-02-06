@@ -108,7 +108,7 @@ const socialLinks: SocialLink[] = [
 
 const contactInfo: ContactInfoItemProps[] = [
   { text: "Ubicacion", href: "https://maps.app.goo.gl/oNfCpynqor7ykd756" },
-  { text: "Llámanos:  934 027 727", href: "https://api.whatsapp.com/send/?phone=51934027727&text=Hola%2C+quiero+una+cotizaci%C3%B3n&type=phone_number&app_absent=0" },
+  { text: "Llámanos:  916 461 291", href: "https://api.whatsapp.com/send/?phone=51916461291&text=Hola%2C+quiero+una+cotizaci%C3%B3n&type=phone_number&app_absent=0" },
 ];
 
 // -----------------------------
@@ -427,7 +427,7 @@ const DesktopMenu = ({
 
     <div className="hidden items-center space-x-4 md:flex lg:flex">
       <a
-        href="https://wa.me/51934027727?text=Hola,%20quiero%20una%20cotización"
+        href="https://wa.me/51916461291?text=Hola,%20quiero%20una%20cotización"
         target="_blank"
         rel="noopener noreferrer"
       >

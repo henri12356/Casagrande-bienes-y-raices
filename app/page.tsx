@@ -1,5 +1,4 @@
 import Blog from "./blog";
-import Casas from "./casas";
 import Comentario from "./comemtario";
 import Footer from "./footer";
 import Formulario from "./formulario";
@@ -16,7 +15,7 @@ export default function Home() {
       <HeroCarousel />
       <Proceso />
       <Proyectos />
-      <Casas />
+      {/* <Casas /> */}
       <Comentario />
       <Gana />
       <Formulario />
