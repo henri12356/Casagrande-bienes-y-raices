@@ -1,6 +1,83 @@
 [
  
-  
+  {
+    "slug": "cañones-ayacucho",
+    "tipo": "proyecto",
+    "titulo": "Cañones",
+    "subtitulo": "Qorihuillca",
+    "categoria": "Lotes",
+    "ubicacion": "Qorihuillca, Huamanga – Ayacucho",
+
+    "precioDesdeSol": "S/ 30,000",
+    "precioDesdeDolar": "",
+    "pagoContado": "S/ 2,000",
+
+    "imagen": "/villasol01.webp",
+    "etiquetas": [
+      "Cañones",
+      "Huamanga",
+      "Ayacucho",
+      "Naturaleza",
+      "Zona en crecimiento",
+      "Alta plusvalía",
+      "Acceso vehicular",
+      "Agua",
+      "Luz",
+      "Bioambiental"
+    ],
+
+    "descripcion": "Cañones es un proyecto de lotes en Qorihuillca – Huamanga, Ayacucho, pensado para quienes buscan tranquilidad, aire puro y una inversión con alta proyección. Rodeado de naturaleza y con accesos en mejora, es ideal para primera vivienda, casa de campo o inversión. Cuenta con agua, luz y acceso vehicular en una zona con crecimiento sostenido y gran potencial de valorización.",
+
+    "equipamiento": [
+      "Agua",
+      "Luz",
+      "Acceso vehicular",
+      "Entorno bioambiental ",
+      "Zona con proyección de valorización"
+    ],
+
+    "caracteristicas": [
+      { "label": "Área", "value": "200 m²" },
+      { "label": "Precio", "value": "S/ 30,000" },
+      { "label": "Uso", "value": "Vivienda / Casa de campo / Inversión" },
+      {
+        "label": "Servicios",
+        "value": "Agua, Luz y acceso vehicular"
+      },
+      {
+        "label": "Documentación",
+        "value": "Acta de transferencia + contrato privado (legalizable)"
+      },
+      {
+        "label": "Entorno",
+        "value": "Bioambiental"
+      },
+      {
+        "label": "Valorización",
+        "value": "Zona con alta proyección de crecimiento"
+      }
+    ],
+
+    "galeria": {
+      "fotos": ["/villasol02.webp", "/villasol03.webp", "/villasol04.webp"],
+      "youtubeId": ""
+    },
+
+    "ubicacionImagen": "/villasolmap.webp",
+    "mapsUrl": "https://earth.google.com/web/@-13.13418924,-74.25607544,3016.56377515a,206.96390993d,35y,83.83308131h,0t,0r/data=CgRCAggBMikKJwolCiExUmJOcjlkUmhlUGg4a2xRaWZSNmd3NG04RUlWVVFHOFEgAToDCgEwQgIIAEoICJbF8NIHEAE",
+
+    "descuento": {
+      "titulo": "Campaña activa: separa tu lote hoy y asegura tu precio preferencial",
+      "imagen": "/prueba01.webp"
+    },
+
+    "contacto": {
+      "whatsapp": "51970993246",
+      "telefono": "+51 970 993 246",
+      "direccion": "Jr. Quinua N° 570, Ayacucho",
+      "horario": "Lun–Dom 9:00 AM – 6:00 PM"
+    }
+  }
 
 
 
