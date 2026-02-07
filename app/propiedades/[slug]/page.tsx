@@ -184,13 +184,13 @@ export default async function ProyectoPage({
           <div className="relative bg-[#FFB200]">
             <div className="relative mx-auto max-w-[1400px] px-4 py-10">
               <div className="">
-                <div className="flex items-start gap-10 justify-between">
+                <div className=" md:flex  items-start gap-10 justify-between">
                   <div className="">
-                    <p className="text-sm font-extrabold text-slate-900/80">
+                    <p className="text-[16px] font-extrabold text-slate-900/80">
                       {proyecto.subtitulo}
                     </p>
 
-                    <h2 className="mt-1 text-5xl font-black tracking-tight text-slate-900 md:text-6xl">
+                    <h2 className="mt-1  text-[32px] font-black tracking-tight text-slate-900 md:text-6xl">
                       {proyecto.titulo ?? ""}
                     </h2>
 
@@ -219,8 +219,8 @@ export default async function ProyectoPage({
                     </div>
                   </div>
 
-                  <div className="flex w-full max-w-[520px]">
-                    <div className="flex w-full max-w-[520px] gap-3 rounded-3xl bg-[#0B6FB6] px-6 py-5 text-white shadow-[0_26px_70px_rgba(2,6,23,0.35)] ring-1 ring-white/10">
+                  <div className="flex pt-10 w-full max-w-[520px]">
+                    <div className="flex max-md:flex-col w-full max-w-[520px] gap-3 rounded-3xl bg-[#0B6FB6] px-6 py-5 text-white shadow-[0_26px_70px_rgba(2,6,23,0.35)] ring-1 ring-white/10">
                       {/* CONTADO */}
                       <div className="flex flex-1 flex-col justify-center rounded-2xl bg-white/15 px-5 py-4 ring-1 ring-white/10">
                         <p className="text-xs font-extrabold uppercase text-white/80">

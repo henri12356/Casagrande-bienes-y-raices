@@ -74,7 +74,97 @@
       "youtubeId": "uWzgyrh_UTI"
     },
 
-    "ubicacionImagen": "/MACHAYHUYCCOMAPA.webp",
+    "ubicacionImagen": "/asdd.png",
+    "mapsUrl": "https://earth.google.com/web/@-13.13722963,-74.25812709,3013.54027912a,236.7314107d,35y,3.62678004h,0t,0r/data=CgRCAggBMikKJwolCiExUmJOcjlkUmhlUGg4a2xRaWZSNmd3NG04RUlWVVFHOFEgAToDCgExQgIIAEoHCPqE1VoQAQ?authuser=1",
+
+    "descuento": {
+      "titulo": "Campaña activa: separa tu lote hoy y asegura precio preferencial",
+      "imagen": "/prueba01.webp"
+    },
+
+    "contacto": {
+      "whatsapp": "51970993246",
+      "telefono": "+51 970 993 246",
+      "direccion": "Jr. Quinua N° 570, Ayacucho",
+      "horario": "Lun–Dom 9:00 AM – 6:00 PM"
+    }
+  },
+  {
+    "slug": "machayhuycco-ayacucho01",
+    "tipo": "proyecto",
+    "titulo": "MACHAYHUYCCOaaaa",
+    "subtitulo": "Ayacucho",
+    "categoria": "Lotes",
+    "ubicacion": "Machayhuycco, Huamanga – Ayacucho",
+
+    "precioDesdeSol": "S/ 20000",
+    "precioDesdeDolar": "",
+    "pagoContado": "S/ 2,000",
+
+    "imagen": "/MACHAYHUYCCO02.jpg",
+    "etiquetas": [
+      "Ayacucho",
+      "Alta plusvalía",
+      "Acceso vehicular",
+      "Servicios básicos",
+      "Entorno natural",
+      "Proyección de valorización"
+    ],
+
+    "descripcion": "MACHAYHUYCCO es un proyecto de lotes en Huamanga – Ayacucho, ideal para vivienda, casa de campo o inversión. Cuenta con acceso vehicular y servicios básicos (agua y luz), en un entorno natural con alta proyección de valorización. Proyecto pensado para compra segura, con acompañamiento durante el proceso de separación y adquisición.",
+
+    "equipamiento": [
+      "Acceso vehicular",
+      "Agua",
+      "Luz",
+      "Entorno natural",
+      "Proyección de valorización"
+    ],
+
+   "planos": {
+  "titulo": "Plano general del proyecto",
+  "imagen": "/MACHAYHUYCCOPLANO.webp",
+  "pdf": "/MACHAYHUYCCOPLANO.pdf",
+  "nota": "Plano referencial"
+}
+,
+
+    "lotes": {
+      "titulo": "Plano de disponibilidad (vendidos marcados)",
+      "imagen": "/MACHAYHUYCCO02.jpg",
+      "nota": "Actualizado: 16/01/2026"
+    },
+
+    "futuro": {
+      "titulo": "Proyección del proyecto a futuro",
+      "imagen": "/MACHAYHUYCCOPROYECCION.jpg",
+      "nota": "Vista referencial"
+    },
+
+    "caracteristicas": [
+      { "label": "Área típica", "value": "200 m²" },
+      { "label": "Lotes especiales", "value": "206 m², 217 m² y 298 m²" },
+      { "label": "Área total del proyecto", "value": "3793.54 m²" },
+      { "label": "Precio por lote", "value": "S/ 20,000" },
+      { "label": "Tipo de uso", "value": "Vivienda / casa de campo / inversión" },
+      {
+        "label": "Servicios",
+        "value": "Agua y luz (según disponibilidad y expansión de zona)"
+      },
+      { "label": "Accesos", "value": "Acceso vehicular y rutas en mejora" },
+      { "label": "Entorno", "value": "Zona natural con proyección de valorización" }
+    ],
+
+    "galeria": {
+      "fotos": [
+        "/MACHAYHUYCCO01.jpg",
+        "/MACHAYHUYCCO02.jpg",
+        "/MACHAYHUYCCO03.jpg"
+      ],
+      "youtubeId": "uWzgyrh_UTI"
+    },
+
+    "ubicacionImagen": "/asdd.png",
     "mapsUrl": "https://earth.google.com/web/@-13.13722963,-74.25812709,3013.54027912a,236.7314107d,35y,3.62678004h,0t,0r/data=CgRCAggBMikKJwolCiExUmJOcjlkUmhlUGg4a2xRaWZSNmd3NG04RUlWVVFHOFEgAToDCgExQgIIAEoHCPqE1VoQAQ?authuser=1",
 
     "descuento": {
