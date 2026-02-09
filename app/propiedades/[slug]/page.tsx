@@ -12,7 +12,7 @@ import GaleriaTabs from "../galeria-tabs";
 import SectionAnimation from "../section-animation";
 import StickyContactoCardCentenario from "../sticky-contacto-card";
 import EquipamientoGrid from "../equipamiento-grid";
-import DescuentoBanner from "../descuento-banner";
+// import DescuentoBanner from "../descuento-banner"; // (lo tienes comentado abajo)
 import Navbar from "@/app/navbar";
 import Footer from "@/app/footer";
 
@@ -22,7 +22,7 @@ type Promo = { titulo: string; detalle?: string };
 type BloquePlanos = {
   titulo?: string;
   imagen: string; // ✅ IMAGEN (NO SE TOCA)
-  pdf?: string; // ✅ NUEVO: PDF a abrir al hacer click
+  pdf?: string; // ✅ PDF a abrir al hacer click
   nota?: string;
 };
 
@@ -54,11 +54,18 @@ type Proyecto = {
   promociones?: Promo[];
   equipamiento?: string[];
 
-  // ✅ SOLO PLANO GENERAL (sin disponibilidad)
+  // ✅ plano general
   planos?: BloquePlanos;
 
-  // ✅ FUTURO (proyección)
+  // ✅ futuro
   futuro?: BloqueFuturo;
+
+  // ✅ NUEVO: para mostrar en el título principal (total + disponibles + actualizado)
+  stockLotes?: {
+    total?: number;
+    restantes?: number;
+    actualizado?: string; // "16/01/2026" o "2026-01-16"
+  };
 
   galeria: {
     fotos: string[];
@@ -88,7 +95,9 @@ function softReq(ok: boolean, msg: string) {
 }
 
 function onlyNumber(v: string) {
-  return String(v ?? "").replace(/s\/|S\/|\s|,/gi, "").trim();
+  return String(v ?? "")
+    .replace(/s\/|S\/|\s|,/gi, "")
+    .trim();
 }
 
 export default async function ProyectoPage({
@@ -105,17 +114,17 @@ export default async function ProyectoPage({
   softReq(!!proyecto.ubicacion, `Falta ubicacion en JSON: ${proyecto.slug}`);
   softReq(
     !!proyecto.precioDesdeSol,
-    `Falta precioDesdeSol en JSON: ${proyecto.slug}`
+    `Falta precioDesdeSol en JSON: ${proyecto.slug}`,
   );
   softReq(
     !!proyecto.galeria?.fotos?.length,
-    `Faltan fotos en galeria: ${proyecto.slug}`
+    `Faltan fotos en galeria: ${proyecto.slug}`,
   );
   softReq(
     !!proyecto.contacto?.whatsapp &&
       !!proyecto.contacto?.telefono &&
       !!proyecto.contacto?.direccion,
-    `Falta contacto (whatsapp/telefono/direccion) en JSON: ${proyecto.slug}`
+    `Falta contacto (whatsapp/telefono/direccion) en JSON: ${proyecto.slug}`,
   );
 
   const fotos = proyecto.galeria.fotos;
@@ -124,7 +133,7 @@ export default async function ProyectoPage({
   const promos = proyecto.promociones ?? [];
   const precioNum = onlyNumber(proyecto.precioDesdeSol);
 
-  // ✅ SOLO UNA FOTO: PLANO GENERAL (VISIBLE)
+  // ✅ PLANO GENERAL (VISIBLE)
   const planoImg = proyecto.planos?.imagen;
 
   // ✅ LINK PDF (AL CLICK) — si no hay pdf, cae a la imagen
@@ -132,6 +141,11 @@ export default async function ProyectoPage({
 
   // ✅ FUTURO (proyección)
   const futuroImg = proyecto.futuro?.imagen;
+
+  // ✅ DATOS DE LOTES (para el título)
+  const totalLotes = proyecto.stockLotes?.total;
+  const disponibles = proyecto.stockLotes?.restantes;
+  const actualizado = proyecto.stockLotes?.actualizado;
 
   return (
     <>
@@ -184,15 +198,31 @@ export default async function ProyectoPage({
           <div className="relative bg-[#FFB200]">
             <div className="relative mx-auto max-w-[1400px] px-4 py-10">
               <div className="">
-                <div className=" md:flex  items-start gap-10 justify-between">
+                <div className="md:flex items-start gap-10 justify-between">
                   <div className="">
                     <p className="text-[16px] font-extrabold text-slate-900/80">
                       {proyecto.subtitulo}
                     </p>
 
-                    <h2 className="mt-1  text-[32px] font-black tracking-tight text-slate-900 md:text-6xl">
+                    <h2 className="mt-1 text-[32px] font-black tracking-tight text-slate-900 md:text-6xl">
                       {proyecto.titulo ?? ""}
                     </h2>
+
+                    {/* ✅ NUEVO: BADGES DE LOTES (TOTAL + DISPONIBLES + ACTUALIZADO) */}
+                    {proyecto.tipo === "proyecto" && totalLotes != null ? (
+                      <div className="mt-3 flex flex-wrap items-center gap-2">
+                        <span className="inline-flex items-center rounded-full border border-slate-900/15 bg-white/80 px-4 py-2 text-xs font-extrabold text-slate-900 shadow-sm ring-1 ring-black/5 backdrop-blur">
+                          {totalLotes} lotes
+                        </span>
+
+                        {disponibles != null ? (
+                          <span className="inline-flex items-center rounded-full border border-[#01338C]/30 bg-white/80 px-4 py-2 text-xs font-extrabold text-[#01338C] shadow-sm ring-1 ring-black/5 backdrop-blur">
+                            {disponibles} disponibles
+                          </span>
+                        ) : null}
+
+                      </div>
+                    ) : null}
 
                     <div className="mt-5 flex flex-col gap-3 text-sm text-slate-900 sm:flex-row sm:items-center sm:gap-8">
                       {/* ✅ UBICACION: link a Maps */}
@@ -219,8 +249,9 @@ export default async function ProyectoPage({
                     </div>
                   </div>
 
+                  {/* ✅ PRECIO (NO TOCAR) */}
                   <div className="flex pt-10 w-full max-w-[520px]">
-                    <div className="flex max-md:flex-col w-full max-w-[520px] gap-3 rounded-3xl bg-[#0B6FB6] px-6 py-5 text-white shadow-[0_26px_70px_rgba(2,6,23,0.35)] ring-1 ring-white/10">
+                    <div className="flex max-md:flex-col w-full max-w-[520px] gap-3 rounded-3xl bg-[#01338C] px-6 py-5 text-white shadow-[0_26px_70px_rgba(2,6,23,0.35)] ring-1 ring-white/10">
                       {/* CONTADO */}
                       <div className="flex flex-1 flex-col justify-center rounded-2xl bg-white/15 px-5 py-4 ring-1 ring-white/10">
                         <p className="text-xs font-extrabold uppercase text-white/80">
@@ -244,7 +275,7 @@ export default async function ProyectoPage({
                             Crédito
                           </p>
 
-                          <p className="mt-1 text-4xl font-black leading-none">
+                        <p className="mt-1 text-4xl font-black leading-none">
                             {proyecto.pagoContado}
                           </p>
                         </div>
@@ -269,7 +300,7 @@ export default async function ProyectoPage({
               {proyecto.descripcion ? (
                 <SectionAnimation>
                   <Card className="rounded-3xl border border-slate-200 bg-white p-7 shadow-[0_16px_45px_rgba(2,6,23,0.06)]">
-                    <h2 className="text-3xl font-extrabold text-[#0B6FB6]">
+                    <h2 className="text-3xl font-extrabold text-[#01338C]">
                       Descripción
                     </h2>
                     <p className="mt-4 text-base leading-relaxed text-slate-700">
@@ -290,7 +321,7 @@ export default async function ProyectoPage({
               {promos.length ? (
                 <SectionAnimation>
                   <div className="pt-10">
-                    <h2 className="text-3xl font-extrabold text-[#0B6FB6]">
+                    <h2 className="text-3xl font-extrabold text-[#01338C]">
                       Promociones
                     </h2>
                     <div className="mt-6 grid gap-4">
@@ -314,112 +345,9 @@ export default async function ProyectoPage({
                 </SectionAnimation>
               ) : null}
 
-              {/* =========================
-                  ✅ PLANOS (SOLO PLANO GENERAL)
-                  ✅ CLICK ABRE PDF (SIN TOCAR IMAGEN)
-                  ✅ MEJOR DISEÑO (NO “cuadrado”)
-              ========================= */}
-              {proyecto.tipo === "proyecto" && planoImg ? (
-                <SectionAnimation>
-                  <div className="pt-10">
-                    <h2 className="text-3xl font-extrabold text-[#0B6FB6]">
-                      Plano del proyecto
-                    </h2>
-
-                    <Card className="mt-6 rounded-3xl border border-slate-200 bg-white p-8 shadow-[0_16px_45px_rgba(2,6,23,0.06)]">
-                      <div className="flex flex-col gap-2 sm:flex-row sm:items-end sm:justify-between">
-                      
-
-                       
-                      </div>
-
-                      <div className="mt-6 overflow-hidden rounded-3xl border border-slate-200 bg-slate-50">
-                        <a
-                          href={planoHref}
-                          target="_blank"
-                          rel="noreferrer"
-                          className="group block"
-                          title="Abrir plano en PDF"
-                        >
-                          {/* ✅ aspecto más “portal” y no cuadrado */}
-                          <div className="relative aspect-[16/7] w-full">
-                            {/* overlay suave */}
-                            <div className="absolute inset-0 z-10 bg-gradient-to-t from-black/25 via-transparent to-transparent opacity-0 transition-opacity duration-300 group-hover:opacity-100" />
-
-                            <Image
-                              src={planoImg}
-                              alt={`Plano del proyecto - ${proyecto.titulo}`}
-                              fill
-                              className="object-cover transition-transform duration-500 group-hover:scale-[1.03]"
-                              sizes="100vw"
-                            />
-
-                            {/* label flotante (sutil) */}
-                            <div className="absolute bottom-4 left-4 z-20 inline-flex items-center rounded-full bg-white/90 px-4 py-2 text-xs font-extrabold text-slate-900 shadow-sm ring-1 ring-black/5">
-                              Ver plano (PDF)
-                            </div>
-                          </div>
-                        </a>
-                      </div>
-                    </Card>
-                  </div>
-                </SectionAnimation>
-              ) : null}
-
-              {/* =========================
-                  ✅ FUTURO (PROYECCIÓN)
-                  ✅ MEJOR DISEÑO (NO “cuadrado”)
-              ========================= */}
-              {proyecto.tipo === "proyecto" && futuroImg ? (
-                <SectionAnimation>
-                  <div className="pt-10">
-                    <Card className="rounded-3xl border border-slate-200 bg-white p-9 shadow-[0_18px_55px_rgba(2,6,23,0.07)]">
-                      <div className="flex flex-col gap-2 sm:flex-row sm:items-end sm:justify-between">
-                        <div>
-                          <h2 className="text-3xl font-extrabold text-[#0B6FB6]">
-                            {proyecto.futuro?.titulo ?? "Así se verá a futuro"}
-                          </h2>
-                          {proyecto.futuro?.nota ? (
-                            <p className="mt-2 text-sm text-slate-600">
-                              {proyecto.futuro.nota}
-                            </p>
-                          ) : null}
-                        </div>
-
-                        <span className="mt-2 inline-flex w-fit items-center rounded-full bg-[#FFB200] px-4 py-2 text-xs font-extrabold text-slate-900">
-                          Vista referencial
-                        </span>
-                      </div>
-
-                      <div className="mt-7 overflow-hidden rounded-3xl border border-slate-200 bg-slate-50">
-                        <a
-                          href={futuroImg}
-                          target="_blank"
-                          rel="noreferrer"
-                          className="group block"
-                          title="Abrir en tamaño completo"
-                        >
-                          {/* ✅ panorámico */}
-                          <div className="relative aspect-[21/9] w-full">
-                            <div className="absolute inset-0 z-10 bg-gradient-to-t from-black/25 via-transparent to-transparent opacity-0 transition-opacity duration-300 group-hover:opacity-100" />
-                            <Image
-                              src={futuroImg}
-                              alt={`Vista futura - ${proyecto.titulo}`}
-                              fill
-                              className="object-cover transition-transform duration-500 group-hover:scale-[1.03]"
-                              sizes="100vw"
-                            />
-                          </div>
-                        </a>
-                      </div>
-                    </Card>
-                  </div>
-                </SectionAnimation>
-              ) : null}
-
               <SectionAnimation>
                 <div className="pt-10">
-                  <h2 className="text-3xl font-extrabold text-[#0B6FB6]">
+                  <h2 className="text-3xl font-extrabold text-[#01338C]">
                     Galería de Fotos y Videos
                   </h2>
                   <div className="mt-6">
@@ -431,25 +359,52 @@ export default async function ProyectoPage({
                   </div>
                 </div>
               </SectionAnimation>
-{/* 
-              {proyecto.descuento?.imagen ? (
+
+              {/* ✅ PLANOS (SOLO PLANO GENERAL) */}
+              {proyecto.tipo === "proyecto" && planoImg ? (
                 <SectionAnimation>
                   <div className="pt-10">
-                    <DescuentoBanner
-                      titulo={proyecto.descuento.titulo}
-                      imagen={proyecto.descuento.imagen}
-                    />
+                    <h2 className="text-3xl font-extrabold text-[#01338C]">
+                      Plano del proyecto
+                    </h2>
+
+                    <Card className="mt-6 rounded-3xl border border-slate-200 bg-white p-8 shadow-[0_16px_45px_rgba(2,6,23,0.06)]">
+                      <div className="mt-6 overflow-hidden rounded-3xl border border-slate-200 bg-slate-50">
+                        <a
+                          href={planoHref}
+                          target="_blank"
+                          rel="noreferrer"
+                          className="group block"
+                          title="Ver plano del proyecto"
+                        >
+                          <div className="relative aspect-[16/7] w-full overflow-hidden">
+                            <Image
+                              src={planoImg}
+                              alt={`Plano del proyecto - ${proyecto.titulo}`}
+                              fill
+                              className="object-cover transition-transform duration-500 group-hover:scale-105"
+                              sizes="100vw"
+                            />
+
+                            <div className="absolute inset-0 bg-black/60 opacity-0 transition-opacity duration-300 group-hover:opacity-100" />
+
+                            <div className="pointer-events-none absolute inset-0 flex items-center justify-center">
+                              <div className="flex items-center gap-2 rounded-full bg-white px-6 py-3 text-sm font-extrabold text-[#01338C] opacity-0 scale-90 transition-all duration-300 group-hover:opacity-100 group-hover:scale-100">
+                                Ver plano
+                              </div>
+                            </div>
+                          </div>
+                        </a>
+                      </div>
+                    </Card>
                   </div>
                 </SectionAnimation>
-              ) : null} */}
+              ) : null}
 
-              {/* =========================
-                  ✅ UBICACIÓN: todo el bloque clickeable (Maps)
-                  ✅ MEJOR DISEÑO (NO “cuadrado”)
-              ========================= */}
+              {/* ✅ UBICACIÓN */}
               <SectionAnimation>
                 <div className="pt-10">
-                  <h2 className="text-3xl font-extrabold text-[#0B6FB6]">
+                  <h2 className="text-3xl font-extrabold text-[#01338C]">
                     Ubicación Perfecta
                   </h2>
 

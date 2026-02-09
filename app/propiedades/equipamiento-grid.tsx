@@ -51,7 +51,7 @@ export default function EquipamientoGrid({ items }: { items: string[] }) {
   return (
     <section className="pt-8">
       {/* ✅ Fondo suave de sección (mantiene tus colores) */}
-      <div className="rounded-[32px] bg-[#F3F7FB] p-6 ring-1 ring-slate-200/70 sm:p-8">
+      <div className=" p-6sm:p-8">
         <div className="flex flex-col gap-2 sm:flex-row sm:items-end sm:justify-between">
           <div>
             <h2 className="text-3xl font-extrabold text-[#01338C] sm:text-4xl">
@@ -88,8 +88,6 @@ export default function EquipamientoGrid({ items }: { items: string[] }) {
                   {t}
                 </p>
 
-                {/* ✅ detalle mínimo para que se vea más “portal” */}
-                <div className="mx-auto mt-4 h-1.5 w-10 rounded-full bg-[#01338C]/15" />
               </Card>
             );
           })}

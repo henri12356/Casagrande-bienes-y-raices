@@ -122,7 +122,7 @@ export default async function ProyectoPage({
               <div className="mx-auto h-full max-w-7xl px-4">
                 <div className="flex h-full flex-col justify-end pb-10 md:pb-12">
                   <div className="mt-4 flex flex-wrap gap-2">
-                    <Badge className="rounded-full bg-[#FFB200] px-4 py-2 text-xs font-extrabold text-slate-900 hover:bg-[#ffbf2e]">
+                    <Badge className="rounded-full bg-[#FFB200] px-4 py-2 text-xs font-extrabold text-[$slate-900] hover:bg-[#ffbf2e]">
                       LOTES
                     </Badge>
 
@@ -213,7 +213,7 @@ export default async function ProyectoPage({
               {proyecto.descripcion ? (
                 <SectionAnimation>
                   <Card className="rounded-3xl border border-slate-200 bg-white p-7 shadow-[0_16px_45px_rgba(2,6,23,0.06)]">
-                    <h2 className="text-3xl font-extrabold text-[#0B6FB6]">
+                    <h2 className="text-3xl font-extrabold text-[#01338C]">
                       Descripción
                     </h2>
                     <p className="mt-4 text-base leading-relaxed text-slate-700">
@@ -234,7 +234,7 @@ export default async function ProyectoPage({
               {promos.length ? (
                 <SectionAnimation>
                   <div className="pt-10">
-                    <h2 className="text-3xl font-extrabold text-[#0B6FB6]">
+                    <h2 className="text-3xl font-extrabold text-[#01338C]">
                       Promociones
                     </h2>
                     <div className="mt-6 grid gap-4">
@@ -259,7 +259,7 @@ export default async function ProyectoPage({
               {proyecto.caracteristicas?.length ? (
                 <SectionAnimation>
                   <div className="pt-10">
-                    <h2 className="text-3xl font-extrabold text-[#0B6FB6]">
+                    <h2 className="text-3xl font-extrabold text-[#01338C]">
                       Características
                     </h2>
                     <div className="mt-6 overflow-hidden rounded-3xl border border-slate-200 bg-white shadow-[0_16px_45px_rgba(2,6,23,0.06)]">
@@ -285,7 +285,7 @@ export default async function ProyectoPage({
 
               <SectionAnimation>
                 <div className="pt-10">
-                  <h2 className="text-3xl font-extrabold text-[#0B6FB6]">
+                  <h2 className="text-3xl font-extrabold text-[#01338C]">
                     Galería de Fotos y Videos
                   </h2>
                   <div className="mt-6">
@@ -296,7 +296,7 @@ export default async function ProyectoPage({
 
               <SectionAnimation>
                 <div className="pt-10">
-                  <h2 className="text-3xl font-extrabold text-[#0B6FB6]">
+                  <h2 className="text-3xl font-extrabold text-[#01338C]">
                     Ubicación
                   </h2>
 
