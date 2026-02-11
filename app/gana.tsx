@@ -1,8 +1,7 @@
 "use client";
-import Image from "next/image";
 import { motion } from "framer-motion";
-import React from "react";
 import { Bebas_Neue } from "next/font/google";
+import Image from "next/image";
 const bebas = Bebas_Neue({
   weight: "400",
   subsets: ["latin"],
@@ -42,9 +41,9 @@ const Gana = () => {
           className="flex justify-center"
         >
           <Image
-            src="/gana.svg"
+            src="/MASCOTA.svg"
             alt="Persona refiriendo amigos"
-            width={500}
+            width={400}
             height={400}
             className="object-contain drop-shadow-lg"
             priority

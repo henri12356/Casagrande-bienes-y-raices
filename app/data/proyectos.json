@@ -1,7 +1,6 @@
 [
- 
   {
-    "slug": "cañones-ayacucho",
+    "slug": "cañones-ayacucho-qorihuillca",
     "tipo": "proyecto",
     "titulo": "Cañones",
     "subtitulo": "Qorihuillca",
@@ -12,7 +11,7 @@
     "precioDesdeDolar": "",
     "pagoContado": "S/ 2,000",
 
-    "imagen": "/villasol01.webp",
+    "imagen": "/CAÑONES/CAÑONES03.webp",
     "etiquetas": [
       "Cañones",
       "Huamanga",
@@ -58,12 +57,19 @@
       }
     ],
 
+    "planos": {
+      "titulo": "Plano del proyecto",
+      "imagen": "/CAÑONES/CAÑONESPLANO.webp",
+      "pdf": "/CAÑONES/CAÑONESPLANO.pdf",
+      "nota": "Haz clic para ver el plano en grande"
+    },
+
     "galeria": {
-      "fotos": ["/villasol02.webp", "/villasol03.webp", "/villasol04.webp"],
+      "fotos": ["/CAÑONES/CAÑONES03.webp", "/CAÑONES/CAÑONES01.webp"],
       "youtubeId": ""
     },
 
-    "ubicacionImagen": "/villasolmap.webp",
+    "ubicacionImagen": "/hero03.webp",
     "mapsUrl": "https://earth.google.com/web/@-13.13418924,-74.25607544,3016.56377515a,206.96390993d,35y,83.83308131h,0t,0r/data=CgRCAggBMikKJwolCiExUmJOcjlkUmhlUGg4a2xRaWZSNmd3NG04RUlWVVFHOFEgAToDCgEwQgIIAEoICJbF8NIHEAE",
 
     "descuento": {
@@ -75,10 +81,7 @@
       "whatsapp": "51970993246",
       "telefono": "+51 970 993 246",
       "direccion": "Jr. Quinua N° 570, Ayacucho",
-       "horario": "Lun–Sab 9:00 AM – 7:00 PM"
+      "horario": "Lun–Sab 9:00 AM – 7:00 PM"
     }
   }
-
-
-
 ]

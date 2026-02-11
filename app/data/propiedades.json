@@ -149,7 +149,7 @@
       ],
       "youtubeId": "uWzgyrh_UTI"
     },
-    "ubicacionImagen": "/BUNGAVILIAMAPA.webp",
+    "ubicacionImagen": "/hero03.webp",
     "mapsUrl": "https://earth.google.com/web/@-13.13722963,-74.25812709,3013.54027912a,236.7314107d,35y,3.62678004h,0t,0r/data=CgRCAggBMikKJwolCiExUmJOcjlkUmhlUGg4a2xRaWZSNmd3NG04RUlWVVFHOFEgAToDCgExQgIIAEoHCPqE1VoQAQ?authuser=1",
     "descuento": {
       "titulo": "Campaña activa: separa tu lote hoy y asegura precio preferencial",
@@ -172,7 +172,7 @@
     "precioDesdeSol": "S/ 16000",
     "precioDesdeDolar": "",
     "pagoContado": "S/ 2,000",
-    "imagen": "/HUANUPATAHERO.webp",
+    "imagen": "/HUANUPATA/HUANUPATA01.webp",
     "etiquetas": [
       "Ayacucho",
       "Alta plusvalía",
@@ -190,14 +190,14 @@
       "Proyección de valorización"
     ],
     "stockLotes": {
-      "total": 0,
-      "restantes": 0,
+      "total": 15,
+      "restantes": 3,
       "actualizado": "16/01/2026"
     },
     "planos": {
       "titulo": "Plano general del proyecto",
-      "imagen": "/hero03.webp",
-      "pdf": "/BUNGAVILIA/BUNGAVILIAPLANO.pdf",
+      "imagen": "/HUANUPATA/HUANUPATAPLANO.webp",
+      "pdf": "/HUANUPATA/HUANUPATAPLANO.pdf",
       "nota": "Plano referencial"
     },
     "lotes": {
@@ -225,13 +225,13 @@
     ],
     "galeria": {
       "fotos": [
-        "/MACHAYHUYCCO01.jpg",
-        "/MACHAYHUYCCO02.jpg",
-        "/MACHAYHUYCCO03.jpg"
+        "/HUANUPATA/HUANUPATA04.webp",
+        "/HUANUPATA/HUANUPATA02.webp",
+        "/HUANUPATA/HUANUPATA03.webp"
       ],
-      "youtubeId": "uWzgyrh_UTI"
+      "youtubeId": ""
     },
-    "ubicacionImagen": "/MACHAYHUYCCOMAPA.webp",
+    "ubicacionImagen": "/hero03.webp",
     "mapsUrl": "https://earth.google.com/web/@-13.13722963,-74.25812709,3013.54027912a,236.7314107d,35y,3.62678004h,0t,0r/data=CgRCAggBMikKJwolCiExUmJOcjlkUmhlUGg4a2xRaWZSNmd3NG04RUlWVVFHOFEgAToDCgExQgIIAEoHCPqE1VoQAQ?authuser=1",
     "descuento": {
       "titulo": "Campaña activa: separa tu lote hoy y asegura precio preferencial",
