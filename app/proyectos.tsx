@@ -22,18 +22,45 @@ interface Proyecto {
 const proyectosData: Proyecto[] = [
   {
     id: 1,
-    nombre: "MACHAYHUYCCO",
-    subtitulo: "Qorihuillca",
+    nombre: "CAMPO REAL",
+    subtitulo: "MACHAYHUAYCCO",
     ubicacion: "Huamanga – Qorihuillca",
     precioDesdeSol: "S/ 20,000",
     precioDesdeDolar: "",
-    imagenSrc: "/MACHAYHUYCCOHERO.webp",
+    imagenSrc: "/MACHAYHUAYCCO/MACHAYHUAYCCO03.webp",
     etiqueta: "Proyecto",
     metrosLote: "200 m²",
     servicios: ["Agua", "Luz", "Acceso vehicular", "Entorno bioambiental"],
     link: "/propiedades/machayhuycco-ayacucho",
   },
+  {
+    id: 2,
+    nombre: "BUNGAVILIA",
+    subtitulo: "Ccorihuillca ",
+    ubicacion: "Huamanga – Qorihuillca",
+    precioDesdeSol: "S/ 20,000",
+    precioDesdeDolar: "",
+    imagenSrc: "/BUNGAVILIA/BUNGAVILIA01.webp",
+    etiqueta: "Proyecto",
+    metrosLote: "200 m²",
+    servicios: ["Agua", "Luz", "Acceso vehicular", "Entorno bioambiental"],
+    link: "/propiedades/bungavilia-ayacucho",
+  },
+  {
+    id: 3,
+    nombre: "HUANUPATA",
+    subtitulo: "Ccorihuillca ",
+    ubicacion: "Huamanga – Qorihuillca",
+    precioDesdeSol: "S/ 16,000",
+    precioDesdeDolar: "",
+    imagenSrc: "/HUANUPATA/HUANUPATA01.webp",
+    etiqueta: "Proyecto",
+    metrosLote: "200 m²",
+    servicios: ["Agua", "Luz", "Acceso vehicular", "Entorno bioambiental"],
+    link: "/propiedades/huanupata",
+  },
 ];
+
 
 const SvgIcon: FC<{ path: string; className?: string }> = ({ path, className }) => (
   <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" className={className ?? "w-4 h-4 shrink-0"}>

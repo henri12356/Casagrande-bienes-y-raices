@@ -116,6 +116,9 @@ const contactInfo: ContactInfoItemProps[] = [
 // -----------------------------
 const ciudadesProyectos = [
   "MACHAYHUYCCO",
+  "BUNGAVILIA",
+  "HUANUPATA",
+  "CAÑONES",
   
 ];
 
@@ -125,12 +128,45 @@ const proyectosDestacados: ProyectoDestacado[] = [
     id: 1,
     tipo: "PROYECTO",
     ciudad: "MACHAYHUYCCO",
-    nombre: "MACHAYHUYCCO",
+    nombre: "CAMPO REAL",
     descripcion: "Naturaleza, aire puro y alta plusvalía en Qorihuillca.",
     precioDesde: "S/ 20,000",
     badgeColor: "bg-[#FFB200]",
-    imagen: "/MACHAYHUYCCOHERO.webp",
+    imagen: "/MACHAYHUAYCCO/MACHAYHUAYCCO03.webp",
     href: "/propiedades/machayhuycco-ayacucho",
+  },
+   {
+    id: 2,
+    tipo: "PROYECTO",
+    ciudad: "BUNGAVILIA",
+    nombre: "BUNGAVILIA",
+    descripcion: "Naturaleza, con servicios basicos y alta plusvalía en Qorihuillca.",
+    precioDesde: "S/ 20,000",
+    badgeColor: "bg-[#FFB200]",
+    imagen: "/BUNGAVILIA/BUNGAVILIA01.webp",
+    href: "/propiedades/bungavilia-ayacucho",
+  },
+   {
+    id: 3,
+    tipo: "PROYECTO",
+    ciudad: "HUANUPATA",
+    nombre: "HUANUPATA",
+    descripcion: "Naturaleza, con servicios basicos y alta plusvalía en Qorihuillca.",
+    precioDesde: "S/ 16,000",
+    badgeColor: "bg-[#FFB200]",
+    imagen: "/HUANUPATA/HUANUPATA01.webp",
+    href: "/propiedades/huanupata",
+  },
+   {
+    id: 4,
+    tipo: "LOTES",
+    ciudad: "CAÑONES",
+    nombre: "CAÑONES",
+    descripcion: "Naturaleza, con servicios basicos y alta plusvalía en Qorihuillca.",
+    precioDesde: "S/ 30,000",
+    badgeColor: "bg-[#FFB200]",
+    imagen: "/CAÑONES/CAÑONES01.webp",
+    href: "/proyectos/cañones-ayacucho-qorihuillca",
   },
 ];
 
