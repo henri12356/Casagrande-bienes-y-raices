@@ -12,7 +12,7 @@ interface PropertyLayoutProps {
   params: Promise<{ slug: string }>;
 }
 
-// ✅ TU DOMINIO REAL (INMOBILIARIA)
+// ✅ TU DOMINIO REAL (INMOBILIARIA) — revisa el typo si aplica
 const SITE_URL = "https://www.casagrande-inmobilaria.com";
 
 const BRAND_NAME = "Casagrande Bienes y Raíces";
@@ -22,6 +22,25 @@ const EMAIL = "u19217724@gmail.com";
 
 // ✅ OG fallback (debe existir en /public)
 const FALLBACK_OG = `${SITE_URL}/og-propiedades.jpg`;
+
+type ProjectJson = {
+  slug: string;
+  tipo: string;
+  titulo: string;
+  subtitulo: string;
+  categoria: string;
+  ubicacion: string;
+  precioDesdeSol: string;
+  precioDesdeDolar?: string;
+  pagoContado?: string;
+  imagen: string;
+  etiquetas?: string[];
+  descripcion: string;
+  equipamiento?: string[];
+  stockLotes?: { total: number; restantes: number; actualizado?: string };
+  caracteristicas?: Array<{ label: string; value: string }>;
+  mapsUrl?: string;
+};
 
 type PropertyMeta = {
   title: string;
@@ -42,88 +61,194 @@ type PropertyMeta = {
   availability?: string; // schema.org url
 };
 
-// ✅ Las llaves deben ser EXACTAMENTE el slug real (/propiedades/[slug])
-const propiedadesMetadata = {
-  "villa-sol-2-qorihuillca": {
-    title: "Villa Sol 2 | Lotes en Qorihuillca, Ayacucho (desde 200 m²)",
-    description:
-      "Villa Sol 2: lotes en Ccorihuillca/Qorihuillca – Ayacucho desde 200 m². Ideal para vivienda, casa de campo o inversión. Agenda tu visita y revisa disponibilidad.",
-    keywords: [
-      "villa sol 2",
-      "lotes en qorihuillca",
-      "terrenos en ayacucho",
-      "venta de terrenos ayacucho",
-      "lotes ayacucho",
-      "terrenos en huamanga",
-      "comprar terreno ayacucho",
-      "inmobiliaria en ayacucho",
-      "casagrande bienes y raices",
+const proyectosJson: ProjectJson[] = [
+  {
+    slug: "machayhuycco-ayacucho",
+    tipo: "proyecto",
+    titulo: "CAMPO REAL",
+    subtitulo: "Ayacucho",
+    categoria: "Lotes",
+    ubicacion: "Machayhuaycco , Huamanga – Ayacucho",
+    precioDesdeSol: "S/ 20000",
+    precioDesdeDolar: "",
+    pagoContado: "S/ 2,000",
+    imagen: "/MACHAYHUAYCCO/MACHAYHUAYCCOHERO.webp",
+    etiquetas: [
+      "Alta plusvalía",
+      "Acceso vehicular",
+      "Servicios básicos",
+      "Entorno natural",
+      "Proyección de valorización",
     ],
-    image: "/villasol01.webp",
-    canonical: `${SITE_URL}/propiedades/villa-sol-2-qorihuillca`,
-    locationText: "Ccorihuillca / Qorihuillca, Huamanga – Ayacucho",
-    address: {
-      addressLocality: "Huamanga",
-      addressRegion: "Ayacucho",
-      addressCountry: "PE",
-    },
-    areaM2: 200,
-    pricePEN: 19000,
-    availability: "https://schema.org/InStock",
+    descripcion:
+      "MACHAYHUYCCO es un proyecto de lotes en Huamanga – Ayacucho, ideal para vivienda, casa de campo o inversión. Cuenta con acceso vehicular y servicios básicos (agua y luz), en un entorno natural con alta proyección de valorización. Proyecto pensado para compra segura, con acompañamiento durante el proceso de separación y adquisición.",
+    stockLotes: { total: 18, restantes: 12, actualizado: "16/01/2026" },
+    caracteristicas: [
+      { label: "Área típica", value: "200 m²" },
+      { label: "Lotes especiales", value: "206 m², 217 m² y 298 m²" },
+      { label: "Área total del proyecto", value: "3793.54 m²" },
+      { label: "Precio por lote", value: "S/ 20,000" },
+      { label: "Tipo de uso", value: "Vivienda / casa de campo / inversión" },
+      {
+        label: "Servicios",
+        value: "Agua y luz (según disponibilidad y expansión de zona)",
+      },
+      { label: "Accesos", value: "Acceso vehicular y rutas en mejora" },
+      { label: "Entorno", value: "Zona natural con proyección de valorización" },
+    ],
   },
+  {
+    slug: "bungavilia-ayacucho",
+    tipo: "proyecto",
+    titulo: "BUGAMBILIAS",
+    subtitulo: "Ayacucho",
+    categoria: "Lotes",
+    ubicacion: "Bungavilia, Huamanga – Ayacucho",
+    precioDesdeSol: "S/ 20000",
+    precioDesdeDolar: "",
+    pagoContado: "S/ 2,000",
+    imagen: "/BUNGAVILIA/BUNGAVILIAHERO.webp",
+    etiquetas: [
+      "Ayacucho",
+      "Alta plusvalía",
+      "Acceso vehicular",
+      "Servicios básicos",
+      "Entorno natural",
+      "Proyección de valorización",
+    ],
+    descripcion:
+      "BUNGAVILIA es un proyecto de lotes en Huamanga – Ayacucho, ideal para vivienda, casa de campo o inversión. Cuenta con acceso vehicular y servicios básicos (agua y luz), en un entorno natural con alta proyección de valorización. Proyecto pensado para compra segura, con acompañamiento durante el proceso de separación y adquisición.",
+    stockLotes: { total: 20, restantes: 4, actualizado: "16/01/2026" },
+    caracteristicas: [
+      { label: "Área típica", value: "220 m²" },
+      { label: "Lotes especiales", value: "220 m², 220 m² y 298 m²" },
+      { label: "Área total del proyecto", value: "3793.54 m²" },
+      { label: "Precio por lote", value: "S/ 20,000" },
+      { label: "Tipo de uso", value: "Vivienda / casa de campo / inversión" },
+      {
+        label: "Servicios",
+        value: "Agua y luz (según disponibilidad y expansión de zona)",
+      },
+      { label: "Accesos", value: "Acceso vehicular y rutas en mejora" },
+      { label: "Entorno", value: "Zona natural con proyección de valorización" },
+    ],
+  },
+  {
+    slug: "huanupata",
+    tipo: "proyecto",
+    titulo: "HUANUPATA",
+    subtitulo: "Ayacucho",
+    categoria: "Lotes",
+    ubicacion: "Huanupata, Huamanga – Ayacucho",
+    precioDesdeSol: "S/ 16000",
+    precioDesdeDolar: "",
+    pagoContado: "S/ 2,000",
+    imagen: "/HUANUPATA/HUANUPATA01.webp",
+    etiquetas: [
+      "Ayacucho",
+      "Alta plusvalía",
+      "Acceso vehicular",
+      "Servicios básicos",
+      "Entorno natural",
+      "Proyección de valorización",
+    ],
+    descripcion:
+      "HUANUPATA es un proyecto de lotes en Huamanga – Ayacucho, ideal para vivienda, casa de campo o inversión. Cuenta con acceso vehicular y servicios básicos (agua y luz), en un entorno natural con alta proyección de valorización. Proyecto pensado para compra segura, con acompañamiento durante el proceso de separación y adquisición.",
+    stockLotes: { total: 15, restantes: 3, actualizado: "16/01/2026" },
+    caracteristicas: [
+      { label: "Área típica", value: "200 m²" },
+      { label: "Lotes especiales", value: "200 m², 217 m² y 298 m²" },
+      { label: "Área total del proyecto", value: "3793.54 m²" },
+      { label: "Precio por lote", value: "S/ 16,000" },
+      { label: "Tipo de uso", value: "Vivienda / casa de campo / inversión" },
+      {
+        label: "Servicios",
+        value: "Agua y luz (según disponibilidad y expansión de zona)",
+      },
+      { label: "Accesos", value: "Acceso vehicular y rutas en mejora" },
+      { label: "Entorno", value: "Zona natural con proyección de valorización" },
+    ],
+  },
+];
 
-  "proyecto-esperanza": {
-    title: "Proyecto Esperanza | Terrenos en Ayacucho (Huamanga)",
-    description:
-      "Proyecto Esperanza: terrenos en Ayacucho con alta proyección de valorización. Opciones para inversión, vivienda o casa de campo. Solicita información y agenda visita.",
-    keywords: [
-      "proyecto esperanza",
-      "terrenos ayacucho",
-      "venta de lotes ayacucho",
-      "comprar terreno huamanga",
-      "lotes para casa de campo ayacucho",
-      "inmobiliaria en ayacucho",
-      "casagrande bienes y raices",
-    ],
-    image: "/images/proyectos/proyecto-esperanza.webp",
-    canonical: `${SITE_URL}/propiedades/proyecto-esperanza`,
-    locationText: "Huamanga – Ayacucho",
-    address: {
-      addressLocality: "Huamanga",
-      addressRegion: "Ayacucho",
-      addressCountry: "PE",
-    },
-    areaM2: 370,
-    pricePEN: 49000,
-    availability: "https://schema.org/InStock",
-  },
+// ---------------- helpers ----------------
+function toNumberFromMoneyPEN(input?: string): number | undefined {
+  if (!input) return undefined;
+  // "S/ 20,000" | "S/ 20000" | "20000"
+  const cleaned = input
+    .replace(/s\/\s*/gi, "")
+    .replace(/[^\d.]/g, ""); // deja dígitos y punto
+  if (!cleaned) return undefined;
+  const n = Number(cleaned);
+  return Number.isFinite(n) ? n : undefined;
+}
 
-  "casera-qorihuillca-200m2": {
-    title: "Casera Qorihuillca 200 m² | Lotes en Ayacucho (Qorihuillca)",
-    description:
-      "Lote Casera Ccorihuillca/Qorihuillca de 200 m² en Ayacucho. Acceso vehicular y entorno tranquilo. Ideal para inversión o vivienda. Consulta precio y disponibilidad.",
-    keywords: [
-      "casera qorihuillca",
-      "lote 200 m2 ayacucho",
-      "terrenos en qorihuillca",
-      "venta de terrenos en ayacucho",
-      "lotes huamanga",
-      "inmobiliaria en ayacucho",
-      "casagrande bienes y raices",
-    ],
-    image: "/images/proyectos/casera-qorihuillca.webp",
-    canonical: `${SITE_URL}/propiedades/casera-qorihuillca-200m2`,
-    locationText: "Ccorihuillca / Qorihuillca, Huamanga – Ayacucho",
+function areaFromCaracteristicas(
+  caracteristicas?: Array<{ label: string; value: string }>
+): number | undefined {
+  const area = caracteristicas?.find((c) =>
+    c.label.toLowerCase().includes("área típica")
+  )?.value;
+  if (!area) return undefined;
+  const m = area.match(/(\d+(\.\d+)?)/);
+  if (!m) return undefined;
+  const n = Number(m[1]);
+  return Number.isFinite(n) ? n : undefined;
+}
+
+function keywordsFromProject(p: ProjectJson): string[] {
+  const base = [
+    p.titulo.toLowerCase(),
+    "terrenos en ayacucho",
+    "lotes ayacucho",
+    "venta de lotes ayacucho",
+    "terrenos en huamanga",
+    "inmobiliaria en ayacucho",
+    "casagrande bienes y raices",
+  ];
+
+  const extra = (p.etiquetas ?? []).map((x) => x.toLowerCase());
+  const ubic = [
+    ...(p.ubicacion ? [p.ubicacion.toLowerCase()] : []),
+    ...(p.subtitulo ? [p.subtitulo.toLowerCase()] : []),
+  ];
+
+  // dedupe simple
+  return Array.from(new Set([...base, ...extra, ...ubic])).filter(Boolean);
+}
+
+function makeMetaFromProject(p: ProjectJson): PropertyMeta {
+  const pricePEN = toNumberFromMoneyPEN(p.precioDesdeSol);
+  const areaM2 = areaFromCaracteristicas(p.caracteristicas);
+  const restantes = p.stockLotes?.restantes ?? 0;
+  const availability =
+    restantes > 0 ? "https://schema.org/InStock" : "https://schema.org/SoldOut";
+
+  const title = `${p.titulo} | Lotes en ${p.subtitulo} (${p.ubicacion})`;
+  const description = p.descripcion;
+
+  return {
+    title,
+    description,
+    keywords: keywordsFromProject(p),
+    image: p.imagen?.startsWith("/") ? p.imagen : `/${p.imagen}`,
+    canonical: `${SITE_URL}/propiedades/${p.slug}`,
+    locationText: p.ubicacion,
     address: {
       addressLocality: "Huamanga",
       addressRegion: "Ayacucho",
       addressCountry: "PE",
     },
-    areaM2: 200,
-    pricePEN: 33000,
-    availability: "https://schema.org/InStock",
-  },
-} satisfies Record<string, PropertyMeta>;
+    areaM2,
+    pricePEN,
+    availability,
+  };
+}
+
+// ✅ Slug => meta
+const propiedadesMetadata = Object.fromEntries(
+  proyectosJson.map((p) => [p.slug, makeMetaFromProject(p)])
+) satisfies Record<string, PropertyMeta>;
 
 type PropertySlug = keyof typeof propiedadesMetadata;
 
@@ -137,7 +262,7 @@ export async function generateMetadata({
     return {
       title: `Propiedad no encontrada | ${BRAND_NAME}`,
       description:
-        "La propiedad que buscas no está disponible. Revisa terrenos y lotes en Ayacucho (Ccorihuillca/Qorihuillca y alrededores).",
+        "La propiedad que buscas no está disponible. Revisa terrenos y lotes en Ayacucho (Huamanga y alrededores).",
       alternates: { canonical: `${SITE_URL}/propiedades` },
       robots: { index: false, follow: false },
     };
@@ -216,9 +341,7 @@ export default async function PropertyLayout({
   const data = propiedadesMetadata[slug as PropertySlug];
 
   const canonical = data?.canonical ?? `${SITE_URL}/propiedades/${slug}`;
-  const imageUrl = data?.image
-    ? `${SITE_URL}${data.image}`
-    : FALLBACK_OG;
+  const imageUrl = data?.image ? `${SITE_URL}${data.image}` : FALLBACK_OG;
 
   const schemaWebPage = {
     "@context": "https://schema.org",

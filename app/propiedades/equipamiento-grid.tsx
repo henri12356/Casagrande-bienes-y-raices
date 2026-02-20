@@ -1,17 +1,17 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { Card } from "@/components/ui/card";
 import {
-  FileCheck2,
-  Lightbulb,
-  Trees,
   Bike,
-  ShieldCheck,
-  Droplets,
-  Zap,
-  Waypoints,
   Car,
-  TrendingUp,
+  Droplets,
+  FileCheck2,
   Leaf,
+  Lightbulb,
+  ShieldCheck,
+  Trees,
+  TrendingUp,
+  Waypoints,
+  Zap,
 } from "lucide-react";
 
 const ICONS: Record<string, any> = {
@@ -51,7 +51,7 @@ export default function EquipamientoGrid({ items }: { items: string[] }) {
   return (
     <section className="pt-8">
       {/* ✅ Fondo suave de sección (mantiene tus colores) */}
-      <div className=" p-6sm:p-8">
+      <div className=" p-6 sm:p-8">
         <div className="flex flex-col gap-2 sm:flex-row sm:items-end sm:justify-between">
           <div>
             <h2 className="text-3xl font-extrabold text-[#01338C] sm:text-4xl">
@@ -73,7 +73,7 @@ export default function EquipamientoGrid({ items }: { items: string[] }) {
                 key={t}
                 className={[
                   // ✅ Un poco más grande + mejor presencia
-                  "group rounded-3xl border border-slate-200/60 bg-[#F1F7FF] p-7 text-center",
+                  "  p-7 text-center",
                   // ✅ sombra leve y hover limpio (sin “ux/ui” raro)
                   "shadow-[0_10px_26px_rgba(2,6,23,0.06)] transition",
                   "hover:-translate-y-0.5 hover:shadow-[0_16px_40px_rgba(2,6,23,0.10)]",

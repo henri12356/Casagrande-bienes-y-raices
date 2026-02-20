@@ -5,7 +5,7 @@ import { useEffect, useState } from "react";
 import {
   FaArrowRight,
   FaFacebookF,
-  FaLinkedinIn,
+  FaTiktok,
   FaWhatsapp,
 } from "react-icons/fa";
 import { HiOutlineDotsVertical } from "react-icons/hi";
@@ -150,15 +150,16 @@ const FloatingButtons: React.FC = () => {
           hoverBgColor="hover:bg-green-500"
         />
 
+        {/* ✅ TikTok (reemplaza LinkedIn) */}
         <SocialFloatingButton
-          icon={<FaLinkedinIn />}
-          label="LinkedIn"
-          href="https://www.linkedin.com/company/casagrande-geotecnia-y-concreto/about/"
-          bgColor="bg-blue-700"
-          hoverBgColor="hover:bg-[#0A66C2]"
+          icon={<FaTiktok />}
+          label="TikTok"
+          href="https://www.tiktok.com/@casagrandeinmb.24"
+          bgColor="bg-black"
+          hoverBgColor="hover:bg-neutral-800"
         />
 
-        {/* Facebook (reemplaza Correo) */}
+        {/* Facebook */}
         <SocialFloatingButton
           icon={<FaFacebookF />}
           label="Facebook"
@@ -207,16 +208,17 @@ const FloatingButtons: React.FC = () => {
           className="w-10 h-10 text-lg"
         />
 
+        {/* ✅ TikTok (reemplaza LinkedIn) */}
         <SocialFloatingButton
-          icon={<FaLinkedinIn />}
-          label="LinkedIn"
-          href="https://www.linkedin.com/in/henri-delacruz/"
-          bgColor="bg-blue-700"
-          hoverBgColor="hover:bg-blue-800"
+          icon={<FaTiktok />}
+          label="TikTok"
+          href="https://www.tiktok.com/@casagrandeinmb.24"
+          bgColor="bg-black"
+          hoverBgColor="hover:bg-neutral-800"
           className="w-10 h-10 text-lg"
         />
 
-        {/* Facebook (reemplaza Correo) */}
+        {/* Facebook */}
         <SocialFloatingButton
           icon={<FaFacebookF />}
           label="Facebook"

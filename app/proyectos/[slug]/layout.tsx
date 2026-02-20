@@ -23,6 +23,52 @@ const EMAIL = "u19217724@gmail.com";
 // ✅ OG fallback (debe existir en /public)
 const FALLBACK_OG = `${SITE_URL}/og-proyectos.jpg`;
 
+type ProjectJson = {
+  slug: string;
+  tipo: string;
+  titulo: string;
+  subtitulo: string;
+  categoria: string;
+  ubicacion: string;
+
+  precioDesdeSol?: string;
+  precioDesdeDolar?: string;
+  pagoContado?: string;
+
+  imagen: string;
+  etiquetas?: string[];
+  descripcion: string;
+
+  equipamiento?: string[];
+  caracteristicas?: Array<{ label: string; value: string }>;
+
+  planos?: {
+    titulo?: string;
+    imagen?: string;
+    pdf?: string;
+    nota?: string;
+  };
+
+  galeria?: {
+    fotos?: string[];
+    youtubeId?: string;
+  };
+
+  ubicacionImagen?: string;
+  mapsUrl?: string;
+
+  descuento?: { titulo?: string; imagen?: string };
+
+  contacto?: {
+    whatsapp?: string;
+    telefono?: string;
+    direccion?: string;
+    horario?: string;
+  };
+
+  stockLotes?: { total: number; restantes: number; actualizado?: string };
+};
+
 type ProjectMeta = {
   title: string;
   description: string;
@@ -42,102 +88,228 @@ type ProjectMeta = {
   availability?: string;
 };
 
-// ✅ Las llaves deben ser EXACTAMENTE el slug real (/proyectos/[slug])
-const proyectosMetadata = {
-  "villa-sol-2-qorihuillca": {
-    title: "Villa Sol 2 | Lotes en Qorihuillca, Ayacucho (desde 200 m²)",
-    description:
-      "Villa Sol 2: lotes en Ccorihuillca/Qorihuillca – Ayacucho desde 200 m². Ideal para vivienda, casa de campo o inversión. Agenda tu visita y revisa disponibilidad.",
-    keywords: [
-      "villa sol 2",
-      "lotes en qorihuillca",
-      "terrenos en ayacucho",
-      "venta de terrenos ayacucho",
-      "lotes ayacucho",
-      "terrenos en huamanga",
-      "comprar terreno ayacucho",
-      "inmobiliaria en ayacucho",
-      "casagrande bienes y raices",
+// ✅ TU JSON (si quieres, muévelo luego a /data/proyectos.ts)
+const proyectosJson: ProjectJson[] = [
+  {
+    slug: "cañones-ayacucho-qorihuillca",
+    tipo: "proyecto",
+    titulo: "Cañones",
+    subtitulo: "Qorihuillca",
+    categoria: "Lotes",
+    ubicacion: "Qorihuillca, Huamanga – Ayacucho",
+
+    precioDesdeSol: "S/ 30,000",
+    precioDesdeDolar: "",
+    pagoContado: "S/ 2,000",
+
+    imagen: "/CAÑONES/CAÑONES03.webp",
+    etiquetas: [
+      "Cañones",
+      "Huamanga",
+      "Ayacucho",
+      "Naturaleza",
+      "Zona en crecimiento",
+      "Alta plusvalía",
+      "Acceso vehicular",
+      "Agua",
+      "Luz",
+      "Bioambiental",
     ],
-    image: "/villasol01.webp",
-    canonical: `${SITE_URL}/proyectos/villa-sol-2-qorihuillca`,
-    locationText: "Ccorihuillca / Qorihuillca, Huamanga – Ayacucho",
+
+    descripcion:
+      "Cañones es un proyecto de lotes en Qorihuillca – Huamanga, Ayacucho, pensado para quienes buscan tranquilidad, aire puro y una inversión con alta proyección. Rodeado de naturaleza y con accesos en mejora, es ideal para primera vivienda, casa de campo o inversión. Cuenta con agua, luz y acceso vehicular en una zona con crecimiento sostenido y gran potencial de valorización.",
+
+    equipamiento: [
+      "Agua",
+      "Luz",
+      "Acceso vehicular",
+      "Entorno bioambiental ",
+      "Zona con proyección de valorización",
+    ],
+
+    caracteristicas: [
+      { label: "Área", value: "200 m²" },
+      { label: "Precio", value: "S/ 30,000" },
+      { label: "Uso", value: "Vivienda / Casa de campo / Inversión" },
+      { label: "Servicios", value: "Agua, Luz y acceso vehicular" },
+      {
+        label: "Documentación",
+        value: "Acta de transferencia + contrato privado (legalizable)",
+      },
+      { label: "Entorno", value: "Bioambiental" },
+      { label: "Valorización", value: "Zona con alta proyección de crecimiento" },
+    ],
+
+    planos: {
+      titulo: "Plano del proyecto",
+      imagen: "/CAÑONES/CAÑONESPLANO.webp",
+      pdf: "/CAÑONES/CAÑONESPLANO.pdf",
+      nota: "Haz clic para ver el plano en grande",
+    },
+
+    galeria: {
+      fotos: ["/CAÑONES/CAÑONES03.webp", "/CAÑONES/CAÑONES01.webp"],
+      youtubeId: "",
+    },
+
+    ubicacionImagen: "/hero03.webp",
+    mapsUrl:
+      "https://www.google.com/maps/place/13%C2%B008'06.3%22S+74%C2%B014'49.4%22W/@-13.135378,-74.2473034,243m/data=!3m1!1e3!4m4!3m3!8m2!3d-13.135083!4d-74.247058?entry=ttu&g_ep=EgoyMDI2MDIxMS4wIKXMDSoASAFQAw%3D%3D",
+
+    descuento: {
+      titulo: "Campaña activa: separa tu lote hoy y asegura tu precio preferencial",
+      imagen: "/prueba01.webp",
+    },
+
+    contacto: {
+      whatsapp: "51970993246",
+      telefono: "+51 970 993 246",
+      direccion: "Jr. Quinua N° 570, Ayacucho",
+      horario: "Lun–Sab 9:00 AM – 7:00 PM",
+    },
+  },
+];
+
+// ---------------- helpers ----------------
+function normalizeSlug(input: string) {
+  const decoded = (() => {
+    try {
+      return decodeURIComponent(input);
+    } catch {
+      return input;
+    }
+  })();
+
+  return decoded.trim().toLowerCase().normalize("NFC");
+}
+
+function slugAscii(input: string) {
+  return normalizeSlug(input)
+    .replace(/ñ/g, "n")
+    .normalize("NFD")
+    .replace(/[\u0300-\u036f]/g, "")
+    .replace(/[^a-z0-9-]/g, "-")
+    .replace(/-+/g, "-")
+    .replace(/^-|-$/g, "");
+}
+
+function toNumberFromMoneyPEN(input?: string): number | undefined {
+  if (!input) return undefined;
+  const cleaned = input.replace(/s\/\s*/gi, "").replace(/[^\d.]/g, "");
+  if (!cleaned) return undefined;
+  const n = Number(cleaned);
+  return Number.isFinite(n) ? n : undefined;
+}
+
+function areaFromCaracteristicas(
+  caracteristicas?: Array<{ label: string; value: string }>
+): number | undefined {
+  if (!caracteristicas?.length) return undefined;
+
+  const item = caracteristicas.find((c) =>
+    c.label.toLowerCase().includes("área")
+  );
+  const val = item?.value;
+  if (!val) return undefined;
+
+  const m = val.match(/(\d+(\.\d+)?)/);
+  if (!m) return undefined;
+
+  const n = Number(m[1]);
+  return Number.isFinite(n) ? n : undefined;
+}
+
+function keywordsFromProject(p: ProjectJson): string[] {
+  const base = [
+    p.titulo.toLowerCase(),
+    `lotes en ${p.subtitulo}`.toLowerCase(),
+    "terrenos en ayacucho",
+    "lotes ayacucho",
+    "venta de lotes ayacucho",
+    "terrenos en huamanga",
+    "inmobiliaria en ayacucho",
+    "casagrande bienes y raices",
+  ];
+
+  const extra = (p.etiquetas ?? []).map((x) => x.toLowerCase().trim());
+  const ubic = p.ubicacion ? [p.ubicacion.toLowerCase()] : [];
+
+  return Array.from(new Set([...base, ...extra, ...ubic])).filter(Boolean);
+}
+
+function availabilityFromStock(p: ProjectJson): string {
+  const restantes = p.stockLotes?.restantes;
+  if (typeof restantes === "number") {
+    return restantes > 0
+      ? "https://schema.org/InStock"
+      : "https://schema.org/SoldOut";
+  }
+  return "https://schema.org/InStock";
+}
+
+function makeMetaFromProject(p: ProjectJson): ProjectMeta {
+  const pricePEN = toNumberFromMoneyPEN(p.precioDesdeSol);
+  const areaM2 = areaFromCaracteristicas(p.caracteristicas);
+
+  const titleParts = [
+    `${p.titulo} | Lotes en ${p.subtitulo}, Ayacucho`,
+    areaM2 ? `(${areaM2} m²)` : null,
+    p.precioDesdeSol ? `(desde ${p.precioDesdeSol})` : null,
+  ].filter(Boolean);
+
+  return {
+    title: titleParts.join(" "),
+    description: p.descripcion,
+    keywords: keywordsFromProject(p),
+    image: p.imagen?.startsWith("/") ? p.imagen : `/${p.imagen}`,
+    canonical: `${SITE_URL}/proyectos/${p.slug}`,
+    locationText: p.ubicacion,
     address: {
       addressLocality: "Huamanga",
       addressRegion: "Ayacucho",
       addressCountry: "PE",
     },
-    areaM2: 200,
-    pricePEN: 19000,
-    availability: "https://schema.org/InStock",
-  },
+    areaM2,
+    pricePEN,
+    availability: availabilityFromStock(p),
+  };
+}
 
-  "proyecto-esperanza": {
-    title: "Proyecto Esperanza | Terrenos en Ayacucho (Huamanga)",
-    description:
-      "Proyecto Esperanza: terrenos en Ayacucho con alta proyección de valorización. Opciones para inversión, vivienda o casa de campo. Solicita información y agenda visita.",
-    keywords: [
-      "proyecto esperanza",
-      "terrenos ayacucho",
-      "venta de lotes ayacucho",
-      "comprar terreno huamanga",
-      "lotes para casa de campo ayacucho",
-      "inmobiliaria en ayacucho",
-      "casagrande bienes y raices",
-    ],
-    image: "/images/proyectos/proyecto-esperanza.webp",
-    canonical: `${SITE_URL}/proyectos/proyecto-esperanza`,
-    locationText: "Huamanga – Ayacucho",
-    address: {
-      addressLocality: "Huamanga",
-      addressRegion: "Ayacucho",
-      addressCountry: "PE",
-    },
-    areaM2: 370,
-    pricePEN: 49000,
-    availability: "https://schema.org/InStock",
-  },
+// ✅ Slug => meta (Map con normalización + alias ASCII)
+const proyectosMetadataMap = new Map<string, ProjectMeta>();
 
-  "casera-qorihuillca-200m2": {
-    title: "Casera Qorihuillca 200 m² | Lotes en Ayacucho (Qorihuillca)",
-    description:
-      "Lote Casera Ccorihuillca/Qorihuillca de 200 m² en Ayacucho. Acceso vehicular y entorno tranquilo. Ideal para inversión o vivienda. Consulta precio y disponibilidad.",
-    keywords: [
-      "casera qorihuillca",
-      "lote 200 m2 ayacucho",
-      "terrenos en qorihuillca",
-      "venta de terrenos en ayacucho",
-      "lotes huamanga",
-      "inmobiliaria en ayacucho",
-      "casagrande bienes y raices",
-    ],
-    image: "/images/proyectos/casera-qorihuillca.webp",
-    canonical: `${SITE_URL}/proyectos/casera-qorihuillca-200m2`,
-    locationText: "Ccorihuillca / Qorihuillca, Huamanga – Ayacucho",
-    address: {
-      addressLocality: "Huamanga",
-      addressRegion: "Ayacucho",
-      addressCountry: "PE",
-    },
-    areaM2: 200,
-    pricePEN: 33000,
-    availability: "https://schema.org/InStock",
-  },
-} satisfies Record<string, ProjectMeta>;
+for (const p of proyectosJson) {
+  const meta = makeMetaFromProject(p);
 
-type ProyectoSlug = keyof typeof proyectosMetadata;
+  // 1) slug original
+  proyectosMetadataMap.set(p.slug, meta);
+
+  // 2) slug normalizado (NFC)
+  proyectosMetadataMap.set(normalizeSlug(p.slug), meta);
+
+  // 3) alias ASCII (canones-...)
+  proyectosMetadataMap.set(slugAscii(p.slug), meta);
+}
+
+function getProjectMeta(slug: string): ProjectMeta | undefined {
+  return (
+    proyectosMetadataMap.get(slug) ||
+    proyectosMetadataMap.get(normalizeSlug(slug)) ||
+    proyectosMetadataMap.get(slugAscii(slug))
+  );
+}
 
 export async function generateMetadata({
   params,
 }: ProjectLayoutProps): Promise<Metadata> {
   const { slug } = await params;
-  const data = proyectosMetadata[slug as ProyectoSlug];
+  const data = getProjectMeta(slug);
 
   if (!data) {
     return {
       title: `Proyecto no encontrado | ${BRAND_NAME}`,
       description:
-        "El proyecto que buscas no está disponible. Revisa nuestros proyectos y lotes en Ayacucho (Ccorihuillca/Qorihuillca).",
+        "El proyecto que buscas no está disponible. Revisa nuestros proyectos y lotes en Ayacucho (Qorihuillca y alrededores).",
       alternates: { canonical: `${SITE_URL}/inmuebles#proyectos` },
       robots: { index: false, follow: false },
     };
@@ -201,7 +373,8 @@ export async function generateMetadata({
 }
 
 export async function generateStaticParams() {
-  return Object.keys(proyectosMetadata).map((slug) => ({ slug }));
+  // ✅ genera rutas SOLO con el slug original del JSON
+  return proyectosJson.map((p) => ({ slug: p.slug }));
 }
 
 function clean<T>(obj: T): T {
@@ -213,7 +386,7 @@ export default async function ProjectLayout({
   params,
 }: ProjectLayoutProps) {
   const { slug } = await params;
-  const data = proyectosMetadata[slug as ProyectoSlug];
+  const data = getProjectMeta(slug);
 
   const canonical = data?.canonical ?? `${SITE_URL}/proyectos/${slug}`;
   const imageUrl = data?.image ? `${SITE_URL}${data.image}` : FALLBACK_OG;
@@ -277,7 +450,7 @@ export default async function ProjectLayout({
           ],
           address: {
             "@type": "PostalAddress",
-            streetAddress: "Jirón Quinua 570",
+            streetAddress: "Jr. Quinua N° 570",
             addressLocality: "Huamanga",
             addressRegion: "Ayacucho",
             addressCountry: "PE",

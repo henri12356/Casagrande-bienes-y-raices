@@ -20,7 +20,7 @@ const Gana = () => {
           transition={{ duration: 0.8, ease: "easeOut" }}
         >
           <h2 className={`${bebas.className} text-4xl md:text-[65px] leading-tight mb-4 text-white drop-shadow-lg`}>
-            <span className="text-yellow-300">REFIERE A FAMILIARES Y AMIGOS,</span> Y PODRAS GANAR S/1,000
+            <span className="text-yellow-300">REFIERE A FAMILIARES Y AMIGOS,</span> Y PODRAS GANAR HASTA S/1,000
           </h2>
           
 

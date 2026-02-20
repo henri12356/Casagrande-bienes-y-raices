@@ -1,4 +1,5 @@
 // app/propiedades/layout.tsx
+import { GoogleAnalytics } from "@next/third-parties/google";
 import type { Metadata } from "next";
 
 /**
@@ -17,7 +18,7 @@ const WHATSAPP = "+51916194372";
 const EMAIL = "u19217724@gmail.com";
 
 // ✅ crea esta imagen en /public/og-propiedades.jpg (1200x630)
-const OG_IMAGE = `${SITE_URL}/og-propiedades.jpg`;
+const OG_IMAGE = `${SITE_URL}/hero02.webp`;
 
 export const metadata: Metadata = {
   title: "Propiedades en Ayacucho | Lotes, Terrenos y Proyectos",
@@ -176,6 +177,7 @@ export default function PropiedadesLayout({
           __html: JSON.stringify(clean(schemaCollectionPage)),
         }}
       />
+      <GoogleAnalytics gaId="G-9GG0X367Q4" />
 
       {/* ✅ Schema Markup - BreadcrumbList */}
       <script

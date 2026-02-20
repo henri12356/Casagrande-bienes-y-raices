@@ -23,7 +23,7 @@ const proyectosData: Proyecto[] = [
   {
     id: 1,
     nombre: "CAMPO REAL",
-    subtitulo: "MACHAYHUAYCCO",
+    subtitulo: "Ccorihuillca",
     ubicacion: "Huamanga – Qorihuillca",
     precioDesdeSol: "S/ 20,000",
     precioDesdeDolar: "",
@@ -35,7 +35,7 @@ const proyectosData: Proyecto[] = [
   },
   {
     id: 2,
-    nombre: "BUNGAVILIA",
+    nombre: "BUGAMBILIAS ",
     subtitulo: "Ccorihuillca ",
     ubicacion: "Huamanga – Qorihuillca",
     precioDesdeSol: "S/ 20,000",

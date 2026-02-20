@@ -1,8 +1,8 @@
 "use client";
 
-import React, { useState, FC, ReactNode, ComponentProps } from "react";
-import { motion, AnimatePresence } from "framer-motion";
+import { AnimatePresence, motion } from "framer-motion";
 import { Poppins } from "next/font/google";
+import React, { ComponentProps, FC, ReactNode, useState } from "react";
 
 const poppins = Poppins({
   subsets: ["latin"],
@@ -133,7 +133,7 @@ const simulateApiCall = () => {
 
 // --- Formulario ---
 const Formulario = () => {
-  const imageUrl = "/fondoformulario.webp";
+  const imageUrl = "/portadaformulario.webp";
 
   const [nombre, setNombre] = useState("");
   const [apellidos, setApellidos] = useState("");
@@ -401,7 +401,6 @@ const Formulario = () => {
         </div>
       </div>
 
-      {/* Fondo */}
       <div
         className="absolute bottom-0 left-0 w-full h-[65vh] bg-cover bg-center"
         style={{ backgroundImage: `url(${imageUrl})` }}

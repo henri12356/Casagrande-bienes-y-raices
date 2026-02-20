@@ -13,7 +13,7 @@ const font = Poppins({
   weight: ["400", "500", "600", "700", "800"],
 });
 
-
+// ✅ Config central (fácil de mantener)
 const companyInfo = {
   name: "Casagrande Bienes y Raíces",
   legalName: "Casagrande Bienes y Raíces",
@@ -24,14 +24,15 @@ const companyInfo = {
   // ✅ Tu dominio real
   url: "https://www.casagrande-inmobilaria.com",
 
-  // ⚠️ Ajusta si tu logo está en otra ruta (ideal: /logo.svg o /logo.png)
-  logo: "https://www.casagrande-inmobilaria.com/logo.svg",
+  // ✅ Mejor: usar rutas relativas y que Next las resuelva con metadataBase
+  logoPath: "/logo.svg",
+  ogImagePath: "/hero01.webp",
 
   phone: "+51916194372",
   email: "u19217724@gmail.com",
 
   address: {
-    street: "Jirón Quinua 570",
+    street: "Jr. Quinua N° 570",
     city: "Huamanga",
     region: "Ayacucho",
     postalCode: "05003",
@@ -59,14 +60,20 @@ const companyInfo = {
   pages: {
     home: "/",
     inmuebles: "/inmuebles",
-    proyectosHash: "/inmuebles#proyectos",
-    propiedadesHash: "/inmuebles#propiedades",
+    proyectos: "/proyectos",
+    propiedades: "/propiedades",
     ventaTerreno: "/venta-terreno",
     nosotros: "/nosotros",
+    contacto: "/contacto",
   },
 };
 
-// ✅ JSON-LD (Entidad + SEO Local + ofertas apuntando a tus URLs reales)
+// ✅ helpers (URLs absolutas consistentes)
+const abs = (path: string) => `${companyInfo.url}${path.startsWith("/") ? path : `/${path}`}`;
+
+// ✅ JSON-LD (Entidad + SEO Local)
+// ⚠️ NO uses hashes (#proyectos/#propiedades) en OfferCatalog, Google los ignora.
+// Mejor enlazar a rutas reales: /proyectos y /propiedades
 const jsonLd = {
   "@context": "https://schema.org",
   "@type": "RealEstateAgent",
@@ -80,16 +87,12 @@ const jsonLd = {
 
   logo: {
     "@type": "ImageObject",
-    url: companyInfo.logo,
+    url: abs(companyInfo.logoPath),
     width: "512",
     height: "512",
   },
 
-  image: [
-    companyInfo.logo,
-    `${companyInfo.url}/og-image.jpg`,
-    `${companyInfo.url}/assets/terrenos-ayacucho.jpg`,
-  ],
+  image: [abs(companyInfo.logoPath), abs(companyInfo.ogImagePath)],
 
   telephone: companyInfo.phone,
   email: companyInfo.email,
@@ -147,47 +150,45 @@ const jsonLd = {
     "documentación de terrenos",
   ],
 
-  // ✅ “Catálogo” enlazado a tus páginas reales
   hasOfferCatalog: {
     "@type": "OfferCatalog",
     name: "Inmuebles, proyectos y venta de terrenos en Ayacucho",
     itemListElement: [
       {
         "@type": "Offer",
-        url: `${companyInfo.url}${companyInfo.pages.ventaTerreno}`,
+        url: abs(companyInfo.pages.ventaTerreno),
         itemOffered: {
           "@type": "Service",
           name: "Venta de terrenos y lotes en Ayacucho",
           description:
-            "Terrenos y lotes en Ayacucho (Huamanga) con asesoría completa, procesos seguros y acompañamiento en todo el proceso.",
+            "Terrenos y lotes en Ayacucho (Huamanga) con asesoría completa, procesos seguros y acompañamiento durante la compra.",
           provider: { "@type": "Organization", name: companyInfo.name },
         },
       },
       {
         "@type": "Offer",
-        url: `${companyInfo.url}${companyInfo.pages.inmuebles}`,
+        url: abs(companyInfo.pages.inmuebles),
         itemOffered: {
           "@type": "Service",
-          name: "Inmuebles en Ayacucho (proyectos y propiedades)",
-          description:
-            "Explora proyectos e inmuebles disponibles en Ayacucho. Opciones para vivienda, casa de campo e inversión.",
+          name: "Inmuebles en Ayacucho",
+          description: "Explora proyectos y propiedades disponibles en Ayacucho.",
           provider: { "@type": "Organization", name: companyInfo.name },
         },
       },
       {
         "@type": "Offer",
-        url: `${companyInfo.url}${companyInfo.pages.proyectosHash}`,
+        url: abs(companyInfo.pages.proyectos),
         itemOffered: {
           "@type": "Service",
           name: "Proyectos inmobiliarios en Ayacucho",
           description:
-            "Proyectos de lotes/terrenos con proyección de valorización en Ayacucho (incluye zona Ccorihuillca/Qorihuillca).",
+            "Proyectos de lotes/terrenos con alta proyección de valorización en Ayacucho (incluye Ccorihuillca/Qorihuillca).",
           provider: { "@type": "Organization", name: companyInfo.name },
         },
       },
       {
         "@type": "Offer",
-        url: `${companyInfo.url}${companyInfo.pages.propiedadesHash}`,
+        url: abs(companyInfo.pages.propiedades),
         itemOffered: {
           "@type": "Service",
           name: "Propiedades disponibles en Ayacucho",
@@ -203,10 +204,15 @@ const jsonLd = {
 
   mainEntityOfPage: {
     "@type": "WebPage",
-    "@id": `${companyInfo.url}${companyInfo.pages.home}`,
+    "@id": abs(companyInfo.pages.home),
   },
 };
 
+// ✅ Metadata global mejorado:
+// - metadataBase + alternates OK
+// - OpenGraph/Twitter usan rutas relativas (Next las vuelve absolutas)
+// - keywords (ayuda un poco, no es magia)
+// - verification listo para Search Console (si lo tienes)
 export const metadata: Metadata = {
   metadataBase: new URL(companyInfo.url),
 
@@ -217,6 +223,18 @@ export const metadata: Metadata = {
   },
 
   description: companyInfo.description,
+
+  keywords: [
+    "terrenos en ayacucho",
+    "lotes en ayacucho",
+    "inmobiliaria ayacucho",
+    "terrenos en huamanga",
+    "lotes en qorihuillca",
+    "ccorihuillca",
+    "casa de campo ayacucho",
+    "inversión en terrenos",
+    "casagrande bienes y raíces",
+  ],
 
   applicationName: companyInfo.name,
   authors: [{ name: companyInfo.name }],
@@ -238,8 +256,8 @@ export const metadata: Metadata = {
     },
   },
 
-  // ✅ Search Console usa un token distinto a GA4.
-  // verification: { google: "TU_TOKEN_REAL_DE_SEARCH_CONSOLE" },
+  // ✅ Si ya tienes token de Search Console:
+  // verification: { google: "TU_TOKEN_REAL" },
 
   alternates: {
     canonical: companyInfo.url,
@@ -286,7 +304,7 @@ export const metadata: Metadata = {
     phoneNumbers: [companyInfo.phone],
     images: [
       {
-        url: `${companyInfo.url}/og-image.jpg`,
+        url: companyInfo.ogImagePath, // relativo -> absoluto por metadataBase
         width: 1200,
         height: 630,
         alt: "Casagrande Bienes y Raíces - Terrenos y Lotes en Ayacucho",
@@ -301,7 +319,7 @@ export const metadata: Metadata = {
       "Casagrande Bienes y Raíces | Terrenos y Lotes en Ayacucho (Ccorihuillca)",
     description:
       "Venta de terrenos y lotes en Ayacucho (Ccorihuillca/Qorihuillca) para vivienda o inversión. Acompañamiento y procesos seguros.",
-    images: [`${companyInfo.url}/og-image.jpg`],
+    images: [companyInfo.ogImagePath],
   },
 
   formatDetection: {
@@ -326,6 +344,7 @@ function StructuredData() {
   return (
     <script
       type="application/ld+json"
+      // JSON.stringify directo es OK; si quieres “limpio”, puedes hacer JSON.parse(JSON.stringify())
       dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
     />
   );
@@ -347,7 +366,9 @@ export default function RootLayout({
       <body className={`${font.className} antialiased`}>
         {children}
         <FloatingButtons />
-        <GoogleAnalytics gaId="G-7TJCWC5JMR" />
+
+        {/* ✅ GA solo aquí (como ya lo tienes) */}
+        <GoogleAnalytics gaId="G-9GG0X367Q4" />
       </body>
     </html>
   );
