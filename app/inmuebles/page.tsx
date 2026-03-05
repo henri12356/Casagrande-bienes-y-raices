@@ -6,7 +6,8 @@ import Link from "next/link";
 import { FC, useEffect, useMemo, useState } from "react";
 import { FaBath, FaBed, FaMapMarkerAlt, FaRulerCombined } from "react-icons/fa";
 
-import alquileresData from "@/app/data/alquileres.json";
+// ✅ DATA
+import casasData from "@/app/data/alquileres.json"; // ← tus "casas/alquileres" viven aquí
 import propiedadesData from "@/app/data/propiedades.json";
 import proyectosData from "@/app/data/proyectos.json";
 
@@ -15,7 +16,7 @@ import Navbar from "../navbar";
 import HeroInmuebles from "./HeroInmuebles";
 
 // --- TIPOS ---
-type Tipo = "todos" | "proyecto" | "propiedad" | "alquiler";
+type Tipo = "todos" | "proyecto" | "propiedad" | "casa";
 type TipoOperacion = "comprar" | "alquilar";
 type TipoInmueble =
   | "terreno"
@@ -33,7 +34,6 @@ interface ItemBase {
   subtitulo: string;
   categoria: string;
 
-  // ✅ solo usaremos ubicacion real del JSON
   ubicacion: string;
 
   precioDesdeSol: string;
@@ -55,7 +55,7 @@ interface ItemBase {
   resumen?: string;
 }
 
-// ✅ ZONAS reales donde vendes (amplía cuando quieras)
+// ✅ ZONAS
 const ZONAS_AYACUCHO = [
   "Todos",
   "Ayacucho",
@@ -68,12 +68,11 @@ const PAGE_SIZE = 12;
 const USD_TO_PEN = 3.8;
 
 // --- HELPERS ---
-const inferOperacion = (tipo: Exclude<Tipo, "todos">): TipoOperacion =>
-  tipo === "alquiler" ? "alquilar" : "comprar";
+const inferOperacion = (): TipoOperacion => "comprar";
 
 const inferInmueble = (
   categoria: string,
-  tipo: Exclude<Tipo, "todos">
+  tipo: Exclude<Tipo, "todos">,
 ): TipoInmueble => {
   const c = (categoria || "").toLowerCase();
   if (c.includes("lote") || c.includes("terreno") || c.includes("condominio"))
@@ -82,7 +81,7 @@ const inferInmueble = (
   if (c.includes("departamento") || c.includes("depa")) return "departamento";
   if (c.includes("oficina")) return "oficina";
   if (c.includes("local")) return "local";
-  return "otro";
+  return tipo === "casa" ? "casa" : "otro";
 };
 
 const parsePrice = (value?: string): number | undefined => {
@@ -97,22 +96,22 @@ const IconLocation: FC = () => (
   <FaMapMarkerAlt className="h-4 w-4" style={{ color: "#FFB200" }} />
 );
 
-// Para mapear hash -> tab
+// Hash <-> tab
 const hashToTab = (hash: string): Tipo => {
   if (hash === "proyectos") return "proyecto";
   if (hash === "propiedades") return "propiedad";
-  if (hash === "alquileres") return "alquiler";
+  if (hash === "casas") return "casa";
   return "todos";
 };
 
 const tabToHash = (tab: Tipo): string | undefined => {
   if (tab === "proyecto") return "proyectos";
   if (tab === "propiedad") return "propiedades";
-  if (tab === "alquiler") return "alquileres";
+  if (tab === "casa") return "casas";
   return undefined;
 };
 
-// ✅ filtro por zona: revisa ubicacion + subtitulo + titulo + etiquetas
+// filtro por zona
 const matchesZona = (item: ItemBase, zona: string) => {
   if (!zona || zona === "Todos") return true;
 
@@ -142,11 +141,11 @@ const InmueblesPage = () => {
   const [visibleBySection, setVisibleBySection] = useState<{
     proyectos: number;
     propiedades: number;
-    alquileres: number;
+    casas: number;
   }>({
     proyectos: PAGE_SIZE,
     propiedades: PAGE_SIZE,
-    alquileres: PAGE_SIZE,
+    casas: PAGE_SIZE,
   });
 
   const [visibleTabCount, setVisibleTabCount] = useState<number>(PAGE_SIZE);
@@ -161,12 +160,12 @@ const InmueblesPage = () => {
     setVisibleBySection({
       proyectos: PAGE_SIZE,
       propiedades: PAGE_SIZE,
-      alquileres: PAGE_SIZE,
+      casas: PAGE_SIZE,
     });
     setVisibleTabCount(PAGE_SIZE);
   }, [searchTerm, selectedCity, orderBy]);
 
-  // --- SYNC TAB + SCROLL CON HASH ---
+  // Sync tab + scroll con hash
   useEffect(() => {
     if (typeof window === "undefined") return;
 
@@ -182,7 +181,8 @@ const InmueblesPage = () => {
 
       setTimeout(() => {
         const element = document.getElementById(hash);
-        if (element) element.scrollIntoView({ behavior: "smooth", block: "start" });
+        if (element)
+          element.scrollIntoView({ behavior: "smooth", block: "start" });
       }, 80);
     };
 
@@ -203,31 +203,29 @@ const InmueblesPage = () => {
     window.addEventListener("hashchange", onHashChange);
     window.addEventListener(
       "hashChangeFromNavbar",
-      onHashChangeFromNavbar as EventListener
+      onHashChangeFromNavbar as EventListener,
     );
 
     return () => {
       window.removeEventListener("hashchange", onHashChange);
       window.removeEventListener(
         "hashChangeFromNavbar",
-        onHashChangeFromNavbar as EventListener
+        onHashChangeFromNavbar as EventListener,
       );
     };
   }, []);
 
-  // ✅ Tabs dinámicos
-  // ✅ NO TOCAR LABELS: "Lotes" y "Proyectos" se quedan igual
-  // ✅ SOLO CAMBIO: orden -> primero "Proyectos" (id: propiedad), luego "Lotes" (id: proyecto)
+  // Tabs dinámicos
   const TABS_DYNAMIC: { id: Tipo; label: string }[] = useMemo(() => {
     const tabs: { id: Tipo; label: string }[] = [{ id: "todos", label: "Todos" }];
 
-    // ✅ PRIMERO "Proyectos" (que viene del JSON de propiedades)
-    if ((propiedadesData as any[])?.length) tabs.push({ id: "propiedad", label: "Proyectos" });
+    if ((propiedadesData as any[])?.length)
+      tabs.push({ id: "propiedad", label: "Propiedades" });
 
-    // ✅ DESPUÉS "Lotes" (que viene del JSON de proyectos)
-    if ((proyectosData as any[])?.length) tabs.push({ id: "proyecto", label: "Lotes" });
+    if ((proyectosData as any[])?.length)
+      tabs.push({ id: "proyecto", label: "Lotes" });
 
-    // if ((alquileresData as any[])?.length) tabs.push({ id: "alquiler", label: "Alquileres" });
+    if ((casasData as any[])?.length) tabs.push({ id: "casa", label: "Casas" });
 
     return tabs;
   }, []);
@@ -256,7 +254,9 @@ const InmueblesPage = () => {
 
           titulo: raw.titulo ?? "",
           subtitulo: raw.subtitulo ?? "",
-          categoria: raw.categoria ?? (tipo === "proyecto" ? "Lotes" : ""),
+          categoria:
+            raw.categoria ??
+            (tipo === "proyecto" ? "Lotes" : tipo === "casa" ? "Alquiler" : ""),
           ubicacion: raw.ubicacion ?? "",
 
           precioDesdeSol: raw.precioDesdeSol ?? "",
@@ -267,9 +267,8 @@ const InmueblesPage = () => {
           imagen: raw.imagen ?? "/proyecto.webp",
           etiquetas: raw.etiquetas ?? [],
 
-          tipoOperacion: raw.tipoOperacion ?? inferOperacion(tipo),
-          tipoInmueble:
-            raw.tipoInmueble ?? inferInmueble(raw.categoria ?? "", tipo),
+          tipoOperacion: raw.tipoOperacion ?? inferOperacion(),
+          tipoInmueble: raw.tipoInmueble ?? inferInmueble(raw.categoria ?? "", tipo),
 
           areaM2: raw.areaM2,
           dormitorios: raw.dormitorios,
@@ -280,18 +279,18 @@ const InmueblesPage = () => {
         };
       });
 
-    // ✅ NO TOCAR LÓGICA DE DATA: se mantiene igual
     return [
       ...norm(proyectosData as any[], "proyecto"),
       ...norm(propiedadesData as any[], "propiedad"),
-      ...norm(alquileresData as any[], "alquiler"),
+      ...norm(casasData as any[], "casa"),
     ];
   }, []);
 
-  // ✅ ESTA FUNCIÓN DEFINE A QUÉ PÁGINA TE LLEVA EL CLICK
+  // ✅ LINK CORRECTO SEGÚN TU ESTRUCTURA REAL DE CARPETAS
   const getHref = (item: ItemBase) => {
     if (item.tipo === "proyecto") return `/proyectos/${item.slug}`;
     if (item.tipo === "propiedad") return `/propiedades/${item.slug}`;
+    // ✅ antes estaba /casas/... pero NO existe esa ruta en tu proyecto
     return `/alquileres/${item.slug}`;
   };
 
@@ -303,7 +302,7 @@ const InmueblesPage = () => {
     if (typeof window !== "undefined") window.history.pushState({}, "", "/inmuebles");
   };
 
-  // FILTRO GLOBAL + ORDEN
+  // Filtro global + orden
   const filteredItems = useMemo(() => {
     const term = searchTerm.trim().toLowerCase();
 
@@ -349,9 +348,9 @@ const InmueblesPage = () => {
     () => ({
       proyectos: filteredItems.filter((i) => i.tipo === "proyecto"),
       propiedades: filteredItems.filter((i) => i.tipo === "propiedad"),
-      alquileres: filteredItems.filter((i) => i.tipo === "alquiler"),
+      casas: filteredItems.filter((i) => i.tipo === "casa"),
     }),
-    [filteredItems]
+    [filteredItems],
   );
 
   const filtradosPorTab = useMemo(() => {
@@ -377,18 +376,19 @@ const InmueblesPage = () => {
     }
   };
 
-  // ---------- CARD ----------
+  // Card
   const InmuebleCard: FC<{ item: ItemBase }> = ({ item }) => (
     <Link href={getHref(item)} className="group block h-full">
       <article className="flex h-full flex-col overflow-hidden rounded-3xl border border-slate-100 bg-white shadow-sm transition-all duration-200 hover:-translate-y-1 hover:shadow-2xl">
         {/* IMAGEN */}
-        <div className="relative aspect-[16/9] w-full overflow-hidden">
+        <div className="relative aspect-video w-full overflow-hidden">
           <Image
             src={item.imagen}
             alt={item.titulo}
             fill
             className="object-cover transition-transform duration-300 group-hover:scale-105"
           />
+
           <div className="absolute left-3 top-3">
             <div className="rounded-full bg-white/90 px-4 py-1 text-xs font-extrabold uppercase tracking-wide text-[#005BBB] shadow-md">
               {item.categoria || "Lotes"}
@@ -399,8 +399,8 @@ const InmueblesPage = () => {
             {item.tipo === "proyecto"
               ? "Lotes en venta"
               : item.tipoOperacion === "alquilar"
-              ? "Alquiler"
-              : "Compra"}
+                ? "Alquiler"
+                : "Compra"}
           </div>
         </div>
 
@@ -412,9 +412,7 @@ const InmueblesPage = () => {
                 {item.titulo}
               </h3>
               {item.subtitulo && (
-                <p className="text-xs font-semibold text-[#005BBB]">
-                  {item.subtitulo}
-                </p>
+                <p className="text-xs font-semibold text-[#005BBB]">{item.subtitulo}</p>
               )}
             </div>
 
@@ -453,9 +451,7 @@ const InmueblesPage = () => {
             <div className="flex flex-col text-xs text-slate-600">
               <span className="font-medium">Precio desde</span>
               <span className="text-sm font-extrabold text-[#005BBB]">
-                {item.monedaPrincipal === "USD"
-                  ? item.precioDesdeDolar
-                  : item.precioDesdeSol}
+                {item.monedaPrincipal === "USD" ? item.precioDesdeDolar : item.precioDesdeSol}
               </span>
             </div>
 
@@ -549,13 +545,13 @@ const InmueblesPage = () => {
           {/* CONTENIDO */}
           {tab === "todos" ? (
             <div className="space-y-16">
-              {/* ✅ PRIMERO: PROPIEDADES (Label: Proyectos) */}
+              {/* PROPIEDADES */}
               {groupedItems.propiedades.length > 0 && (
                 <section className="scroll-mt-40" id="propiedades">
                   <div className="mb-3 flex flex-wrap items-center justify-between gap-2">
                     <div>
                       <h2 className="text-2xl font-extrabold text-[#005BBB] sm:text-3xl">
-                        Proyectos
+                        Propiedades
                         {selectedCity !== "Todos" && (
                           <span className="ml-2 text-lg font-medium text-slate-400">
                             en {selectedCity}
@@ -588,14 +584,14 @@ const InmueblesPage = () => {
                           }))
                         }
                       >
-                        Ver más proyectos
+                        Ver más propiedades
                       </button>
                     </div>
                   )}
                 </section>
               )}
 
-              {/* ✅ DESPUÉS: PROYECTOS (Label: Lotes en venta) */}
+              {/* LOTES */}
               {groupedItems.proyectos.length > 0 && (
                 <section className="scroll-mt-40" id="proyectos">
                   <div className="mb-3 flex flex-wrap items-center justify-between gap-2">
@@ -635,6 +631,52 @@ const InmueblesPage = () => {
                         }
                       >
                         Ver más lotes
+                      </button>
+                    </div>
+                  )}
+                </section>
+              )}
+
+              {/* ALQUILERES (antes "casas") */}
+              {groupedItems.casas.length > 0 && (
+                <section className="scroll-mt-40" id="casas">
+                  <div className="mb-3 flex flex-wrap items-center justify-between gap-2">
+                    <div>
+                      <h2 className="text-2xl font-extrabold text-[#005BBB] sm:text-3xl">
+                        Casas
+                        {selectedCity !== "Todos" && (
+                          <span className="ml-2 text-lg font-medium text-slate-400">
+                            en {selectedCity}
+                          </span>
+                        )}
+                      </h2>
+                      <p className="text-xs text-slate-500">
+                        {groupedItems.casas.length} resultados
+                      </p>
+                    </div>
+                  </div>
+
+                  <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-4">
+                    {groupedItems.casas
+                      .slice(0, visibleBySection.casas)
+                      .map((item) => (
+                        <InmuebleCard key={item.slug} item={item} />
+                      ))}
+                  </div>
+
+                  {groupedItems.casas.length > visibleBySection.casas && (
+                    <div className="mt-6 flex justify-center">
+                      <button
+                        type="button"
+                        className="rounded-full border border-[#005BBB] px-6 py-2 text-sm font-semibold text-[#005BBB] hover:bg-[#005BBB] hover:text-white"
+                        onClick={() =>
+                          setVisibleBySection((prev) => ({
+                            ...prev,
+                            casas: prev.casas + PAGE_SIZE,
+                          }))
+                        }
+                      >
+                        Ver más Casas
                       </button>
                     </div>
                   )}

@@ -83,5 +83,84 @@
       "direccion": "Jr. Quinua N° 570, Ayacucho",
       "horario": "Lun–Sab 9:00 AM – 7:00 PM"
     }
+  },
+  {
+  "slug": "lotes-pampahocha-ayacucho",
+  "tipo": "proyecto",
+  "titulo": "Lotes en Pampahocha",
+  "subtitulo": "Ruta 14",
+  "categoria": "Lotes",
+  "ubicacion": "Pampahocha, Huamanga – Ayacucho (al costado de la Ruta 14)",
+
+  "precioDesdeSol": "S/ 49,000",
+  "precioDesdeDolar": "",
+  "pagoContado": "S/ 2,000",
+
+  "imagen": "/PAMPAHOCHA/PAMPAHOCHA01.webp",
+  "etiquetas": [
+    "Pampahocha",
+    "Huamanga",
+    "Ayacucho",
+    "Ruta 14",
+    "Acceso vehicular",
+    "Zona habitada",
+    "Alta plusvalía",
+    "Inversión segura"
+  ],
+
+  "descripcion": "Disponibles 2 lotes ubicados en Pampahocha – Huamanga, Ayacucho, al costado de la Ruta 14. Se encuentran en una zona ya habitada con acceso vehicular y buena conectividad. Son ideales para construir vivienda, desarrollar un pequeño proyecto o invertir en una zona con crecimiento constante y proyección de valorización.",
+
+  "equipamiento": [
+    "Acceso vehicular",
+    "Zona habitada",
+    "Conectividad inmediata",
+    "Ubicación estratégica",
+    "Alta proyección de valorización"
+  ],
+
+  "caracteristicas": [
+    { "label": "Área", "value": "200 m²" },
+    { "label": "Precio", "value": "S/ 49,000" },
+    { "label": "Cantidad disponible", "value": "2 lotes" },
+    { "label": "Ubicación", "value": "Al costado de la Ruta 14" },
+    {
+      "label": "Uso",
+      "value": "Vivienda / Inversión"
+    },
+    {
+      "label": "Zona",
+      "value": "Área ya habitada con crecimiento urbano"
+    }
+  ],
+
+  "planos": {
+    "titulo": "Plano del lote",
+    "imagen": "/PAMPAHOCHA/PAMPAHOCHA-PLANO.webp",
+    "pdf": "",
+    "nota": "Plano referencial del lote"
+  },
+
+  "galeria": {
+    "fotos": [
+      "/PAMPAHOCHA/PAMPAHOCHA01.webp",
+      "/PAMPAHOCHA/PAMPAHOCHA02.webp"
+    ],
+    "youtubeId": ""
+  },
+
+  "ubicacionImagen": "/hero03.webp",
+  "mapsUrl": "",
+
+  "descuento": {
+    "titulo": "Solo 2 lotes disponibles en Pampahocha",
+    "imagen": "/prueba01.webp"
+  },
+
+  "contacto": {
+    "whatsapp": "51970993246",
+    "telefono": "+51 970 993 246",
+    "direccion": "Jr. Quinua N° 570, Ayacucho",
+    "horario": "Lun–Sab 9:00 AM – 7:00 PM"
   }
+}
 ]
