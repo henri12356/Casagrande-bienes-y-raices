@@ -220,12 +220,12 @@ const InmueblesPage = () => {
     const tabs: { id: Tipo; label: string }[] = [{ id: "todos", label: "Todos" }];
 
     if ((propiedadesData as any[])?.length)
-      tabs.push({ id: "propiedad", label: "Propiedades" });
+      tabs.push({ id: "propiedad", label: "Proyectos" });
 
     if ((proyectosData as any[])?.length)
       tabs.push({ id: "proyecto", label: "Lotes" });
 
-    if ((casasData as any[])?.length) tabs.push({ id: "casa", label: "Casas" });
+    if ((casasData as any[])?.length) tabs.push({ id: "casa", label: "Propiedades" });
 
     return tabs;
   }, []);
@@ -551,7 +551,7 @@ const InmueblesPage = () => {
                   <div className="mb-3 flex flex-wrap items-center justify-between gap-2">
                     <div>
                       <h2 className="text-2xl font-extrabold text-[#005BBB] sm:text-3xl">
-                        Propiedades
+                        Proyectos
                         {selectedCity !== "Todos" && (
                           <span className="ml-2 text-lg font-medium text-slate-400">
                             en {selectedCity}
@@ -643,7 +643,7 @@ const InmueblesPage = () => {
                   <div className="mb-3 flex flex-wrap items-center justify-between gap-2">
                     <div>
                       <h2 className="text-2xl font-extrabold text-[#005BBB] sm:text-3xl">
-                        Casas
+                        Propiedades
                         {selectedCity !== "Todos" && (
                           <span className="ml-2 text-lg font-medium text-slate-400">
                             en {selectedCity}

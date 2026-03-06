@@ -2,7 +2,6 @@
 
 import React, { useMemo, useState } from "react";
 import Navbar from "../navbar";
-import Footer from "../footer";
 
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
@@ -311,7 +310,7 @@ export default function VentaPropiedadSimplePage() {
         </div>
       </main>
 
-      <Footer />
+     
     </div>
   );
 }
