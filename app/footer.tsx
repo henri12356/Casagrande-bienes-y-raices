@@ -15,7 +15,7 @@ const Footer = () => {
     {
       title: "Soporte al cliente",
       links: [
-        { name: "916 461 291", href: "https://api.whatsapp.com/send/?phone=51916461291&text=Hola%2C+quiero+una+cotizaci%C3%B3n&type=phone_number&app_absent=0" },
+        { name: "916 194 372", href: "https://api.whatsapp.com/send/?phone=51916194372&text=Hola%2C+quiero+una+cotizaci%C3%B3n&type=phone_number&app_absent=0" },
         {
           name: "casagrandeinmb.24@gmail.com ",
           href: "https://mail.google.com/mail/?view=cm&to=casagrandeinmb.24@gmail.com",

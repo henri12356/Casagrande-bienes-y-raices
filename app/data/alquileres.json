@@ -1,68 +1,68 @@
 [
-{
-  "slug": "casa-san-juan-bautista-acuchimay",
-  "tipo": "casa",
-  "titulo": "Casa en San Juan Bautista",
-  "subtitulo": "Cerca al Cerro Acuchimay",
-  "categoria": "Casa",
-  "ubicacion": "San Juan Bautista, Huamanga – Ayacucho",
-
-  "precioDesdeSol": "S/ 200,000",
-  "precioDesdeDolar": "",
-  "pagoContado": "S/ 200,000",
-
-  "tipoOperacion": "comprar",
-  "tipoInmueble": "casa",
-  "areaM2": 200,
-
-  "imagen": "/CASA/CASA01.webp",
-
-  "etiquetas": [
-    "San Juan Bautista",
-    "Ayacucho",
-    "Cerro Acuchimay",
-    "Casa en venta",
-    "Servicios básicos",
-    "Documentos en regla",
-    "Zona urbana"
-  ],
-
-  "descripcion": "Casa ubicada en San Juan Bautista – Huamanga, Ayacucho, cerca al Cerro Acuchimay. La propiedad cuenta con un área de 200 m² y todos los documentos en regla. Dispone de servicios básicos como agua, luz y desagüe, ubicada en una zona urbana con acceso vehicular y buena conectividad. Ideal para vivienda familiar o inversión.",
-
-  "equipamiento": [
-    "Agua",
-    "Luz",
-    "Desagüe",
-    "Acceso vehicular",
-    "Zona urbana"
-  ],
-
-  "caracteristicas": [
-    { "label": "Área del terreno", "value": "200 m²" },
-    { "label": "Precio", "value": "S/ 200,000" },
-    { "label": "Tipo de propiedad", "value": "Casa" },
-    { "label": "Servicios", "value": "Agua, luz y desagüe" },
-    { "label": "Documentación", "value": "Papeles en regla" },
-    { "label": "Ubicación", "value": "San Juan Bautista – cerca al Cerro Acuchimay" }
-  ],
-
-  "galeria": {
-    "fotos": [
-      "/CASA/CASA01.webp",
-      "/CASA/CASA02.webp"
+  {
+    "slug": "propiedad-san-juan-bautista-ayacucho",
+    "tipo": "propiedad",
+    "titulo": " San Juan Bautista",
+    "subtitulo": "Ayacucho",
+    "categoria": "Propiedad",
+    "ubicacion": "San Juan Bautista, Huamanga, Cerca al Mirador de Acuchimay",
+    "precioDesdeSol": "S/ 240,000",
+    "precioDesdeDolar": "",
+    "pagoContado": "",
+    "imagen": "/SANJUAN/SANJUAN01.webp",
+    "etiquetas": [
+      "San Juan Bautista",
+      "Mercado Las Américas",
+      "Mirador de Acuchimay",
+      "Agua",
+      "Luz",
+      "Desagüe",
+      "Título de Propiedad",
+      "Todo en regla"
     ],
-    "youtubeId": ""
-  },
-
-  "ubicacionImagen": "/hero03.webp",
-
-  "mapsUrl": "",
-
-  "contacto": {
-    "whatsapp": "51970993246",
-    "telefono": "+51 970 993 246",
-    "direccion": "Jr. Quinua N° 570, Ayacucho",
-    "horario": "Lun–Sab 9:00 AM – 7:00 PM"
+    "descripcion": "Se vende propiedad ubicada en San Juan Bautista, Huamanga – Ayacucho, en una zona estratégica y de fácil acceso, cerca del Mercado Las Américas y del Mirador de Acuchimay. La propiedad cuenta con agua, luz, desagüe y título de propiedad, con documentación completamente en regla. Es una excelente oportunidad para vivienda o inversión en una zona consolidada y con alta demanda.",
+    "equipamiento": [
+      "Agua",
+      "Luz",
+      "Desagüe",
+      "Título de Propiedad",
+      "Ubicación estratégica"
+    ],
+    "caracteristicas": [
+      { "label": "Precio", "value": "S/ 240,000" },
+      { "label": "Ubicación", "value": "San Juan Bautista, cerca del Mercado Las Américas y Mirador de Acuchimay" },
+      { "label": "Servicios", "value": "Agua, luz y desagüe" },
+      { "label": "Documentación", "value": "Título de propiedad y documentos en regla" },
+      { "label": "Estado legal", "value": "Todo en regla" },
+      { "label": "Uso", "value": "Vivienda / inversión" }
+    ],
+    "planos": {
+      "titulo": "Plano de la propiedad",
+      "imagen": "",
+      "pdf": "",
+      "nota": "Plano referencial"
+    },
+    "galeria": {
+      "fotos": [
+        "/SANJUAN/SANJUAN01.webp",
+        "/SANJUAN/SANJUAN02.webp",
+        "/SANJUAN/SANJUAN03.webp",
+        "/SANJUAN/SANJUAN04.webp",
+        "/SANJUAN/SANJUAN05.webp"
+      ],
+      "youtubeId": ""
+    },
+    "ubicacionImagen": "/hero03.webp",
+    "mapsUrl": "https://maps.app.goo.gl/CutYzfSohpdeAiKAA",
+    "descuento": {
+      "titulo": "Agenda tu visita y conoce esta propiedad en San Juan Bautista",
+      "imagen": "/prueba01.webp"
+    },
+    "contacto": {
+      "whatsapp": "51970993246",
+      "telefono": "+51 970 993 246",
+      "direccion": "Jr. Quinua N° 570, Ayacucho",
+      "horario": "Lun–Sab 9:00 AM – 7:00 PM"
+    }
   }
-}
 ]

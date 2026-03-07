@@ -71,6 +71,7 @@ type ProyectoDestacado = {
 const navLinks: NavLink[] = [
   { href: "/inmuebles#propiedades", label: "Proyectos" },
   { href: "/inmuebles#proyectos", label: "Lotes" },
+  { href: "/inmuebles#casas", label: "Propiedades" },
   { href: "/venta-terreno", label: "Vende tu terreno" },
   { href: "/nosotros", label: "Nosotros" },
 ];
@@ -108,7 +109,7 @@ const socialLinks: SocialLink[] = [
 
 const contactInfo: ContactInfoItemProps[] = [
   { text: "Ubicacion", href: "https://maps.app.goo.gl/oNfCpynqor7ykd756" },
-  { text: "Llámanos:  916 461 291", href: "https://api.whatsapp.com/send/?phone=51916461291&text=Hola%2C+quiero+una+cotizaci%C3%B3n&type=phone_number&app_absent=0" },
+  { text: "Llámanos:  916 194 372", href: "https://api.whatsapp.com/send/?phone=51916194372&text=Hola%2C+quiero+una+cotizaci%C3%B3n&type=phone_number&app_absent=0" },
 ];
 
 // -----------------------------
@@ -141,9 +142,9 @@ const proyectosDestacados: ProyectoDestacado[] = [
     ciudad: "BUNGAVILIA",
     nombre: "BUNGAVILIA",
     descripcion: "Naturaleza, con servicios basicos y alta plusvalía en Qorihuillca.",
-    precioDesde: "S/ 20,000",
+    precioDesde: "S/ 18,000",
     badgeColor: "bg-[#FFB200]",
-    imagen: "/BUNGAVILIA/BUNGAVILIA01.webp",
+    imagen: "/BUNGAVILIA/BUGAMBILIAS01.webp",
     href: "/propiedades/bungavilia-ayacucho",
   },
    {
@@ -463,7 +464,7 @@ const DesktopMenu = ({
 
     <div className="hidden items-center space-x-4 md:flex lg:flex">
       <a
-        href="https://wa.me/51916461291?text=Hola,%20quiero%20una%20cotización"
+        href="https://wa.me/51916194372?text=Hola,%20quiero%20una%20cotización"
         target="_blank"
         rel="noopener noreferrer"
       >

@@ -4,9 +4,9 @@
     "tipo": "proyecto",
     "titulo": "CAMPO REAL",
     "subtitulo": "Ayacucho",
-    "categoria": "Lotes",
+    "categoria": "Proyecto",
     "ubicacion": "Machayhuaycco , Huamanga – Ayacucho",
-    "precioDesdeSol": "S/ 20000",
+    "precioDesdeSol": "S/ 18000",
     "precioDesdeDolar": "",
     "pagoContado": "S/ 2,000",
     "imagen": "/MACHAYHUAYCCO/MACHAYHUAYCCOHERO.webp",
@@ -14,15 +14,15 @@
       "Alta plusvalía",
       "Acceso vehicular",
       "Servicios básicos",
-      "Entorno natural",
+      "200 m²",
       "Proyección de valorización"
     ],
-    "descripcion": "MACHAYHUYCCO es un proyecto de lotes en Huamanga – Ayacucho, ideal para vivienda, casa de campo o inversión. Cuenta con acceso vehicular y servicios básicos (agua y luz), en un entorno natural con alta proyección de valorización. Proyecto pensado para compra segura, con acompañamiento durante el proceso de separación y adquisición.",
+    "descripcion": "MACHAYHUYCCO es un proyecto de lotes en Huamanga – Ayacucho, ideal para vivienda, casa de campo o inversión. Cuenta con acceso vehicular y servicios básicos (agua y luz), con alta proyección de valorización. Proyecto pensado para compra segura, con acompañamiento durante el proceso de separación y adquisición.",
     "equipamiento": [
       "Acceso vehicular",
       "Agua",
       "Luz",
-      "Entorno natural",
+      "200 m²",
       "Proyección de valorización"
     ],
     "stockLotes": {
@@ -86,32 +86,32 @@
     "tipo": "proyecto",
     "titulo": "BUGAMBILIAS",
     "subtitulo": "Ayacucho",
-    "categoria": "Lotes",
-    "ubicacion": "Bungavilia, Huamanga – Ayacucho",
-    "precioDesdeSol": "S/ 20000",
+    "categoria": "Proyecto",
+    "ubicacion": "Bugambilias, Huamanga – Ayacucho",
+    "precioDesdeSol": "S/ 18000",
     "precioDesdeDolar": "",
     "pagoContado": "S/ 2,000",
-    "imagen": "/BUNGAVILIA/BUNGAVILIAHERO.webp",
+    "imagen": "/BUNGAVILIA/BUGAMBILIAS01.webp",
     "etiquetas": [
       "Ayacucho",
       "Alta plusvalía",
       "Acceso vehicular",
       "Servicios básicos",
-      "Entorno natural",
+      "200 m²",
       "Proyección de valorización"
     ],
-    "descripcion": "BUNGAVILIA es un proyecto de lotes en Huamanga – Ayacucho, ideal para vivienda, casa de campo o inversión. Cuenta con acceso vehicular y servicios básicos (agua y luz), en un entorno natural con alta proyección de valorización. Proyecto pensado para compra segura, con acompañamiento durante el proceso de separación y adquisición.",
+    "descripcion": "BUGAMBILIAS es un proyecto de lotes en Huamanga – Ayacucho, ideal para casa de campo o inversión. Cuenta con acceso vehicular y servicios básicos (agua y luz), con alta proyección de valorización. Proyecto pensado para compra segura, con acompañamiento durante el proceso de separación y adquisición.",
     "equipamiento": [
       "Acceso vehicular",
       "Agua",
       "Luz",
-      "Entorno natural",
+      "200 m²",
       "Proyección de valorización"
     ],
     "stockLotes": {
       "total": 20,
-      "restantes": 4,
-      "actualizado": "16/01/2026"
+      "restantes": 2,
+      "actualizado": "07/03/2026"
     },
     "planos": {
       "titulo": "Plano general del proyecto",
@@ -144,10 +144,12 @@
     ],
     "galeria": {
       "fotos": [
-        "/BUNGAVILIA/BUNGAVILIA02.webp",
-        "/BUNGAVILIA/BUNGAVILIA01.webp"
+        "/BUNGAVILIA/BUGAMBILIAS02.webp",
+        "/BUNGAVILIA/BUGAMBILIAS01.webp",
+        "/BUNGAVILIA/BUGAMBILIAS03.webp",
+        "/BUNGAVILIA/BUGAMBILIAS04.webp"
       ],
-      "youtubeId": "uWzgyrh_UTI"
+      "youtubeId": ""
     },
     "ubicacionImagen": "/hero03.webp",
     "mapsUrl": "https://www.google.com/maps/place/13%C2%B007'39.0%22S+74%C2%B015'15.2%22W/@-13.1273404,-74.2542754,130m/data=!3m1!1e3!4m4!3m3!8m2!3d-13.127504!4d-74.254226?entry=ttu&g_ep=EgoyMDI2MDIxMS4wIKXMDSoASAFQAw%3D%3D",
@@ -167,7 +169,7 @@
     "tipo": "proyecto",
     "titulo": "HUANUPATA",
     "subtitulo": "Ayacucho",
-    "categoria": "Lotes",
+    "categoria": "Proyecto",
     "ubicacion": "Huanupata, Huamanga – Ayacucho",
     "precioDesdeSol": "S/ 16000",
     "precioDesdeDolar": "",
@@ -178,15 +180,15 @@
       "Alta plusvalía",
       "Acceso vehicular",
       "Servicios básicos",
-      "Entorno natural",
+      "200 m²",
       "Proyección de valorización"
     ],
-    "descripcion": "HUANUPATA es un proyecto de lotes en Huamanga – Ayacucho, ideal para vivienda, casa de campo o inversión. Cuenta con acceso vehicular y servicios básicos (agua y luz), en un entorno natural con alta proyección de valorización. Proyecto pensado para compra segura, con acompañamiento durante el proceso de separación y adquisición.",
+    "descripcion": "HUANUPATA es un proyecto de lotes en Huamanga – Ayacucho, ideal para vivienda, casa de campo o inversión. Cuenta con acceso vehicular y servicios básicos (agua y luz), con alta proyección de valorización. Proyecto pensado para compra segura, con acompañamiento durante el proceso de separación y adquisición.",
     "equipamiento": [
       "Acceso vehicular",
       "Agua",
       "Luz",
-      "Entorno natural",
+      "200 m²",
       "Proyección de valorización"
     ],
     "stockLotes": {

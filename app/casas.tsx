@@ -20,14 +20,14 @@ interface Proyecto {
 const proyectosData: Proyecto[] = [
   {
     id: 1,
-    nombre: "Cañones",
-    subtitulo: "Qorihuillca",
+    nombre: "San Juan Bautista",
+    subtitulo: "Ayacucho",
     ubicacion: "Ayacucho, Huamanga – Qorihuillca",
-    precioDesdeSol: "S/ 30,000",
-    imagenSrc: "/CAÑONES/CAÑONES01.webp",
+    precioDesdeSol: "S/ 240,000",
+    imagenSrc: "/SANJUAN/SANJUAN01.webp",
     etiqueta: "LOTES",
-    servicios: ["Agua", "Luz", "Acceso vehicular", "Entorno bioambiental"],
-    link: "/proyectos/cañones-ayacucho-qorihuillca",
+    servicios: ["Agua", "Luz", "titulo de propiedad"],
+    link: "/alquileres/propiedad-san-juan-bautista-ayacucho",
   },
 ];
 
@@ -280,7 +280,7 @@ const Casas = () => {
             </button>
 
             <Link
-              href="/inmuebles"
+              href="/inmuebles#casas"
               className="hidden sm:inline-flex items-center justify-center rounded-full bg-[#005BBB] text-white px-5 py-2.5 font-semibold hover:bg-[#004a9b] transition shadow-sm"
             >
               Ver más

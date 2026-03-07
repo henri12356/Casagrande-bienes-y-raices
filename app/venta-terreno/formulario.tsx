@@ -3,9 +3,9 @@
 import React, { useMemo, useState } from "react";
 import Navbar from "../navbar";
 
-import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
+import { Card, CardContent } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import {
@@ -17,7 +17,7 @@ import {
 } from "@/components/ui/select";
 
 const FORMSPREE_ENDPOINT = "https://formspree.io/f/xeoynvdk";
-const WHATSAPP_NUMBER = "51970993246"; // 970 993 246 (sin +)
+const WHATSAPP_NUMBER = "51916194372"; // tu número correcto sin +
 const BRAND = "Casagrande Bienes y Raíces";
 
 type Status = "idle" | "sending" | "success" | "error";
@@ -56,28 +56,45 @@ export default function VentaPropiedadSimplePage() {
   const [precio, setPrecio] = useState("");
   const [tipo, setTipo] = useState<TipoPropiedad>("");
 
-  const whatsappHref = useMemo(() => {
-    const text = [
+  const whatsappText = useMemo(() => {
+    return [
       `Hola ${BRAND}, quiero vender una propiedad.`,
-      `Tipo: ${labelTipo(tipo)}`,
-      `Nombre: ${nombre || "-"}`,
-      `Teléfono: ${telefono || "-"}`,
-      `Lugar: ${lugar || "-"}`,
-      `Precio: ${precio || "-"}`,
+      ``,
+      `*Datos del propietario:*`,
+      `• Tipo: ${labelTipo(tipo)}`,
+      `• Nombre: ${nombre || "-"}`,
+      `• Teléfono: ${telefono || "-"}`,
+      `• Lugar: ${lugar || "-"}`,
+      `• Precio: ${precio || "-"}`,
     ].join("\n");
-
-    return `https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(text)}`;
   }, [nombre, telefono, lugar, precio, tipo]);
+
+  const whatsappHref = useMemo(() => {
+    return `https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(
+      whatsappText
+    )}`;
+  }, [whatsappText]);
 
   async function onSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
+
+    if (!tipo || !nombre || !telefono || !lugar || !precio) {
+      setStatus("error");
+      setMsg("Completa todos los campos antes de enviar.");
+      return;
+    }
+
     setStatus("sending");
     setMsg("");
 
     try {
-      const form = e.currentTarget;
-      const formData = new FormData(form);
+      const formData = new FormData();
 
+      formData.append("tipo_propiedad", labelTipo(tipo));
+      formData.append("nombre", nombre);
+      formData.append("telefono", telefono);
+      formData.append("lugar", lugar);
+      formData.append("precio", precio);
       formData.append(
         "_subject",
         `Venta de propiedad | ${labelTipo(tipo)} | ${lugar || "Sin lugar"}`
@@ -86,7 +103,9 @@ export default function VentaPropiedadSimplePage() {
       const res = await fetch(FORMSPREE_ENDPOINT, {
         method: "POST",
         body: formData,
-        headers: { Accept: "application/json" },
+        headers: {
+          Accept: "application/json",
+        },
       });
 
       const json = (await res.json().catch(() => null)) as {
@@ -98,15 +117,18 @@ export default function VentaPropiedadSimplePage() {
         setStatus("error");
         setMsg(
           json?.errors?.[0]?.message ??
-            "No se pudo enviar. Revisa tu Formspree (correo verificado / spam) e inténtalo nuevamente."
+            "No se pudo enviar. Revisa tu configuración de Formspree e inténtalo nuevamente."
         );
         return;
       }
 
       setStatus("success");
-      setMsg("Enviado correctamente. Te contactaremos en breve.");
+      setMsg("Enviado correctamente. También te estamos redirigiendo a WhatsApp.");
 
-      form.reset();
+      // Abre WhatsApp con toda la info
+      window.open(whatsappHref, "_blank");
+
+      // Limpieza después de abrir WhatsApp
       setNombre("");
       setTelefono("");
       setLugar("");
@@ -119,14 +141,6 @@ export default function VentaPropiedadSimplePage() {
   }
 
   const disabled = status === "sending";
-
-  /**
-   * HACERLO “MÁS GRANDE”:
-   * - subimos alturas (h-16)
-   * - subimos tamaños de texto (text-[17px] inputs, labels más grandes)
-   * - ampliamos anchos máximos (main max-w-[1700px], card max-w-[1500px])
-   * - aumentamos gaps (gap-8) y padding (px-8)
-   */
 
   const inputCls =
     "h-16 rounded-full border-2 border-blue-600/70 bg-white px-8 text-[17px] text-slate-900 " +
@@ -217,13 +231,6 @@ export default function VentaPropiedadSimplePage() {
                         <SelectItem value="otros">Otros</SelectItem>
                       </SelectContent>
                     </Select>
-
-                    <input
-                      type="hidden"
-                      name="tipo_propiedad"
-                      value={tipo}
-                      required
-                    />
                   </div>
 
                   <div className="space-y-3">
@@ -231,6 +238,7 @@ export default function VentaPropiedadSimplePage() {
                     <Input
                       className={inputCls}
                       name="nombre"
+                      value={nombre}
                       placeholder="Ej. Juan Pérez"
                       required
                       onChange={(e) => setNombre(e.target.value)}
@@ -242,6 +250,7 @@ export default function VentaPropiedadSimplePage() {
                     <Input
                       className={inputCls}
                       name="telefono"
+                      value={telefono}
                       placeholder="Ej. 970 993 246"
                       required
                       onChange={(e) => setTelefono(e.target.value)}
@@ -253,6 +262,7 @@ export default function VentaPropiedadSimplePage() {
                     <Input
                       className={inputCls}
                       name="lugar"
+                      value={lugar}
                       placeholder="Ej. Qorihuillca, Huamanga – Ayacucho"
                       required
                       onChange={(e) => setLugar(e.target.value)}
@@ -264,6 +274,7 @@ export default function VentaPropiedadSimplePage() {
                     <Input
                       className={inputCls}
                       name="precio"
+                      value={precio}
                       placeholder="Ej. 15000 USD o S/ 50,000"
                       required
                       onChange={(e) => setPrecio(e.target.value)}
@@ -309,8 +320,6 @@ export default function VentaPropiedadSimplePage() {
           </Card>
         </div>
       </main>
-
-     
     </div>
   );
 }

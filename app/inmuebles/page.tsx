@@ -400,7 +400,7 @@ const InmueblesPage = () => {
               ? "Lotes en venta"
               : item.tipoOperacion === "alquilar"
                 ? "Alquiler"
-                : "Compra"}
+                : "Disponible"}
           </div>
         </div>
 
