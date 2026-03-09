@@ -8,7 +8,7 @@ import type { Metadata } from "next";
  * - Este layout solo debe encargarse del SEO de /propiedades
  */
 
-const SITE_URL = "https://www.casagrande-inmobilaria.com"; // ✅ tu dominio real
+const SITE_URL = "https://www.casagrande-inmobiliaria.com"; // ✅ tu dominio real
 const CATALOG_PATH = "/propiedades";
 const CANONICAL = `${SITE_URL}${CATALOG_PATH}`;
 

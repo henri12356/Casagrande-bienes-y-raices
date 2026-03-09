@@ -22,7 +22,7 @@ const companyInfo = {
     "Casagrande Bienes y Raíces: venta de terrenos y lotes en Ayacucho (Huamanga) con proyectos en Ccorihuillca/Qorihuillca. Asesoría completa y procesos seguros. Más de 400 lotes vendidos. Ideal para vivienda, casa de campo o inversión.",
 
   // ✅ Tu dominio real
-  url: "https://www.casagrande-inmobilaria.com",
+  url: "https://www.casagrande-inmobiliaria.com",
 
   // ✅ Mejor: usar rutas relativas y que Next las resuelva con metadataBase
   logoPath: "/logo.svg",

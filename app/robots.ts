@@ -1,7 +1,7 @@
 // app/robots.ts
 import type { MetadataRoute } from "next";
 
-const SITE_URL = "https://www.casagrande-inmobilaria.com";
+const SITE_URL = "https://www.casagrande-inmobiliaria.com";
 
 export default function robots(): MetadataRoute.Robots {
   return {

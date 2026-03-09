@@ -8,7 +8,7 @@ import type { Metadata } from "next";
  * - NO incluir GoogleAnalytics aquí (va solo en app/layout.tsx)
  */
 
-const SITE_URL = "https://www.casagrande-inmobilaria.com";
+const SITE_URL = "https://www.casagrande-inmobiliaria.com";
 const PAGE_PATH = "/nosotros";
 const CANONICAL = `${SITE_URL}${PAGE_PATH}`;
 

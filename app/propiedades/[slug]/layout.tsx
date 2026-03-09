@@ -13,7 +13,7 @@ interface PropertyLayoutProps {
 }
 
 // ✅ TU DOMINIO REAL (INMOBILIARIA) — revisa el typo si aplica
-const SITE_URL = "https://www.casagrande-inmobilaria.com";
+const SITE_URL = "https://www.casagrande-inmobiliaria.com";
 
 const BRAND_NAME = "Casagrande Bienes y Raíces";
 const ALT_BRAND = "Casagrande Inmobiliaria Ayacucho";

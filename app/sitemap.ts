@@ -2,7 +2,7 @@
 import type { MetadataRoute } from "next";
 
 /**
- * Sitemap para: https://www.casagrande-inmobilaria.com
+ * Sitemap para: https://www.casagrande-inmobiliaria.com/
  * Incluye:
  * - Home
  * - Inmuebles (y ancla #proyectos SOLO como referencia; NO se agrega al sitemap porque Google ignora hashes)
@@ -11,7 +11,7 @@ import type { MetadataRoute } from "next";
  */
 
 // ✅ Dominio real
-const baseUrl = "https://www.casagrande-inmobilaria.com";
+const baseUrl = "https://www.casagrande-inmobiliaria.com/";
 
 /**
  * ⚠️ Nota:
