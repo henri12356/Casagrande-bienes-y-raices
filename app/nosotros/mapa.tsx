@@ -1,9 +1,9 @@
 "use client";
 
 // 1. Importamos useState y AnimatePresence
-import React, { useState } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
+import { AnimatePresence, motion } from 'framer-motion';
 import Image from 'next/image';
+import { useState } from 'react';
 import { FaTimes } from 'react-icons/fa'; // Icono para cerrar
 
 // --- DATOS DE LA LEYENDA (Sin cambios) ---
@@ -28,30 +28,30 @@ interface Proyecto {
 }
 
 const proyectos: Proyecto[] = [
-  { 
-    id: 'p1', 
-    title: 'Residencial Los Álamos', 
-    type: 'casa', 
-    imageUrl: '/proyectos/casa-ejemplo.jpg', // Cambia esta imagen
-    position: { top: '35%', left: '40%' }, 
-    color: '#10B981' 
-  },
-  { 
-    id: 'p2', 
-    title: 'Lote Industrial San Juan', 
-    type: 'terreno', 
-    imageUrl: '/proyectos/terreno-ejemplo.jpg', // Cambia esta imagen
-    position: { top: '50%', left: '25%' }, 
-    color: '#F59E0B' 
-  },
-  { 
-    id: 'p3', 
-    title: 'Oficinas Céntricas', 
-    type: 'oficina', 
-    imageUrl: '/proyectos/casa-ejemplo.jpg', // Cambia esta imagen
-    position: { top: '65%', left: '60%' }, 
-    color: '#8B5CF6' 
-  },
+  // { 
+  //   id: 'p1', 
+  //   title: 'Residencial Los Álamos', 
+  //   type: 'casa', 
+  //   imageUrl: '/proyectos/casa-ejemplo.jpg', // Cambia esta imagen
+  //   position: { top: '35%', left: '40%' }, 
+  //   color: '#10B981' 
+  // },
+  // { 
+  //   id: 'p2', 
+  //   title: 'Lote Industrial San Juan', 
+  //   type: 'terreno', 
+  //   imageUrl: '/proyectos/terreno-ejemplo.jpg', // Cambia esta imagen
+  //   position: { top: '50%', left: '25%' }, 
+  //   color: '#F59E0B' 
+  // },
+  // { 
+  //   id: 'p3', 
+  //   title: 'Oficinas Céntricas', 
+  //   type: 'oficina', 
+  //   imageUrl: '/proyectos/casa-ejemplo.jpg', // Cambia esta imagen
+  //   position: { top: '65%', left: '60%' }, 
+  //   color: '#8B5CF6' 
+  // },
 ];
 // ---------------------------------------------
 
@@ -83,7 +83,7 @@ const Mapa = () => {
               className="text-4xl sm:text-5xl font-extrabold mt-3"
               style={{ color: '#01338C' }}
             >
-              Presentes en las Mejores Zonas del País
+              Presentes en las Mejores Zonas de Ayacucho
             </h2>
             <p className="text-gray-600 text-lg mt-5">
               Conectamos a compradores y vendedores con las mejores oportunidades inmobiliarias.
@@ -100,7 +100,7 @@ const Mapa = () => {
                 className="text-4xl font-bold"
                 style={{ color: '#01338C' }}
               >
-                +500 Propiedades
+                +10 Propiedades
               </p>
             </motion.div>
           </motion.div>

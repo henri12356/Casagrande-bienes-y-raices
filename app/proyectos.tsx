@@ -60,7 +60,7 @@ const proyectosData: Proyecto[] = [
     link: "/propiedades/huanupata",
   },
   {
-    id: 3,
+    id: 4,
     nombre: "Corihuillca",
     subtitulo: "Ayacucho ",
     ubicacion: "Huamanga – Qorihuillca",
@@ -211,7 +211,7 @@ const Proyectos = () => {
             style={{ scrollbarWidth: "none", msOverflowStyle: "none" }}
           >
             {proyectosData.map((p) => (
-              <div key={p.id} className="snap-start flex-shrink-0 w-[88%] sm:w-[52%] lg:w-[32%] xl:w-[24%]">
+              <div key={p.id} className="snap-start shrink-0 w-[88%] sm:w-[52%] lg:w-[32%] xl:w-[24%]">
                 <ProjectCard p={p} />
               </div>
             ))}

@@ -2,7 +2,7 @@
 import type { MetadataRoute } from "next";
 
 /**
- * Sitemap para: https://www.casagrande-inmobiliaria.com/
+ * Sitemap para: https://www.casagrande-inmobiliaria.com
  * Incluye:
  * - Home
  * - Inmuebles (y ancla #proyectos SOLO como referencia; NO se agrega al sitemap porque Google ignora hashes)
@@ -11,7 +11,7 @@ import type { MetadataRoute } from "next";
  */
 
 // ✅ Dominio real
-const baseUrl = "https://www.casagrande-inmobiliaria.com/";
+const baseUrl = "https://www.casagrande-inmobiliaria.com";
 
 /**
  * ⚠️ Nota:
@@ -34,6 +34,10 @@ const propiedadesSlugs = [
   "bungavilia-ayacucho",
   "huanupata",
   // agrega los demás...
+];
+const alquileresSlugs = [
+  "propiedad-san-juan-bautista-ayacucho",
+ 
 ];
 
 export default function sitemap(): MetadataRoute.Sitemap {
@@ -104,6 +108,14 @@ export default function sitemap(): MetadataRoute.Sitemap {
       priority: 0.75,
     })
   );
+  const alquileresUrls: MetadataRoute.Sitemap = alquileresSlugs.map(
+    (slug) => ({
+      url: `${baseUrl}/alquileres/${encodeURIComponent(slug)}`,
+      lastModified: now,
+      changeFrequency: "weekly",
+      priority: 0.75,
+    })
+  );
 
-  return [...staticUrls, ...proyectosUrls, ...propiedadesUrls];
+  return [...staticUrls, ...proyectosUrls, ...propiedadesUrls, ...alquileresUrls];
 }

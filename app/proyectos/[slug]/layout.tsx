@@ -103,28 +103,29 @@ const proyectosJson: ProjectJson[] = [
     pagoContado: "S/ 2,000",
 
     imagen: "/CAÑONES/CAÑONES03.webp",
+
     etiquetas: [
       "Cañones",
       "Huamanga",
       "Ayacucho",
-      "Naturaleza",
+      "200 m²",
       "Zona en crecimiento",
       "Alta plusvalía",
       "Acceso vehicular",
       "Agua",
       "Luz",
-      "Bioambiental",
+      "Bioambiental"
     ],
 
     descripcion:
-      "Cañones es un proyecto de lotes en Qorihuillca – Huamanga, Ayacucho, pensado para quienes buscan tranquilidad, aire puro y una inversión con alta proyección. Rodeado de naturaleza y con accesos en mejora, es ideal para primera vivienda, casa de campo o inversión. Cuenta con agua, luz y acceso vehicular en una zona con crecimiento sostenido y gran potencial de valorización.",
+      "Cañones es un proyecto de lotes en Qorihuillca – Huamanga, Ayacucho, pensado para quienes buscan tranquilidad, aire puro y una inversión con alta proyección. Con accesos en mejora, es ideal para primera vivienda, casa de campo o inversión. Cuenta con agua, luz y acceso vehicular en una zona con crecimiento sostenido y gran potencial de valorización.",
 
     equipamiento: [
       "Agua",
       "Luz",
       "Acceso vehicular",
-      "Entorno bioambiental ",
-      "Zona con proyección de valorización",
+      "200 m²",
+      "Zona con proyección de valorización"
     ],
 
     caracteristicas: [
@@ -132,42 +133,119 @@ const proyectosJson: ProjectJson[] = [
       { label: "Precio", value: "S/ 30,000" },
       { label: "Uso", value: "Vivienda / Casa de campo / Inversión" },
       { label: "Servicios", value: "Agua, Luz y acceso vehicular" },
-      {
-        label: "Documentación",
-        value: "Acta de transferencia + contrato privado (legalizable)",
-      },
+      { label: "Documentación", value: "Acta de transferencia + contrato privado (legalizable)" },
       { label: "Entorno", value: "Bioambiental" },
-      { label: "Valorización", value: "Zona con alta proyección de crecimiento" },
+      { label: "Valorización", value: "Zona con alta proyección de crecimiento" }
     ],
 
     planos: {
       titulo: "Plano del proyecto",
       imagen: "/CAÑONES/CAÑONESPLANO.webp",
       pdf: "/CAÑONES/CAÑONESPLANO.pdf",
-      nota: "Haz clic para ver el plano en grande",
+      nota: "Haz clic para ver el plano en grande"
     },
 
     galeria: {
       fotos: ["/CAÑONES/CAÑONES03.webp", "/CAÑONES/CAÑONES01.webp"],
-      youtubeId: "",
+      youtubeId: ""
     },
 
     ubicacionImagen: "/hero03.webp",
+
     mapsUrl:
-      "https://www.google.com/maps/place/13%C2%B008'06.3%22S+74%C2%B014'49.4%22W/@-13.135378,-74.2473034,243m/data=!3m1!1e3!4m4!3m3!8m2!3d-13.135083!4d-74.247058?entry=ttu&g_ep=EgoyMDI2MDIxMS4wIKXMDSoASAFQAw%3D%3D",
+      "https://www.google.com/maps/place/13%C2%B008'06.3%22S+74%C2%B014'49.4%22W/@-13.135378,-74.2473034,243m/data=!3m1!1e3!4m4!3m3!8m2!3d-13.135083!4d-74.247058",
 
     descuento: {
       titulo: "Campaña activa: separa tu lote hoy y asegura tu precio preferencial",
-      imagen: "/prueba01.webp",
+      imagen: "/prueba01.webp"
     },
 
     contacto: {
       whatsapp: "51970993246",
       telefono: "+51 970 993 246",
       direccion: "Jr. Quinua N° 570, Ayacucho",
-      horario: "Lun–Sab 9:00 AM – 7:00 PM",
-    },
+      horario: "Lun–Sab 9:00 AM – 7:00 PM"
+    }
   },
+
+  {
+    slug: "lotes-pampahocha-ayacucho",
+    tipo: "proyecto",
+    titulo: "Corihuillca",
+    subtitulo: "Ayacucho",
+    categoria: "Lotes",
+    ubicacion: "Pampahocha, Huamanga – Ayacucho (al costado de la Ruta 14)",
+
+    precioDesdeSol: "S/ 47,000",
+    precioDesdeDolar: "",
+    pagoContado: "S/ 2,000",
+
+    imagen: "/PAMPAHOCHA/PAMPAHOCHA02.webp",
+
+    etiquetas: [
+      "Pampahocha",
+      "Huamanga",
+      "Ayacucho",
+      "Ruta 14",
+      "Acceso vehicular",
+      "200 m²",
+      "Agua",
+      "Luz"
+    ],
+
+    descripcion:
+      "Disponibles 3 lotes ubicados en Corihuillca – Huamanga, Ayacucho, al costado de la Ruta 14. Se encuentran en una zona ya habitada con acceso vehicular y buena conectividad. Son ideales para construir vivienda, desarrollar un pequeño proyecto o invertir en una zona con crecimiento constante y proyección de valorización.",
+
+    equipamiento: [
+      "Acceso vehicular",
+      "200 m²",
+      "Agua",
+      "Luz",
+      "Alta proyección de valorización"
+    ],
+
+    caracteristicas: [
+      { label: "Área", value: "200 m²" },
+      { label: "Precio", value: "S/ 47,000" },
+      { label: "Cantidad disponible", value: "3 lotes" },
+      { label: "Ubicación", value: "Al costado de la Ruta 14" },
+      { label: "Uso", value: "Vivienda / Inversión" },
+      { label: "Zona", value: "Área ya habitada con crecimiento urbano" }
+    ],
+
+    planos: {
+      titulo: "Plano del lote",
+      imagen: "/PAMPAHOCHA/PLANOPAMPAHOCHA.webp",
+      pdf: "/PAMPAHOCHA/PAMPACCOCHA-PAMPACCOCHA.pdf",
+      nota: "Plano referencial del lote"
+    },
+
+    galeria: {
+      fotos: [
+        "/PAMPAHOCHA/PAMPAHOCHA02.webp",
+        "/PAMPAHOCHA/PAMPAHOCHA03.webp",
+        "/PAMPAHOCHA/PAMPAHOCHA04.webp",
+        "/PAMPAHOCHA/PAMPAHOCHA01.webp"
+      ],
+      youtubeId: ""
+    },
+
+    ubicacionImagen: "/hero03.webp",
+
+    mapsUrl: "https://maps.app.goo.gl/dyWMZzafR5fx5Y1o6",
+
+    descuento: {
+      titulo: "Campaña activa: separa tu lote hoy y asegura precio preferencial",
+      imagen: "/prueba01.webp"
+    },
+
+    contacto: {
+      whatsapp: "51970993246",
+      telefono: "+51 970 993 246",
+      direccion: "Jr. Quinua N° 570, Ayacucho",
+      horario: "Lun–Sab 9:00 AM – 7:00 PM"
+    }
+  }
 ];
 
 // ---------------- helpers ----------------
