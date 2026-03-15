@@ -8,10 +8,8 @@ import { FaCheck, FaSearch } from "react-icons/fa";
 const LUGARES = [
   "Todos",
   "Ayacucho",
-  "Qorihuillca",
-  "Pampaqocha",
-  "Ccasera",
-  "Ccahuiñayoq",
+  "Corihuillca",
+ 
 ] as const;
 
 type Lugar = (typeof LUGARES)[number];
@@ -122,21 +120,8 @@ const HeroInmuebles: React.FC<HeroProps> = ({
               </button>
             </div>
 
-            {/* Mini texto debajo (pro) */}
-            <div className="mt-3 flex flex-wrap items-center justify-center gap-x-4 gap-y-2 text-xs font-semibold text-white/85">
-              <span className="inline-flex items-center gap-2">
-                <span className="h-2 w-2 rounded-full bg-[#FFB200]" />
-                Agua y Luz
-              </span>
-              <span className="inline-flex items-center gap-2">
-                <span className="h-2 w-2 rounded-full bg-[#FFB200]" />
-                Acceso vehicular
-              </span>
-              <span className="inline-flex items-center gap-2">
-                <span className="h-2 w-2 rounded-full bg-[#FFB200]" />
-                Entorno bioambiental
-              </span>
-            </div>
+        
+            
           </div>
         </div>
       </div>

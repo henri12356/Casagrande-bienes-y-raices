@@ -1,20 +1,20 @@
 // app/proyectos/[slug]/page.tsx
-import { notFound } from "next/navigation";
+import { Clock, MapPin } from "lucide-react";
 import Image from "next/image";
-import { MapPin, Clock } from "lucide-react";
+import { notFound } from "next/navigation";
 
 import propiedadesdata from "@/app/data/propiedades.json";
 
 import { Badge } from "@/components/ui/badge";
 import { Card } from "@/components/ui/card";
 
+import EquipamientoGrid from "../equipamiento-grid";
 import GaleriaTabs from "../galeria-tabs";
 import SectionAnimation from "../section-animation";
 import StickyContactoCardCentenario from "../sticky-contacto-card";
-import EquipamientoGrid from "../equipamiento-grid";
 // import DescuentoBanner from "../descuento-banner"; // (lo tienes comentado abajo)
-import Navbar from "@/app/navbar";
 import Footer from "@/app/footer";
+import Navbar from "@/app/navbar";
 
 type KV = { label: string; value: string };
 type Promo = { titulo: string; detalle?: string };
@@ -293,10 +293,10 @@ export default async function ProyectoPage({
         {/* =========================
             CONTENIDO + FORM
         ========================= */}
-        <section className="mx-auto max-w-[1400px] px-4 pb-10">
+        <section className="mx-auto max-w-[1400px] px-1 pb-10">
           <div className="grid gap-10 lg:grid-cols-[1fr_420px] lg:items-start">
             {/* IZQUIERDA */}
-            <div className="pt-10 lg:pt-12">
+            <div className="pt-10 lg:pt-12 w-full min-w-0">
               {proyecto.descripcion ? (
                 <SectionAnimation>
                   <Card className="rounded-3xl border border-slate-200 bg-white p-7 shadow-[0_16px_45px_rgba(2,6,23,0.06)]">

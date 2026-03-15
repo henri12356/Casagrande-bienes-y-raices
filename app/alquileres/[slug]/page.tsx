@@ -277,7 +277,7 @@ export default async function AlquilerPage({
 
                   {/* ✅ PRECIO (NO TOCAR) */}
                   <div className="flex pt-10 w-full max-w-[520px]">
-                    <div className="flex max-md:flex-col w-full max-w-[520px] gap-3 rounded-3xl bg-[#01338C] px-6 py-5 text-white shadow-[0_26px_70px_rgba(2,6,23,0.35)] ring-1 ring-white/10">
+                    <div className="flex max-md:flex-col w-full max-w-[300px] gap-3 rounded-3xl bg-[#01338C] px-6 py-5 text-white shadow-[0_26px_70px_rgba(2,6,23,0.35)] ring-1 ring-white/10">
                       {/* CONTADO */}
                       <div className="flex flex-1 flex-col justify-center rounded-2xl bg-white/15 px-5 py-4 ring-1 ring-white/10">
                         <p className="text-xs font-extrabold uppercase text-white/80">
@@ -319,10 +319,10 @@ export default async function AlquilerPage({
         {/* =========================
             CONTENIDO + FORM
         ========================= */}
-        <section className="mx-auto max-w-[1400px] px-4 pb-10">
+        <section className="mx-auto max-w-[1400px] px-1 pb-10">
           <div className="grid gap-10 lg:grid-cols-[1fr_420px] lg:items-start">
             {/* IZQUIERDA */}
-            <div className="pt-10 lg:pt-12">
+            <div className="pt-10 lg:pt-12 w-full min-w-0">
               {alquiler.descripcion ? (
                 <SectionAnimation>
                   <Card className="rounded-3xl border border-slate-200 bg-white p-7 shadow-[0_16px_45px_rgba(2,6,23,0.06)]">

@@ -13,7 +13,7 @@ export default function DescuentoBanner({
         ¡Grandes descuentos solo por pocos días!
       </h2>
 
-      <div className="mt-6 overflow-hidden rounded-3xl bg-[#F3F7FB] p-6">
+      <div className="mt-6 overflow-hidden rounded-3xl bg-[#F3F7FB] p-2">
         <div className="relative aspect-[16/7] w-full overflow-hidden rounded-2xl">
           <Image
             src={imagen}

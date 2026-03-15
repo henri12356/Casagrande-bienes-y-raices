@@ -1,9 +1,9 @@
 "use client";
 
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { ChevronLeft, ChevronRight, Images, Video } from "lucide-react";
 import Image from "next/image";
 import { useMemo, useState } from "react";
-import { ChevronLeft, ChevronRight, Images, Video } from "lucide-react";
-import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
 
 export default function GaleriaTabs({
   fotos,
@@ -25,7 +25,7 @@ export default function GaleriaTabs({
   const next = () => setActive((v) => (v + 1) % safeFotos.length);
 
   return (
-    <div className="overflow-hidden rounded-3xl bg-[#F3F7FB] p-6">
+    <div className="overflow-hidden rounded-3xl bg-[#F3F7FB] p-2">
       <Tabs defaultValue="fotos">
         {/* ✅ CONTENIDO: FOTOS */}
         <TabsContent value="fotos" className="mt-0">

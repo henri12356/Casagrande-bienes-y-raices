@@ -325,10 +325,10 @@ export default async function ProyectoPage({
         {/* =========================
             CONTENIDO + FORM
         ========================= */}
-        <section className="mx-auto max-w-[1400px] px-4 pb-10">
+        <section className="mx-auto max-w-[1400px] px-1 pb-10">
           <div className="grid gap-10 lg:grid-cols-[1fr_420px] lg:items-start">
             {/* IZQUIERDA */}
-            <div className="pt-10 lg:pt-12">
+            <div className="pt-10 lg:pt-12 w-full min-w-0">
               {proyecto.descripcion ? (
                 <SectionAnimation>
                   <Card className="rounded-3xl border border-slate-200 bg-white p-7 shadow-[0_16px_45px_rgba(2,6,23,0.06)]">
@@ -409,7 +409,7 @@ export default async function ProyectoPage({
                           className="group block"
                           title="Ver plano del proyecto"
                         >
-                          <div className="relative aspect-[16/7] w-full overflow-hidden">
+                          <div className="relative aspect-16/7 w-full overflow-hidden">
                             <Image
                               src={planoImg}
                               alt={`Plano del proyecto - ${proyecto.titulo}`}
