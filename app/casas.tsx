@@ -20,13 +20,13 @@ interface Proyecto {
 const proyectosData: Proyecto[] = [
   {
     id: 1,
-    nombre: "San Juan Bautista",
+    nombre: "CCORIHUILLCA 01",
     subtitulo: "Ayacucho",
-    ubicacion: "Ayacucho, Huamanga – Qorihuillca",
-    precioDesdeSol: "S/ 240,000",
-    imagenSrc: "/SANJUAN/SANJUAN01.webp",
+    ubicacion: "Centro poblado de Ccorihuillca, a 15 minutos del grifo Ayacucho",
+    precioDesdeSol: "S/ 56,000",
+    imagenSrc: "/ccorihuillca-01.png",
     etiqueta: "LOTES",
-    servicios: ["Agua", "Luz", "titulo de propiedad"],
+    servicios: ["Agua", "Luz", "Acceso vehicular", "250 m²"],
     link: "/alquileres/propiedad-san-juan-bautista-ayacucho",
   },
 ];

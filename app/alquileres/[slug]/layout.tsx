@@ -1,10 +1,10 @@
-// app/propiedades/[slug]/layout.tsx
+// app/alquileres/[slug]/layout.tsx
 import type { Metadata } from "next";
 
 /**
  * ✅ IMPORTANTE
  * - NO incluyas GoogleAnalytics aquí (debe estar SOLO en app/layout.tsx)
- * - Este layout es para SEO por propiedad: /propiedades/[slug]
+ * - Este layout es para SEO por lote: /alquileres/[slug]
  */
 
 interface PropertyLayoutProps {
@@ -65,40 +65,42 @@ const proyectosJson: ProjectJson[] = [
   {
     slug: "propiedad-san-juan-bautista-ayacucho",
     tipo: "propiedad",
-    titulo: "San Juan Bautista",
+    titulo: "CCORIHUILLCA 01",
     subtitulo: "Ayacucho",
-    categoria: "Propiedad",
+    categoria: "Lote",
     ubicacion:
-      "San Juan Bautista, Huamanga – Ayacucho (cerca del Mercado Las Américas y Mirador de Acuchimay)",
-    precioDesdeSol: "S/ 240000",
+      "Centro poblado de Ccorihuillca, Huamanga - Ayacucho",
+    precioDesdeSol: "S/ 56000",
     precioDesdeDolar: "",
     pagoContado: "",
-    imagen: "/SANJUAN/SANJUAN01.webp",
+    imagen: "/ccorihuillca-01.png",
 
     etiquetas: [
-      "San Juan Bautista",
-      "Mercado Las Américas",
-      "Mirador de Acuchimay",
+      "Ccorihuillca",
+      "Centro poblado",
+      "250 m²",
       "Agua",
       "Luz",
-      "Desagüe",
-      "Título de Propiedad",
-      "Todo en regla",
+      "Acceso vehicular",
+      "Listo para construir",
+      "A 15 minutos del grifo Ayacucho",
     ],
 
     descripcion:
-      "Se vende propiedad ubicada en San Juan Bautista, Huamanga – Ayacucho, en una zona estratégica y de fácil acceso, cerca del Mercado Las Américas y del Mirador de Acuchimay. Cuenta con agua, luz y desagüe, además de título de propiedad con documentación completamente en regla. Excelente oportunidad para vivienda o inversión en una zona consolidada y con alta demanda.",
+      "Se vende lote de 250 m² ubicado en el centro poblado de Ccorihuillca, a 15 minutos del grifo Ayacucho. El terreno se encuentra dentro del mismo pueblo, en una zona con restaurantes, tiendas y servicios cercanos. Cuenta con agua, luz, acceso vehicular y está listo para construir, ideal para vivienda, casa de campo o inversión.",
 
     caracteristicas: [
-      { label: "Precio", value: "S/ 240,000" },
+      { label: "Precio", value: "S/ 56,000" },
+      { label: "Área", value: "250 m²" },
       {
         label: "Ubicación",
         value:
-          "San Juan Bautista, cerca del Mercado Las Américas y Mirador de Acuchimay",
+          "Centro poblado de Ccorihuillca, a 15 minutos del grifo Ayacucho",
       },
-      { label: "Servicios", value: "Agua, luz y desagüe" },
-      { label: "Documentación", value: "Título de propiedad en regla" },
-      { label: "Uso", value: "Vivienda / inversión" },
+      { label: "Servicios", value: "Agua y luz" },
+      { label: "Acceso", value: "Acceso vehicular" },
+      { label: "Entorno", value: "Zona con restaurantes, tiendas y servicios cercanos" },
+      { label: "Uso", value: "Vivienda / casa de campo / inversión" },
     ],
   },
 ];
@@ -164,7 +166,7 @@ function makeMetaFromProject(p: ProjectJson): PropertyMeta {
     description,
     keywords: keywordsFromProject(p),
     image: p.imagen?.startsWith("/") ? p.imagen : `/${p.imagen}`,
-    canonical: `${SITE_URL}/propiedades/${p.slug}`,
+    canonical: `${SITE_URL}/alquileres/${p.slug}`,
     locationText: p.ubicacion,
     address: {
       addressLocality: "Huamanga",
@@ -195,7 +197,7 @@ export async function generateMetadata({
       title: `Propiedad no encontrada | ${BRAND_NAME}`,
       description:
         "La propiedad que buscas no está disponible. Revisa terrenos y lotes en Ayacucho (Huamanga y alrededores).",
-      alternates: { canonical: `${SITE_URL}/propiedades` },
+      alternates: { canonical: `${SITE_URL}/alquileres` },
       robots: { index: false, follow: false },
     };
   }
@@ -272,7 +274,7 @@ export default async function PropertyLayout({
   const { slug } = await params;
   const data = propiedadesMetadata[slug as PropertySlug];
 
-  const canonical = data?.canonical ?? `${SITE_URL}/propiedades/${slug}`;
+  const canonical = data?.canonical ?? `${SITE_URL}/alquileres/${slug}`;
   const imageUrl = data?.image ? `${SITE_URL}${data.image}` : FALLBACK_OG;
 
   const schemaWebPage = {
@@ -298,8 +300,8 @@ export default async function PropertyLayout({
       {
         "@type": "ListItem",
         position: 2,
-        name: "Propiedades",
-        item: `${SITE_URL}/propiedades`,
+        name: "Lotes",
+        item: `${SITE_URL}/alquileres`,
       },
       {
         "@type": "ListItem",

@@ -144,5 +144,217 @@
       "direccion": "Jr. Quinua N° 570, Ayacucho",
       "horario": "Lun–Sab 9:00 AM – 7:00 PM"
     }
+  },
+  {
+    "slug": "terreno-ccorihuillca-centro-ayacucho",
+    "tipo": "proyecto",
+    "titulo": "Ccorihuillca 01",
+    "subtitulo": "Ayacucho",
+    "estado": "disponible",
+    "categoria": "Lotes",
+    "ubicacion": "Ccorihuillca Centro, a 15 minutos del Grifo Ayacucho",
+    "precioDesdeSol": "S/ 56,000",
+    "precioDesdeDolar": "",
+    "pagoContado": "",
+    "imagen": "/CCORIHUILLCA01/CCORIHUILLCA01-01.webp",
+    "etiquetas": [
+      "Ccorihuillca Centro",
+      "250 m²",
+      "Agua",
+      "Luz",
+      "Acceso vehicular",
+      "Listo para construir",
+      "Zona poblada",
+      "Cerca a tiendas y restaurantes"
+    ],
+    "descripcion": "Se vende terreno de 250 m² ubicado en Ccorihuillca Centro, a solo 15 minutos del Grifo Ayacucho. El lote se encuentra en el mismo pueblo de Ccorihuillca, en una zona poblada y con entorno activo, donde ya existen restaurantes, tiendas y viviendas cercanas. Cuenta con agua, luz y acceso vehicular, ideal para construir una vivienda, casa de campo o realizar una inversión con buena proyección de valorización.",
+    "equipamiento": [
+      "Agua",
+      "Luz",
+      "Acceso vehicular",
+      "Zona poblada",
+      "Listo para construir",
+      "Buena proyección de valorización"
+    ],
+    "caracteristicas": [
+      { "label": "Área", "value": "250 m²" },
+      { "label": "Precio", "value": "S/ 56,000" },
+      { "label": "Cantidad disponible", "value": "1 lote" },
+      { "label": "Ubicación", "value": "Ccorihuillca Centro, a 15 minutos del Grifo Ayacucho" },
+      { "label": "Servicios", "value": "Agua y luz" },
+      { "label": "Acceso", "value": "Acceso vehicular" },
+      { "label": "Entorno", "value": "Zona poblada, con restaurantes, tiendas y viviendas cercanas" },
+      { "label": "Uso", "value": "Vivienda / casa de campo / inversión" },
+      { "label": "Estado", "value": "Listo para construir" }
+    ],
+    "planos": {
+      "titulo": "Plano del lote",
+      "imagen": "/CCORIHUILLCA01/PLANOCCORIHUILLCA01.webp",
+      "pdf": "/CCORIHUILLCA01/CCORIHUILLCA01.pdf",
+      "nota": "Plano referencial del lote"
+    },
+    "galeria": {
+      "fotos": [
+        "/CCORIHUILLCA01/CCORIHUILLCA01-01.webp",
+        "/CCORIHUILLCA01/CCORIHUILLCA01-02.webp",
+        "/CCORIHUILLCA01/CCORIHUILLCA01-03.webp",
+        "/CCORIHUILLCA01/CCORIHUILLCA01-04.webp"
+      ],
+      "youtubeId": ""
+    },
+    "ubicacionImagen": "/hero03.webp",
+    "mapsUrl": "https://maps.app.goo.gl/CutYzfSohpdeAiKAA",
+    "descuento": {
+      "titulo": "Agenda tu visita y conoce este terreno en Ccorihuillca Centro",
+      "imagen": "/prueba01.webp"
+    },
+    "contacto": {
+      "whatsapp": "51970993246",
+      "telefono": "+51 970 993 246",
+      "direccion": "Jr. Quinua N° 570, Ayacucho",
+      "horario": "Lun–Sab 9:00 AM – 7:00 PM"
+    }
+  },
+  {
+    "slug": "terreno-ccorihuillca-02-ayacucho",
+    "tipo": "proyecto",
+    "titulo": "Ccorihuillca 02",
+    "subtitulo": "Ayacucho",
+    "estado": "disponible",
+    "categoria": "Lotes",
+    "ubicacion": "Ccorihuillca Centro, a 12 minutos del Grifo Ayacucho",
+    "precioDesdeSol": "S/ 32,000",
+    "precioDesdeDolar": "",
+    "pagoContado": "",
+    "imagen": "/CCORIHUILLCA02/CCORIHUILLCA02-01.webp",
+    "etiquetas": [
+      "Ccorihuillca Centro",
+      "2 lotes disponibles",
+      "150 m²",
+      "Agua",
+      "Luz",
+      "Acceso vehicular",
+      "Listo para construir",
+      "Ubicado en vía principal",
+      "Zona poblada"
+    ],
+    "descripcion": "Se venden 2 lotes de 150 m² ubicados en Ccorihuillca Centro, a solo 12 minutos del Grifo Ayacucho. Los terrenos se encuentran en el mismo pueblo de Ccorihuillca, en una zona poblada y con acceso directo por la misma vía. El entorno cuenta con viviendas cercanas, tránsito local y buena proyección para construir o invertir. Cada lote cuenta con agua, luz y acceso vehicular, ideal para vivienda, casa de campo o inversión.",
+    "equipamiento": [
+      "Agua",
+      "Luz",
+      "Acceso vehicular",
+      "Ubicado en vía principal",
+      "Zona poblada",
+      "Listo para construir",
+      "Buena proyección de valorización"
+    ],
+    "caracteristicas": [
+      { "label": "Área", "value": "150 m²" },
+      { "label": "Precio", "value": "S/ 32,000" },
+      { "label": "Cantidad disponible", "value": "2 lotes" },
+      { "label": "Ubicación", "value": "Ccorihuillca Centro, a 12 minutos del Grifo Ayacucho" },
+      { "label": "Servicios", "value": "Agua y luz" },
+      { "label": "Acceso", "value": "Acceso vehicular por vía directa" },
+      { "label": "Entorno", "value": "Zona poblada, ubicada en la misma vía del pueblo" },
+      { "label": "Uso", "value": "Vivienda / casa de campo / inversión" },
+      { "label": "Estado", "value": "Listo para construir" }
+    ],
+    "planos": {
+      "titulo": "Plano del lote",
+      "imagen": "/CCORIHUILLCA02/PLANOCCORIHUILLCA02.webp",
+      "pdf": "/CCORIHUILLCA02/CCORIHUILLCA02.pdf",
+      "nota": "Plano referencial del lote"
+    },
+    "galeria": {
+      "fotos": [
+        "/CCORIHUILLCA02/CCORIHUILLCA02-01.webp",
+        "/CCORIHUILLCA02/CCORIHUILLCA02-02.webp"
+      ],
+      "youtubeId": ""
+    },
+    "ubicacionImagen": "/hero03.webp",
+    "mapsUrl": "https://maps.app.goo.gl/CutYzfSohpdeAiKAA",
+    "descuento": {
+      "titulo": "Agenda tu visita y conoce estos lotes en Ccorihuillca Centro",
+      "imagen": "/prueba01.webp"
+    },
+    "contacto": {
+      "whatsapp": "51970993246",
+      "telefono": "+51 970 993 246",
+      "direccion": "Jr. Quinua N° 570, Ayacucho",
+      "horario": "Lun–Sab 9:00 AM – 7:00 PM"
+    }
+  },
+  {
+    "slug": "terreno-ccorihuillca-03-ayacucho",
+    "tipo": "proyecto",
+    "titulo": "Ccorihuillca 03",
+    "subtitulo": "Ayacucho",
+    "estado": "disponible",
+    "categoria": "Lotes",
+    "ubicacion": "Ccorihuillca Centro, a 12 minutos del Grifo Ayacucho",
+    "precioDesdeSol": "S/ 28,000",
+    "precioDesdeDolar": "",
+    "pagoContado": "",
+    "imagen": "/CCORIHUILLCA03/CCORIHUILLCA03-01.webp",
+    "etiquetas": [
+      "Ccorihuillca Centro",
+      "2 lotes disponibles",
+      "150 m²",
+      "Agua",
+      "Luz",
+      "Acceso vehicular",
+      "Listo para construir",
+      "Ubicado en la misma vía",
+      "Zona poblada",
+      "Buena proyección"
+    ],
+    "descripcion": "Se venden lotes de 150 m² ubicados en Ccorihuillca Centro, a solo 12 minutos del Grifo Ayacucho. El terreno se encuentra en el mismo pueblo de Ccorihuillca, en una zona con acceso directo por la misma vía, viviendas cercanas y un entorno en crecimiento. Cuenta con agua, luz y acceso vehicular, ideal para construir una vivienda, casa de campo o invertir en una zona con buena proyección de valorización.",
+    "equipamiento": [
+      "Agua",
+      "Luz",
+      "Acceso vehicular",
+      "Ubicado en la misma vía",
+      "Zona poblada",
+      "Listo para construir",
+      "Buena proyección de valorización"
+    ],
+    "caracteristicas": [
+      { "label": "Área", "value": "150 m²" },
+      { "label": "Precio", "value": "S/ 28,000" },
+      { "label": "Cantidad disponible", "value": "2 lotes" },
+      { "label": "Ubicación", "value": "Ccorihuillca Centro, a 12 minutos del Grifo Ayacucho" },
+      { "label": "Servicios", "value": "Agua y luz" },
+      { "label": "Acceso", "value": "Acceso vehicular por vía directa" },
+      { "label": "Entorno", "value": "Zona poblada, ubicada en la misma vía del pueblo" },
+      { "label": "Uso", "value": "Vivienda / casa de campo / inversión" },
+      { "label": "Estado", "value": "Listo para construir" }
+    ],
+    "planos": {
+      "titulo": "Plano del lote",
+      "imagen": "/CCORIHUILLCA03/PLANOCCORIHUILLCA03.webp",
+      "pdf": "/CCORIHUILLCA03/CCORIHUILLCA03.pdf",
+      "nota": "Plano referencial del lote"
+    },
+    "galeria": {
+      "fotos": [
+        "/CCORIHUILLCA03/CCORIHUILLCA03-01.webp",
+        "/CCORIHUILLCA03/CCORIHUILLCA03-02.webp"
+      ],
+      "youtubeId": ""
+    },
+    "ubicacionImagen": "/hero03.webp",
+    "mapsUrl": "https://maps.app.goo.gl/CutYzfSohpdeAiKAA",
+    "descuento": {
+      "titulo": "Agenda tu visita y conoce estos lotes en Ccorihuillca Centro",
+      "imagen": "/prueba01.webp"
+    },
+    "contacto": {
+      "whatsapp": "51970993246",
+      "telefono": "+51 970 993 246",
+      "direccion": "Jr. Quinua N° 570, Ayacucho",
+      "horario": "Lun–Sab 9:00 AM – 7:00 PM"
+    }
   }
+  
 ]
