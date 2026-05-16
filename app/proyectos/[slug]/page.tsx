@@ -9,8 +9,6 @@ import proyectosData from "@/app/data/proyectos.json";
 import { Badge } from "@/components/ui/badge";
 import { Card } from "@/components/ui/card";
 
-
-
 import Footer from "@/app/footer";
 import Navbar from "@/app/navbar";
 import EquipamientoGrid from "@/app/propiedades/equipamiento-grid";
@@ -108,7 +106,7 @@ function safeDecodeSlug(s: string) {
 }
 
 async function getParams(
-  input: { slug: string } | Promise<{ slug: string }>
+  input: { slug: string } | Promise<{ slug: string }>,
 ): Promise<{ slug: string }> {
   const p: any = input;
   if (p && typeof p.then === "function") return await p;
@@ -127,7 +125,8 @@ export default async function ProyectoPage({
 
   // ✅ Match robusto (por si llega raw o decoded)
   const proyecto =
-    data.find((p) => p.slug === decodedSlug) || data.find((p) => p.slug === slug);
+    data.find((p) => p.slug === decodedSlug) ||
+    data.find((p) => p.slug === slug);
 
   if (!proyecto) notFound();
 
@@ -136,17 +135,17 @@ export default async function ProyectoPage({
   softReq(!!proyecto.ubicacion, `Falta ubicacion en JSON: ${proyecto.slug}`);
   softReq(
     !!proyecto.precioDesdeSol,
-    `Falta precioDesdeSol en JSON: ${proyecto.slug}`
+    `Falta precioDesdeSol en JSON: ${proyecto.slug}`,
   );
   softReq(
     !!proyecto.galeria?.fotos?.length,
-    `Faltan fotos en galeria: ${proyecto.slug}`
+    `Faltan fotos en galeria: ${proyecto.slug}`,
   );
   softReq(
     !!proyecto.contacto?.whatsapp &&
       !!proyecto.contacto?.telefono &&
       !!proyecto.contacto?.direccion,
-    `Falta contacto (whatsapp/telefono/direccion) en JSON: ${proyecto.slug}`
+    `Falta contacto (whatsapp/telefono/direccion) en JSON: ${proyecto.slug}`,
   );
 
   const fotos = proyecto.galeria.fotos;
@@ -261,12 +260,16 @@ export default async function ProyectoPage({
                           title="Abrir en Maps"
                         >
                           <MapPin className="h-4 w-4" />
-                          <span className="font-bold">{proyecto.ubicacion}</span>
+                          <span className="font-bold">
+                            {proyecto.ubicacion}
+                          </span>
                         </a>
                       ) : (
                         <div className="flex items-center gap-2">
                           <MapPin className="h-4 w-4" />
-                          <span className="font-bold">{proyecto.ubicacion}</span>
+                          <span className="font-bold">
+                            {proyecto.ubicacion}
+                          </span>
                         </div>
                       )}
 
@@ -282,7 +285,7 @@ export default async function ProyectoPage({
                   </div>
 
                   {/* ✅ PRECIO (NO TOCAR) */}
-                  <div className="flex pt-10 w-full max-w-[520px]">
+                  <div className="flex pt-10 w-full max-w-[450px]">
                     <div className="flex max-md:flex-col w-full max-w-[520px] gap-3 rounded-3xl bg-[#01338C] px-6 py-5 text-white shadow-[0_26px_70px_rgba(2,6,23,0.35)] ring-1 ring-white/10">
                       {/* CONTADO */}
                       <div className="flex flex-1 flex-col justify-center rounded-2xl bg-white/15 px-5 py-4 ring-1 ring-white/10">
@@ -300,15 +303,15 @@ export default async function ProyectoPage({
                         </div>
                       </div>
 
-                      {/* CRÉDITO */}
-                      {proyecto.pagoContado ? (
+                      {/* CANTIDAD DE LOTES */}
+                      {proyecto.stockLotes?.total != null ? (
                         <div className="flex flex-1 flex-col justify-center rounded-2xl bg-white/20 px-5 py-4 ring-1 ring-white/10">
                           <p className="text-xs font-extrabold uppercase text-white/80">
-                            Crédito
+                            Cantidad de lotes
                           </p>
 
                           <p className="mt-1 text-4xl font-black leading-none">
-                            {proyecto.pagoContado}
+                            {proyecto.stockLotes.total} 
                           </p>
                         </div>
                       ) : null}
@@ -480,7 +483,7 @@ export default async function ProyectoPage({
             </div>
 
             {/* FORM sticky */}
-            <div className="lg:sticky lg:top-[120px] pt-72 lg:self-start">
+            <div className="lg:sticky lg:top-[120px]  pt-10 sm:pt-72 lg:self-start">
               <div className="-mt-10 md:-mt-16 lg:-mt-[250px]">
                 <StickyContactoCardCentenario
                   proyecto={`${proyecto.titulo} ${proyecto.subtitulo ?? ""}`.trim()}

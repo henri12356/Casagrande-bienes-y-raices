@@ -3,7 +3,7 @@
     "slug": "cañones-ayacucho-qorihuillca",
     "tipo": "proyecto",
     "titulo": "Cañones",
-    "subtitulo": "Qorihuillca",
+    "subtitulo": "",
     "categoria": "Lotes",
     "ubicacion": "Qorihuillca, Huamanga – Ayacucho",
     "precioDesdeSol": "S/ 30,000",
@@ -78,7 +78,7 @@
     "slug": "lotes-pampahocha-ayacucho",
     "tipo": "proyecto",
     "titulo": "Corihuillca",
-    "subtitulo": "Ayacucho",
+    "subtitulo": "",
     "categoria": "Lotes",
     "ubicacion": "Pampahocha, Huamanga – Ayacucho (al costado de la Ruta 14)",
     "precioDesdeSol": "S/ 47,000",
@@ -148,14 +148,17 @@
   {
     "slug": "terreno-ccorihuillca-centro-ayacucho",
     "tipo": "proyecto",
-    "titulo": "Ccorihuillca 01",
-    "subtitulo": "Ayacucho",
+    "titulo": "Ccorihuillca Centro",
+    "subtitulo": "",
     "estado": "disponible",
     "categoria": "Lotes",
     "ubicacion": "Ccorihuillca Centro, a 15 minutos del Grifo Ayacucho",
     "precioDesdeSol": "S/ 56,000",
     "precioDesdeDolar": "",
-    "pagoContado": "",
+    "stockLotes": {
+  "total": 1,
+  "restantes": 1
+},
     "imagen": "/CCORIHUILLCA01/CCORIHUILLCA01-01.webp",
     "etiquetas": [
       "Ccorihuillca Centro",
@@ -173,9 +176,8 @@
       "Luz",
       "Acceso vehicular",
       "Zona poblada",
-      "Listo para construir",
-      "Buena proyección de valorización"
-    ],
+      "Listo para construir"
+        ],
     "caracteristicas": [
       { "label": "Área", "value": "250 m²" },
       { "label": "Precio", "value": "S/ 56,000" },
@@ -189,8 +191,8 @@
     ],
     "planos": {
       "titulo": "Plano del lote",
-      "imagen": "/CCORIHUILLCA01/PLANOCCORIHUILLCA01.webp",
-      "pdf": "/CCORIHUILLCA01/CCORIHUILLCA01.pdf",
+      "imagen": "",
+      "pdf": "",
       "nota": "Plano referencial del lote"
     },
     "galeria": {
@@ -198,12 +200,13 @@
         "/CCORIHUILLCA01/CCORIHUILLCA01-01.webp",
         "/CCORIHUILLCA01/CCORIHUILLCA01-02.webp",
         "/CCORIHUILLCA01/CCORIHUILLCA01-03.webp",
-        "/CCORIHUILLCA01/CCORIHUILLCA01-04.webp"
+        "/CCORIHUILLCA01/CCORIHUILLCA01-04.webp",
+        "/CCORIHUILLCA01/CCORIHUILLCA01-05.webp"
       ],
       "youtubeId": ""
     },
     "ubicacionImagen": "/hero03.webp",
-    "mapsUrl": "https://maps.app.goo.gl/CutYzfSohpdeAiKAA",
+    "mapsUrl": "https://maps.app.goo.gl/XZYoEoGsrB8diqoH8",
     "descuento": {
       "titulo": "Agenda tu visita y conoce este terreno en Ccorihuillca Centro",
       "imagen": "/prueba01.webp"
@@ -219,22 +222,22 @@
     "slug": "terreno-ccorihuillca-02-ayacucho",
     "tipo": "proyecto",
     "titulo": "Ccorihuillca 02",
-    "subtitulo": "Ayacucho",
+    "subtitulo": "",
     "estado": "disponible",
     "categoria": "Lotes",
     "ubicacion": "Ccorihuillca Centro, a 12 minutos del Grifo Ayacucho",
     "precioDesdeSol": "S/ 32,000",
     "precioDesdeDolar": "",
-    "pagoContado": "",
+    "stockLotes": {
+  "total": 2,
+  "restantes": 2
+},
     "imagen": "/CCORIHUILLCA02/CCORIHUILLCA02-01.webp",
     "etiquetas": [
       "Ccorihuillca Centro",
-      "2 lotes disponibles",
-      "150 m²",
       "Agua",
       "Luz",
       "Acceso vehicular",
-      "Listo para construir",
       "Ubicado en vía principal",
       "Zona poblada"
     ],
@@ -244,9 +247,7 @@
       "Luz",
       "Acceso vehicular",
       "Ubicado en vía principal",
-      "Zona poblada",
-      "Listo para construir",
-      "Buena proyección de valorización"
+      "Zona poblada"
     ],
     "caracteristicas": [
       { "label": "Área", "value": "150 m²" },
@@ -261,20 +262,22 @@
     ],
     "planos": {
       "titulo": "Plano del lote",
-      "imagen": "/CCORIHUILLCA02/PLANOCCORIHUILLCA02.webp",
-      "pdf": "/CCORIHUILLCA02/CCORIHUILLCA02.pdf",
+      "imagen": "",
+      "pdf": "",
       "nota": "Plano referencial del lote"
     },
     "galeria": {
       "fotos": [
         "/CCORIHUILLCA02/CCORIHUILLCA02-01.webp",
-        "/CCORIHUILLCA02/CCORIHUILLCA02-02.webp"
+        "/CCORIHUILLCA02/CCORIHUILLCA02-02.webp",
+        "/CCORIHUILLCA02/CCORIHUILLCA02-03.webp",
+        "/CCORIHUILLCA02/CCORIHUILLCA02-04.webp"
       ],
       "youtubeId": ""
     },
     "ubicacionImagen": "/hero03.webp",
-    "mapsUrl": "https://maps.app.goo.gl/CutYzfSohpdeAiKAA",
-    "descuento": {
+    "mapsUrl": "https://maps.app.goo.gl/XgzpXxgmRjHMbyad9",
+    "descuento": {    
       "titulo": "Agenda tu visita y conoce estos lotes en Ccorihuillca Centro",
       "imagen": "/prueba01.webp"
     },
@@ -289,36 +292,33 @@
     "slug": "terreno-ccorihuillca-03-ayacucho",
     "tipo": "proyecto",
     "titulo": "Ccorihuillca 03",
-    "subtitulo": "Ayacucho",
+    "subtitulo": "",
     "estado": "disponible",
     "categoria": "Lotes",
     "ubicacion": "Ccorihuillca Centro, a 12 minutos del Grifo Ayacucho",
     "precioDesdeSol": "S/ 28,000",
     "precioDesdeDolar": "",
-    "pagoContado": "",
+    "stockLotes": {
+  "total": 2,
+  "restantes": 2
+},
     "imagen": "/CCORIHUILLCA03/CCORIHUILLCA03-01.webp",
     "etiquetas": [
       "Ccorihuillca Centro",
-      "2 lotes disponibles",
       "150 m²",
       "Agua",
       "Luz",
       "Acceso vehicular",
-      "Listo para construir",
-      "Ubicado en la misma vía",
-      "Zona poblada",
-      "Buena proyección"
+      "Zona poblada"
     ],
     "descripcion": "Se venden lotes de 150 m² ubicados en Ccorihuillca Centro, a solo 12 minutos del Grifo Ayacucho. El terreno se encuentra en el mismo pueblo de Ccorihuillca, en una zona con acceso directo por la misma vía, viviendas cercanas y un entorno en crecimiento. Cuenta con agua, luz y acceso vehicular, ideal para construir una vivienda, casa de campo o invertir en una zona con buena proyección de valorización.",
     "equipamiento": [
       "Agua",
       "Luz",
       "Acceso vehicular",
-      "Ubicado en la misma vía",
       "Zona poblada",
-      "Listo para construir",
-      "Buena proyección de valorización"
-    ],
+      "Listo para construir"
+        ],
     "caracteristicas": [
       { "label": "Área", "value": "150 m²" },
       { "label": "Precio", "value": "S/ 28,000" },
@@ -332,14 +332,16 @@
     ],
     "planos": {
       "titulo": "Plano del lote",
-      "imagen": "/CCORIHUILLCA03/PLANOCCORIHUILLCA03.webp",
-      "pdf": "/CCORIHUILLCA03/CCORIHUILLCA03.pdf",
+      "imagen": "",
+      "pdf": "",
       "nota": "Plano referencial del lote"
     },
     "galeria": {
       "fotos": [
         "/CCORIHUILLCA03/CCORIHUILLCA03-01.webp",
-        "/CCORIHUILLCA03/CCORIHUILLCA03-02.webp"
+        "/CCORIHUILLCA03/CCORIHUILLCA03-02.webp",
+        "/CCORIHUILLCA03/CCORIHUILLCA03-03.webp",
+        "/CCORIHUILLCA03/CCORIHUILLCA03-04.webp"
       ],
       "youtubeId": ""
     },

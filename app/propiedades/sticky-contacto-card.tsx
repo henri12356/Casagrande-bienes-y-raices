@@ -1,14 +1,19 @@
 "use client";
 
-import { useMemo, useState } from "react";
 import { motion } from "framer-motion";
 import Link from "next/link";
-import { Phone, Send, MessageCircle } from "lucide-react";
+import {
+  CalendarCheck,
+  MessageCircle,
+  MapPin,
+  ShieldCheck,
+  ChevronRight,
+  Clock,
+  Award,
+} from "lucide-react";
 
 import { Card } from "@/components/ui/card";
-import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-import { Checkbox } from "@/components/ui/checkbox";
 
 function waLink(phone: string, text: string) {
   const clean = phone.replace(/\D/g, "");
@@ -19,246 +24,145 @@ type Props = {
   proyecto: string;
   tipo?: "LOTES" | "DEPARTAMENTOS" | "CASAS" | "PROPIEDAD";
   whatsapp: string;
-  telefono: string; 
+  telefono: string;
 };
 
 export default function StickyContactoCardCentenario({
   proyecto,
   tipo = "LOTES",
   whatsapp,
-  telefono,
 }: Props) {
-  const [step, setStep] = useState<1 | 2>(1);
-
-  const [nombre, setNombre] = useState("");
-  const [apellidos, setApellidos] = useState("");
-  const [doc, setDoc] = useState("");
-  const [pais, setPais] = useState("+51");
-  const [telefonoForm, setTelefonoForm] = useState("");
-  const [email, setEmail] = useState("");
-
-  const [aceptaDatos, setAceptaDatos] = useState(true);
-  const [aceptaCom, setAceptaCom] = useState(true);
-
-  const telClean = telefono.replace(/\s/g, "");
-  const quickMsg = `Hola, quiero información del proyecto: ${proyecto}`;
-
-  const msg = useMemo(() => {
-    return `Hola, quiero información del proyecto: ${proyecto}
-Nombre: ${nombre} ${apellidos}
-Documento: ${doc}
-Teléfono: ${pais} ${telefonoForm}
-Email: ${email}`;
-  }, [proyecto, nombre, apellidos, doc, pais, telefonoForm, email]);
-
-  const canNext =
-    nombre.trim().length >= 2 &&
-    apellidos.trim().length >= 2 &&
-    doc.trim().length >= 8 &&
-    telefonoForm.trim().length >= 7;
-
-  const canSend = canNext && email.includes("@") && aceptaDatos;
+  const msg = `Hola, quiero agendar una visita para conocer el proyecto: ${proyecto}. ¿Podrían ayudarme a coordinar horario y punto de encuentro?`;
 
   return (
     <motion.div
-      initial={{ opacity: 0, y: 14 }}
+      initial={{ opacity: 0, y: 18 }}
       animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.35, ease: "easeOut" }}
+      transition={{ duration: 0.45, ease: "easeOut" }}
+      className="mx-auto w-full max-[350px]:max-w-[320px] max-w-[420px] sm:px-3 sm:px-0"
     >
-      {/* ✅ NOTA: quitamos lg:sticky aquí. El sticky debe vivir SOLO en page.tsx */}
-      <Card
-        className={[
-          "relative overflow-hidden rounded-3xl border-0 bg-[#01338C] text-white",
-          "shadow-[0_24px_70px_rgba(2,6,23,0.30)]",
-          // ✅ clave para que NO SE CORTE:
-          // el card nunca supera la altura de pantalla
-          "max-h-[calc(100vh-140px)]",
-          "flex flex-col",
-        ].join(" ")}
-      >
-        {/* etiqueta tipo arriba derecha */}
-        <div className="absolute right-4 top-4 text-[11px] font-extrabold tracking-wide text-white/90">
-          {tipo}
-        </div>
+      <Card className="relative overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-[0_14px_40px_rgba(15,23,42,0.12)] sm:rounded-[28px] sm:shadow-[0_18px_50px_rgba(15,23,42,0.12)]">
+        {/* Franja corporativa superior */}
+        <div className="h-1.5 w-full bg-gradient-to-r from-[#0A2F6C] via-[#01338C] to-[#FFB200] sm:h-2" />
 
-        {/* ✅ Barra “Comunícate” (siempre visible) */}
+        <div className="relative p-4 sm:p-6">
+          {/* Header */}
+          <div className="flex items-start justify-between gap-3 sm:gap-4">
+            <div className="min-w-0 flex-1">
+              <div className="inline-flex max-w-full items-center gap-2 rounded-full bg-[#0A2F6C]/8 px-2.5 py-1.5 text-[10px] font-bold uppercase tracking-wide text-[#0A2F6C] sm:px-3 sm:text-xs">
+                <span className="h-2 w-2 shrink-0 rounded-full bg-[#FFB200]" />
+                <span className="truncate">Visitas disponibles</span>
+              </div>
 
-        {/* Steps + título */}
-        <div className="px-6 pt-5">
-          <div className="mx-auto flex max-w-[260px] items-center justify-center gap-3">
-            <button
-              onClick={() => setStep(1)}
-              className={[
-                "grid h-8 w-8 place-items-center rounded-full text-xs font-extrabold",
-                step === 1
-                  ? "bg-[#FFB200] text-slate-900"
-                  : "bg-white/20 text-white",
-              ].join(" ")}
-            >
-              1
-            </button>
-            <div className="h-0.5 w-16 bg-white/25" />
-            <button
-              onClick={() => setStep(2)}
-              className={[
-                "grid h-8 w-8 place-items-center rounded-full text-xs font-extrabold",
-                step === 2
-                  ? "bg-[#FFB200] text-slate-900"
-                  : "bg-white/20 text-white",
-              ].join(" ")}
-            >
-              2
-            </button>
-          </div>
+              <h3 className="mt-3 text-xl font-black tracking-tight text-slate-950 sm:mt-4 sm:text-2xl">
+                Agenda tu visita
+              </h3>
 
-          <h3 className="mt-4 text-center text-lg font-extrabold">
-            Quiero recibir información
-          </h3>
-          <p className="mt-1 text-center text-xs font-semibold text-white/80">
-            Completa tus datos y te respondemos rápido.
-          </p>
-        </div>
+              <p className="mt-2 max-w-[300px] text-xs leading-relaxed text-slate-600 sm:text-sm">
+                Coordina una visita al proyecto y recibe orientación directa de
+                nuestro equipo comercial.
+              </p>
+            </div>
 
-        {/* ✅ CUERPO SCROLLEABLE (para que no se corte) */}
-        <div className="mt-4 px-6 pb-6">
-          <div className="rounded-2xl bg-white/10 p-4 backdrop-blur">
-            <div className="max-h-[calc(100vh-320px)] overflow-y-auto pr-1">
-              {step === 1 ? (
-                <div className="grid grid-cols-2 gap-3">
-                  <Input
-                    className="h-11 rounded-2xl bg-white text-slate-900 placeholder:text-slate-400"
-                    placeholder="Nombre*"
-                    value={nombre}
-                    onChange={(e) => setNombre(e.target.value)}
-                  />
-                  <Input
-                    className="h-11 rounded-2xl bg-white text-slate-900 placeholder:text-slate-400"
-                    placeholder="Apellidos*"
-                    value={apellidos}
-                    onChange={(e) => setApellidos(e.target.value)}
-                  />
-
-                  <div className="col-span-2">
-                    <Input
-                      className="h-11 rounded-2xl bg-white text-slate-900 placeholder:text-slate-400"
-                      placeholder="Nro. de documento*"
-                      value={doc}
-                      onChange={(e) => setDoc(e.target.value)}
-                    />
-                  </div>
-
-                  <div className="col-span-2 flex gap-3">
-                    <select
-                      value={pais}
-                      onChange={(e) => setPais(e.target.value)}
-                      className="h-11 w-[92px] rounded-2xl bg-white px-3 text-sm font-bold text-slate-900 outline-none"
-                    >
-                      <option value="+51">+51</option>
-                      <option value="+54">+54</option>
-                      <option value="+56">+56</option>
-                      <option value="+57">+57</option>
-                      <option value="+58">+58</option>
-                    </select>
-
-                    <Input
-                      className="h-11 flex-1 rounded-2xl bg-white text-slate-900 placeholder:text-slate-400"
-                      placeholder="Teléfono*"
-                      value={telefonoForm}
-                      onChange={(e) => setTelefonoForm(e.target.value)}
-                    />
-                  </div>
-
-                  <div className="col-span-2 flex justify-end">
-                    <Button
-                      type="button"
-                      onClick={() => setStep(2)}
-                      disabled={!canNext}
-                      className="h-10 rounded-full bg-white/15 text-white hover:bg-white/20 disabled:opacity-50"
-                    >
-                      Siguiente
-                    </Button>
-                  </div>
-                </div>
-              ) : (
-                <div className="space-y-3">
-                  <Input
-                    className="h-11 rounded-2xl bg-white text-slate-900 placeholder:text-slate-400"
-                    placeholder="Correo electrónico*"
-                    value={email}
-                    onChange={(e) => setEmail(e.target.value)}
-                  />
-
-                  <label className="flex items-start gap-3 text-xs text-white/90">
-                    <Checkbox
-                      checked={aceptaDatos}
-                      onCheckedChange={(v) => setAceptaDatos(Boolean(v))}
-                    />
-                    <span className="leading-relaxed">
-                      He leído y acepto el{" "}
-                      <Link
-                        className="underline underline-offset-2"
-                        href="/tratamiento-datos"
-                      >
-                        Tratamiento de mis datos personales
-                      </Link>
-                      .
-                    </span>
-                  </label>
-
-                  <label className="flex items-start gap-3 text-xs text-white/90">
-                    <Checkbox
-                      checked={aceptaCom}
-                      onCheckedChange={(v) => setAceptaCom(Boolean(v))}
-                    />
-                    <span className="leading-relaxed">
-                      He leído y acepto la{" "}
-                      <Link
-                        className="underline underline-offset-2"
-                        href="/politica-comunicaciones"
-                      >
-                        Política para envío de comunicaciones comerciales
-                      </Link>
-                      .
-                    </span>
-                  </label>
-
-                  <Button
-                    asChild
-                    disabled={!canSend}
-                    className="mt-2 h-12 w-full rounded-full bg-[#FFB200] text-slate-900 hover:bg-[#ffbf2e] disabled:opacity-50"
-                  >
-                    <Link href={waLink(whatsapp, msg)} target="_blank">
-                      <Send className="mr-2 h-4 w-4" />
-                      Solicitar información
-                    </Link>
-                  </Button>
-
-                  <div className="mt-3 grid grid-cols-2 gap-3">
-                    <Button
-                      asChild
-                      className="h-11 rounded-full bg-white text-slate-900 hover:bg-white/90"
-                    >
-                      <Link href={`tel:${telClean}`}>
-                        <Phone className="mr-2 h-4 w-4" />
-                        Llamar
-                      </Link>
-                    </Button>
-
-                    <Button
-                      type="button"
-                      onClick={() => setStep(1)}
-                      className="h-11 rounded-full bg-white/15 text-white hover:bg-white/20"
-                    >
-                      Volver
-                    </Button>
-                  </div>
-                </div>
-              )}
+            <div className="grid h-11 w-11 shrink-0 place-items-center rounded-xl bg-[#0A2F6C] text-white shadow-lg sm:h-14 sm:w-14 sm:rounded-2xl">
+              <CalendarCheck className="h-5 w-5 sm:h-7 sm:w-7" />
             </div>
           </div>
 
-        
-        
+          {/* Proyecto */}
+          <div className="mt-5 rounded-2xl border border-slate-200 bg-slate-50 p-3 sm:mt-6 sm:p-4">
+            <div className="flex items-start gap-3">
+              <div className="grid h-9 w-9 shrink-0 place-items-center rounded-xl bg-[#FFB200]/15 sm:h-10 sm:w-10">
+                <MapPin className="h-4 w-4 text-[#0A2F6C] sm:h-5 sm:w-5" />
+              </div>
+
+              <div className="min-w-0 flex-1">
+                <p className="text-[10px] font-bold uppercase tracking-wider text-slate-500 sm:text-[11px]">
+                  Proyecto seleccionado
+                </p>
+
+                <p className="mt-1 break-words text-sm font-extrabold leading-tight text-slate-950 sm:text-base">
+                  {proyecto}
+                </p>
+              </div>
+
+              <span className="shrink-0 rounded-full bg-[#0A2F6C] px-2.5 py-1 text-[9px] font-black tracking-wide text-white sm:px-3 sm:text-[10px]">
+                {tipo}
+              </span>
+            </div>
+          </div>
+
+          {/* Beneficios */}
+          <div className="mt-4 grid grid-cols-1 gap-2 xs:grid-cols-3 sm:mt-5 sm:grid-cols-3">
+            <div className="flex items-center gap-3 rounded-xl border border-slate-200 bg-white p-3 shadow-sm xs:block xs:text-center sm:rounded-2xl">
+              <Clock className="h-4 w-4 shrink-0 text-[#0A2F6C] xs:mx-auto" />
+              <p className="text-[11px] font-semibold leading-tight text-slate-600 xs:mt-2">
+                Horario coordinado
+              </p>
+            </div>
+
+            <div className="flex items-center gap-3 rounded-xl border border-slate-200 bg-white p-3 shadow-sm xs:block xs:text-center sm:rounded-2xl">
+              <MapPin className="h-4 w-4 shrink-0 text-[#0A2F6C] xs:mx-auto" />
+              <p className="text-[11px] font-semibold leading-tight text-slate-600 xs:mt-2">
+                Punto de encuentro
+              </p>
+            </div>
+
+            <div className="flex items-center gap-3 rounded-xl border border-slate-200 bg-white p-3 shadow-sm xs:block xs:text-center sm:rounded-2xl">
+              <Award className="h-4 w-4 shrink-0 text-[#0A2F6C] xs:mx-auto" />
+              <p className="text-[11px] font-semibold leading-tight text-slate-600 xs:mt-2">
+                Asesoría directa
+              </p>
+            </div>
+          </div>
+
+          {/* Confianza */}
+          <div className="mt-4 flex items-center justify-center gap-2 rounded-xl bg-[#0A2F6C]/5 px-3 py-3 text-center sm:mt-5 sm:rounded-2xl sm:px-4">
+            <ShieldCheck className="h-4 w-4 shrink-0 text-[#0A2F6C]" />
+            <span className="text-[11px] font-semibold leading-tight text-slate-700 sm:text-xs">
+              Atención personalizada por WhatsApp
+            </span>
+          </div>
+
+          {/* Botón principal */}
+          <motion.div
+            whileHover={{ y: -2 }}
+            whileTap={{ scale: 0.98 }}
+            className="mt-4 sm:mt-5"
+          >
+            <Button
+              asChild
+              className={[
+                "group relative h-12 w-full overflow-hidden rounded-xl",
+                "bg-[#25D366] text-sm font-black text-white",
+                "shadow-[0_12px_26px_rgba(37,211,102,0.25)]",
+                "transition-all duration-300",
+                "hover:bg-[#1ebe5d] hover:shadow-[0_18px_38px_rgba(37,211,102,0.38)]",
+                "sm:h-14 sm:rounded-2xl sm:text-base",
+              ].join(" ")}
+            >
+              <Link
+                href={waLink(whatsapp, msg)}
+                target="_blank"
+                className="flex min-w-0 items-center justify-center px-2"
+              >
+                <span className="absolute inset-0 -translate-x-full bg-gradient-to-r from-transparent via-white/20 to-transparent transition-transform duration-700 group-hover:translate-x-full" />
+
+                <MessageCircle className="mr-2 h-5 w-5 shrink-0" />
+
+                <span className="truncate">
+                  Agendar visita por WhatsApp
+                </span>
+
+                <ChevronRight className="ml-2 h-5 w-5 shrink-0 transition-transform duration-300 group-hover:translate-x-1" />
+              </Link>
+            </Button>
+          </motion.div>
+
+          <p className="mx-auto mt-3 max-w-[320px] text-center text-[10px] leading-relaxed text-slate-500 sm:mt-4 sm:text-[11px]">
+            Sin compromiso. Te ayudamos a coordinar el horario, punto de
+            encuentro y detalles del recorrido.
+          </p>
         </div>
       </Card>
     </motion.div>

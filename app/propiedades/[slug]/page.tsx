@@ -446,7 +446,7 @@ export default async function ProyectoPage({
             </div>
 
             {/* FORM sticky */}
-            <div className="lg:sticky lg:top-[120px] pt-72 lg:self-start">
+            <div className="lg:sticky lg:top-[120px]  pt-10 sm:pt-72 lg:self-start">
               <div className="-mt-10 md:-mt-16 lg:-mt-[250px]">
                 <StickyContactoCardCentenario
                   proyecto={`${proyecto.titulo} ${proyecto.subtitulo ?? ""}`.trim()}

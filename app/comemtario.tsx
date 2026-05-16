@@ -15,24 +15,34 @@ interface Testimonio {
 }
 
 const testimoniosData: Testimonio[] = [
-  {
+{
     id: 1,
     nombre: "Eduardo Diaz",
-    ubicacion: "Lacho Propio - Chincha",
+    ubicacion: "CAMPO REAL - Ayacucho",
     testimonio:
-      "Cumplimos el sueño de la casa propia con Los Portales. En Chincha hallamos un lugar hermoso, accesible y con bono Techo Propio.",
-    titulo: "Nuestro sueño hecho realidad en Chincha",
+      "Logramos asegurar nuestra inversión adquiriendo 2 lotes en CAMPO REAL 2. Un proyecto con excelente ubicación y el respaldo que buscábamos en Ayacucho.",
+    titulo: "Asegurando el futuro en CAMPO REAL",
     imagenUrl: "/clientes01.webp",
   },
   {
     id: 2,
     nombre: "Franklin Suarez",
-    ubicacion: "HU2 - Huancarpani",
+    ubicacion: "BUGAMBILIAS - Ayacucho",
     testimonio:
-      "Me dieron facilidades y logré cumplir el sueño de la casa propia. Todo el proceso fue transparente y sin complicaciones.",
-    titulo: "Un hogar pensando en el futuro",
+      "Adquirí 3 lotes en el proyecto BUGAMBILIAS. El proceso fue transparente y las facilidades brindadas me permitieron dar este gran paso para mi familia.",
+    titulo: "Inversión sólida en BUGAMBILIAS",
     imagenUrl: "/clientes02.webp",
   },
+  {
+    id: 3,
+    nombre: "Anita Huayhuameza",
+    ubicacion: "La Planicie - Ayacucho",
+    testimonio:
+      "Muy contenta con la adquisición de mis 2 lotes en La Planicie. Es un lugar hermoso y accesible, ideal para construir el hogar que siempre soñamos en Ayacucho.",
+    titulo: "Nuestro sueño hecho realidad en La Planicie",
+    imagenUrl: "/clientes03.webp",
+  },
+
 
 ];
 
