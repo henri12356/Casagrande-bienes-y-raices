@@ -20,18 +20,70 @@ interface Proyecto {
 const proyectosData: Proyecto[] = [
   {
     id: 1,
-    nombre: "CCORIHUILLCA 01",
-    subtitulo: "Ayacucho",
-    ubicacion: "Centro poblado de Ccorihuillca, a 15 minutos del grifo Ayacucho",
+    nombre: "Corihuillca",
+    subtitulo: "",
+    ubicacion:
+      "cerca al reservorio de Ccorihuillca, a 12 minutos del grifo Ayacucho",
+    precioDesdeSol: "S/ 46,000",
+    imagenSrc: "/PAMPAHOCHA/PAMPAHOCHA04.webp",
+    etiqueta: "LOTES",
+    servicios: ["Agua", "Luz", "Acceso vehicular", "200 m²"],
+     link: "/proyectos/lotes-pampahocha-ayacucho",
+  },
+   {
+    id: 2,
+    nombre: "Cañones",
+    subtitulo: "",
+    ubicacion:
+      "Al Frente de los cañones de Ccorihuillca, a 15 minutos del grifo Ayacucho",
+    precioDesdeSol: "S/ 27,000",
+    imagenSrc: "/CAÑONES/CAÑONES03.webp",
+    etiqueta: "LOTES",
+    servicios: ["Agua", "Luz", "Acceso vehicular", "200 m²"],
+     link: "/proyectos/cañones-ayacucho-qorihuillca",
+  },
+   {
+    id: 3,
+    nombre: "Ccorihuillca Centro",
+    subtitulo: "",
+    ubicacion:
+      "Ccorihuillca Centro, a 15 minutos del Grifo Ayacucho",
     precioDesdeSol: "S/ 56,000",
-    imagenSrc: "/ccorihuillca-01.png",
+    imagenSrc: "/CCORIHUILLCA01/CCORIHUILLCA01-01.webp",
     etiqueta: "LOTES",
     servicios: ["Agua", "Luz", "Acceso vehicular", "250 m²"],
-    link: "/alquileres/propiedad-san-juan-bautista-ayacucho",
+     link: "/proyectos/terreno-ccorihuillca-centro-ayacucho",
+  },
+   {
+    id: 4,
+    nombre: "Ccorihuillca Centro",
+    subtitulo: "",
+    ubicacion:
+      "Ccorihuillca Centro, a 12 minutos del Grifo Ayacucho",
+    precioDesdeSol: "S/ 32,000",
+    imagenSrc: "/CCORIHUILLCA02/CCORIHUILLCA02-01.webp",
+    etiqueta: "LOTES",
+    servicios: ["Agua", "Luz", "Acceso vehicular", "150 m²"],
+     link: "/proyectos/terreno-ccorihuillca-02-ayacucho",
+  },
+  {
+    id: 5,
+    nombre: "Ccorihuillca Centro",
+    subtitulo: "",
+    ubicacion:
+      "Ccorihuillca Centro, a 12 minutos del Grifo Ayacucho",
+    precioDesdeSol: "S/ 28,000",
+    imagenSrc: "/CCORIHUILLCA03/CCORIHUILLCA03-01.webp",
+    etiqueta: "LOTES",
+    servicios: ["Agua", "Luz", "Acceso vehicular", "150 m²"],
+     link: "/proyectos/terreno-ccorihuillca-03-ayacucho",
   },
 ];
 
-const SvgIcon: FC<{ path: string; className?: string }> = ({ path, className }) => (
+const SvgIcon: FC<{ path: string; className?: string }> = ({
+  path,
+  className,
+}) => (
   <svg
     xmlns="http://www.w3.org/2000/svg"
     viewBox="0 0 24 24"
@@ -48,9 +100,9 @@ const ICON = {
     "M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5S10.62 6.5 12 6.5s2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z",
   agua: "M12 2s-7 7.2-7 12a7 7 0 0 0 14 0c0-4.8-7-12-7-12zm0 18a5 5 0 0 1-5-5c0-2.9 3.3-7.2 5-9 1.7 1.8 5 6.1 5 9a5 5 0 0 1-5 5z",
   luz: "M11 21h2v-1h-2v1zm1-20C7.9 1 5 3.9 5 7c0 2.1 1.1 3.9 2.7 4.9V15c0 .6.4 1 1 1h6.6c.6 0 1-.4 1-1v-3.1C17.9 10.9 19 9.1 19 7c0-3.1-2.9-6-7-6zm3.3 9.2-.9.6V14H9.6v-3.2l-.9-.6C7.6 9.5 7 8.3 7 7c0-2.2 2.2-4 5-4s5 1.8 5 4c0 1.3-.6 2.5-1.7 3.2z",
-  acceso: "M10 2h4l2 20h-4l-1-8-1 8H6l2-20zm2 5-1 1h2l-1-1zm0 4-1 1h2l-1-1zm0 4-1 1h2l-1-1z",
-  bio:
-    "M20 3s-7 1-11 5-5 11-5 11 7-1 11-5 5-11 5-11zm-12 13c2-1 4-3 5-5 1.2-2.4 2-5 2-5s-2.6.8-5 2c-2 1-4 3-5 5-.4.8-.8 1.8-1.1 2.7.9-.3 1.9-.7 2.1-.7z",
+  acceso:
+    "M10 2h4l2 20h-4l-1-8-1 8H6l2-20zm2 5-1 1h2l-1-1zm0 4-1 1h2l-1-1zm0 4-1 1h2l-1-1z",
+  bio: "M20 3s-7 1-11 5-5 11-5 11 7-1 11-5 5-11 5-11zm-12 13c2-1 4-3 5-5 1.2-2.4 2-5 2-5s-2.6.8-5 2c-2 1-4 3-5 5-.4.8-.8 1.8-1.1 2.7.9-.3 1.9-.7 2.1-.7z",
 } as const;
 
 const serviceKey = (s: string) => {
@@ -90,7 +142,8 @@ const ProjectCard: FC<{ p: Proyecto }> = ({ p }) => (
           className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-[1.04]"
           onError={(e) => {
             e.currentTarget.onerror = null;
-            e.currentTarget.src = "https://placehold.co/1200x675/EEEEEE/0B1F3A?text=Imagen+no+disponible";
+            e.currentTarget.src =
+              "https://placehold.co/1200x675/EEEEEE/0B1F3A?text=Imagen+no+disponible";
           }}
         />
         <div className="absolute inset-0 bg-gradient-to-t from-black/35 via-black/0 to-black/0" />
@@ -101,7 +154,9 @@ const ProjectCard: FC<{ p: Proyecto }> = ({ p }) => (
 
       <div className="p-4 sm:p-5 bg-[#01338C]">
         <div className="min-w-0">
-          <h3 className="text-lg sm:text-xl font-extrabold text-white leading-tight truncate">{p.nombre}</h3>
+          <h3 className="text-lg sm:text-xl font-extrabold text-white leading-tight truncate">
+            {p.nombre}
+          </h3>
           <p className="text-sm font-semibold text-[#FFB200]">{p.subtitulo}</p>
         </div>
 
@@ -158,7 +213,10 @@ const Casas = () => {
     return () => window.removeEventListener("resize", updateLayout);
   }, []);
 
-  const maxIndex = useMemo(() => Math.max(0, proyectosData.length - cardsToShow), [cardsToShow]);
+  const maxIndex = useMemo(
+    () => Math.max(0, proyectosData.length - cardsToShow),
+    [cardsToShow],
+  );
 
   // calcular step real (ancho item + gap) con ResizeObserver
   useEffect(() => {
@@ -166,7 +224,9 @@ const Casas = () => {
     if (!el) return;
 
     const calc = () => {
-      const firstItem = el.querySelector<HTMLElement>("[data-carousel-item='true']");
+      const firstItem = el.querySelector<HTMLElement>(
+        "[data-carousel-item='true']",
+      );
       if (!firstItem) return;
       const rect = firstItem.getBoundingClientRect();
       setStep(Math.round(rect.width + gap));
@@ -253,7 +313,9 @@ const Casas = () => {
         {/* Header + controles */}
         <div className="flex items-end justify-between gap-4 mb-6">
           <div>
-            <h2 className="text-3xl sm:text-4xl font-extrabold text-[#005BBB] leading-tight">Lotes en Ayacucho</h2>
+            <h2 className="text-3xl sm:text-4xl font-extrabold text-[#005BBB] leading-tight">
+              Lotes en Ayacucho
+            </h2>
           </div>
 
           <div className="flex items-center gap-3">
@@ -263,8 +325,18 @@ const Casas = () => {
               aria-label="Anterior"
               className="h-11 w-11 rounded-full border border-slate-200 bg-white text-[#005BBB] shadow-sm hover:shadow transition flex items-center justify-center disabled:opacity-40 disabled:cursor-not-allowed"
             >
-              <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
+              <svg
+                className="w-6 h-6"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={2}
+                  d="M15 19l-7-7 7-7"
+                />
               </svg>
             </button>
 
@@ -274,8 +346,18 @@ const Casas = () => {
               aria-label="Siguiente"
               className="h-11 w-11 rounded-full border border-slate-200 bg-white text-[#005BBB] shadow-sm hover:shadow transition flex items-center justify-center disabled:opacity-40 disabled:cursor-not-allowed"
             >
-              <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+              <svg
+                className="w-6 h-6"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={2}
+                  d="M9 5l7 7-7 7"
+                />
               </svg>
             </button>
 
@@ -297,8 +379,18 @@ const Casas = () => {
             aria-label="Anterior"
             className="sm:hidden absolute left-2 top-1/2 -translate-y-1/2 z-10 h-10 w-10 rounded-full bg-white/90 border border-slate-200 text-[#005BBB] shadow flex items-center justify-center disabled:opacity-40 disabled:cursor-not-allowed"
           >
-            <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
+            <svg
+              className="w-6 h-6"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth={2}
+                d="M15 19l-7-7 7-7"
+              />
             </svg>
           </button>
 
@@ -308,8 +400,18 @@ const Casas = () => {
             aria-label="Siguiente"
             className="sm:hidden absolute right-2 top-1/2 -translate-y-1/2 z-10 h-10 w-10 rounded-full bg-white/90 border border-slate-200 text-[#005BBB] shadow flex items-center justify-center disabled:opacity-40 disabled:cursor-not-allowed"
           >
-            <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+            <svg
+              className="w-6 h-6"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth={2}
+                d="M9 5l7 7-7 7"
+              />
             </svg>
           </button>
 
@@ -346,7 +448,9 @@ const Casas = () => {
                   onClick={() => scrollToIndex(i)}
                   aria-label={`Ir a slide ${i + 1}`}
                   className={`h-2.5 rounded-full transition-all ${
-                    i === currentIndex ? "w-8 bg-[#005BBB]" : "w-2.5 bg-slate-300 hover:bg-slate-400"
+                    i === currentIndex
+                      ? "w-8 bg-[#005BBB]"
+                      : "w-2.5 bg-slate-300 hover:bg-slate-400"
                   }`}
                 />
               ))}

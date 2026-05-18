@@ -6,21 +6,9 @@
     "subtitulo": "",
     "categoria": "Lotes",
     "ubicacion": "Qorihuillca, Huamanga – Ayacucho",
-    "precioDesdeSol": "S/ 30,000",
-    "precioDesdeDolar": "",
-    "pagoContado": "S/ 2,000",
+    "precioDesdeSol": "S/ 27,000",
     "imagen": "/CAÑONES/CAÑONES03.webp",
     "etiquetas": [
-      "Cañones",
-      "Huamanga",
-      "Ayacucho",
-      "200 m²",
-      "Zona en crecimiento",
-      "Alta plusvalía",
-      "Acceso vehicular",
-      "Agua",
-      "Luz",
-      "Bioambiental"
     ],
     "descripcion": "Cañones es un proyecto de lotes en Qorihuillca – Huamanga, Ayacucho, pensado para quienes buscan tranquilidad, aire puro y una inversión con alta proyección. Con accesos en mejora, es ideal para primera vivienda, casa de campo o inversión. Cuenta con agua, luz y acceso vehicular en una zona con crecimiento sostenido y gran potencial de valorización.",
     "equipamiento": [
@@ -82,26 +70,15 @@
     "categoria": "Lotes",
     "ubicacion": "Pampahocha, Huamanga – Ayacucho (al costado de la Ruta 14)",
     "precioDesdeSol": "S/ 47,000",
-    "precioDesdeDolar": "",
-    "pagoContado": "S/ 2,000",
+     "stockLotes": {
+  "total": 2,
+  "restantes": 1
+},
     "imagen": "/PAMPAHOCHA/PAMPAHOCHA02.webp",
     "etiquetas": [
-      "Pampahocha",
-      "Huamanga",
-      "Ayacucho",
-      "Ruta 14",
-      "Acceso vehicular",
-      "200 m²",
-      "Agua",
-      "Luz"
     ],
     "descripcion": "Disponibles 3 lotes ubicados en Corihuillca – Huamanga, Ayacucho, al costado de la Ruta 14. Se encuentran en una zona ya habitada con acceso vehicular y buena conectividad. Son ideales para construir vivienda, desarrollar un pequeño proyecto o invertir en una zona con crecimiento constante y proyección de valorización.",
     "equipamiento": [
-      "Acceso vehicular",
-      "200 m²",
-      "Agua",
-      "Luz",
-      "Alta proyección de valorización"
     ],
     "caracteristicas": [
       { "label": "Área", "value": "200 m²" },
@@ -161,14 +138,7 @@
 },
     "imagen": "/CCORIHUILLCA01/CCORIHUILLCA01-01.webp",
     "etiquetas": [
-      "Ccorihuillca Centro",
-      "250 m²",
-      "Agua",
-      "Luz",
-      "Acceso vehicular",
-      "Listo para construir",
-      "Zona poblada",
-      "Cerca a tiendas y restaurantes"
+
     ],
     "descripcion": "Se vende terreno de 250 m² ubicado en Ccorihuillca Centro, a solo 15 minutos del Grifo Ayacucho. El lote se encuentra en el mismo pueblo de Ccorihuillca, en una zona poblada y con entorno activo, donde ya existen restaurantes, tiendas y viviendas cercanas. Cuenta con agua, luz y acceso vehicular, ideal para construir una vivienda, casa de campo o realizar una inversión con buena proyección de valorización.",
     "equipamiento": [
@@ -221,7 +191,7 @@
   {
     "slug": "terreno-ccorihuillca-02-ayacucho",
     "tipo": "proyecto",
-    "titulo": "Ccorihuillca 02",
+    "titulo": "Ccorihuillca Centro",
     "subtitulo": "",
     "estado": "disponible",
     "categoria": "Lotes",
@@ -234,12 +204,6 @@
 },
     "imagen": "/CCORIHUILLCA02/CCORIHUILLCA02-01.webp",
     "etiquetas": [
-      "Ccorihuillca Centro",
-      "Agua",
-      "Luz",
-      "Acceso vehicular",
-      "Ubicado en vía principal",
-      "Zona poblada"
     ],
     "descripcion": "Se venden 2 lotes de 150 m² ubicados en Ccorihuillca Centro, a solo 12 minutos del Grifo Ayacucho. Los terrenos se encuentran en el mismo pueblo de Ccorihuillca, en una zona poblada y con acceso directo por la misma vía. El entorno cuenta con viviendas cercanas, tránsito local y buena proyección para construir o invertir. Cada lote cuenta con agua, luz y acceso vehicular, ideal para vivienda, casa de campo o inversión.",
     "equipamiento": [
@@ -291,7 +255,7 @@
   {
     "slug": "terreno-ccorihuillca-03-ayacucho",
     "tipo": "proyecto",
-    "titulo": "Ccorihuillca 03",
+    "titulo": "Ccorihuillca Centro",
     "subtitulo": "",
     "estado": "disponible",
     "categoria": "Lotes",
@@ -304,12 +268,7 @@
 },
     "imagen": "/CCORIHUILLCA03/CCORIHUILLCA03-01.webp",
     "etiquetas": [
-      "Ccorihuillca Centro",
-      "150 m²",
-      "Agua",
-      "Luz",
-      "Acceso vehicular",
-      "Zona poblada"
+      
     ],
     "descripcion": "Se venden lotes de 150 m² ubicados en Ccorihuillca Centro, a solo 12 minutos del Grifo Ayacucho. El terreno se encuentra en el mismo pueblo de Ccorihuillca, en una zona con acceso directo por la misma vía, viviendas cercanas y un entorno en crecimiento. Cuenta con agua, luz y acceso vehicular, ideal para construir una vivienda, casa de campo o invertir en una zona con buena proyección de valorización.",
     "equipamiento": [

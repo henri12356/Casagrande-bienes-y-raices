@@ -20,12 +20,25 @@ interface Proyecto {
 }
 
 const proyectosData: Proyecto[] = [
+   {
+    id: 5,
+    nombre: "LA PLANICIE",
+    subtitulo: "Ccorihuillca",
+    ubicacion: "Huamanga – Qorihuillca",
+    precioDesdeSol: "S/ 18,000",
+    precioDesdeDolar: "",
+    imagenSrc: "/LAPLANICIE/LAPLANICIE01.webp",
+    etiqueta: "Proyecto",
+    metrosLote: "180 m²",
+    servicios: ["Agua", "Luz", "Acceso vehicular", "PREVENTA"],
+    link: "/propiedades/la-planicie-ayacucho",
+  },
   {
     id: 1,
     nombre: "CAMPO REAL",
     subtitulo: "Ccorihuillca",
     ubicacion: "Huamanga – Qorihuillca",
-    precioDesdeSol: "S/ 18,000",
+    precioDesdeSol: "S/ 15,000",
     precioDesdeDolar: "",
     imagenSrc: "/MACHAYHUAYCCO/MACHAYHUAYCCO03.webp",
     etiqueta: "Proyecto",
@@ -59,19 +72,7 @@ const proyectosData: Proyecto[] = [
     servicios: ["Agua", "Luz", "Acceso vehicular", "Entorno bioambiental"],
     link: "/propiedades/huanupata",
   },
-  {
-    id: 4,
-    nombre: "Corihuillca",
-    subtitulo: "Ayacucho ",
-    ubicacion: "Huamanga – Qorihuillca",
-    precioDesdeSol: "S/ 47,000",
-    precioDesdeDolar: "",
-    imagenSrc: "/PAMPAHOCHA/PAMPAHOCHA04.webp",
-    etiqueta: "Proyecto",
-    metrosLote: "200 m²",
-    servicios: ["Agua", "Luz", "Acceso vehicular", "Entorno bioambiental"],
-    link: "/proyectos/lotes-pampahocha-ayacucho",
-  },
+  
 ];
 
 

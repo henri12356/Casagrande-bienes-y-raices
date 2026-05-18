@@ -15,22 +15,24 @@ import {
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 
-function waLink(phone: string, text: string) {
-  const clean = phone.replace(/\D/g, "");
-  return `https://wa.me/${clean}?text=${encodeURIComponent(text)}`;
+const WHATSAPP_CASAGRANDE = "51916194372";
+
+function waLink(text: string) {
+  return `https://api.whatsapp.com/send/?phone=${WHATSAPP_CASAGRANDE}&text=${encodeURIComponent(
+    text
+  )}&type=phone_number&app_absent=0`;
 }
 
 type Props = {
   proyecto: string;
   tipo?: "LOTES" | "DEPARTAMENTOS" | "CASAS" | "PROPIEDAD";
-  whatsapp: string;
-  telefono: string;
+  whatsapp?: string;
+  telefono?: string;
 };
 
 export default function StickyContactoCardCentenario({
   proyecto,
   tipo = "LOTES",
-  whatsapp,
 }: Props) {
   const msg = `Hola, quiero agendar una visita para conocer el proyecto: ${proyecto}. ¿Podrían ayudarme a coordinar horario y punto de encuentro?`;
 
@@ -142,17 +144,16 @@ export default function StickyContactoCardCentenario({
               ].join(" ")}
             >
               <Link
-                href={waLink(whatsapp, msg)}
+                href={waLink(msg)}
                 target="_blank"
+                rel="noopener noreferrer"
                 className="flex min-w-0 items-center justify-center px-2"
               >
                 <span className="absolute inset-0 -translate-x-full bg-gradient-to-r from-transparent via-white/20 to-transparent transition-transform duration-700 group-hover:translate-x-full" />
 
                 <MessageCircle className="mr-2 h-5 w-5 shrink-0" />
 
-                <span className="truncate">
-                  Agendar visita por WhatsApp
-                </span>
+                <span className="truncate">Agendar visita por WhatsApp</span>
 
                 <ChevronRight className="ml-2 h-5 w-5 shrink-0 transition-transform duration-300 group-hover:translate-x-1" />
               </Link>

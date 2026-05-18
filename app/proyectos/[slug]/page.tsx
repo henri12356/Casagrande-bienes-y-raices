@@ -97,6 +97,12 @@ function onlyNumber(v: string) {
     .trim();
 }
 
+function getCaracteristica(caracteristicas: KV[] | undefined, label: string) {
+  return caracteristicas?.find(
+    (item) => item.label.toLowerCase() === label.toLowerCase(),
+  )?.value;
+}
+
 function safeDecodeSlug(s: string) {
   try {
     return decodeURIComponent(s);
@@ -120,17 +126,14 @@ export default async function ProyectoPage({
 }) {
   const { slug } = await getParams(params);
 
-  // ✅ CLAVE: el slug puede venir como ca%C3%B1ones...
   const decodedSlug = safeDecodeSlug(slug);
 
-  // ✅ Match robusto (por si llega raw o decoded)
   const proyecto =
     data.find((p) => p.slug === decodedSlug) ||
     data.find((p) => p.slug === slug);
 
   if (!proyecto) notFound();
 
-  // ✅ HARD REQUIREMENTS: 100% JSON
   softReq(!!proyecto.imagen, `Falta imagen (hero) en JSON: ${proyecto.slug}`);
   softReq(!!proyecto.ubicacion, `Falta ubicacion en JSON: ${proyecto.slug}`);
   softReq(
@@ -154,26 +157,18 @@ export default async function ProyectoPage({
   const promos = proyecto.promociones ?? [];
   const precioNum = onlyNumber(proyecto.precioDesdeSol);
 
-  // ✅ PLANO GENERAL (VISIBLE)
   const planoImg = proyecto.planos?.imagen;
   const planoHref = proyecto.planos?.pdf ?? proyecto.planos?.imagen;
 
-  // ✅ FUTURO (proyección)
-  const futuroImg = proyecto.futuro?.imagen;
-
-  // ✅ DATOS DE LOTES (para el título)
   const totalLotes = proyecto.stockLotes?.total;
-  const disponibles = proyecto.stockLotes?.restantes;
-  const actualizado = proyecto.stockLotes?.actualizado;
+  const lotesRestantes = proyecto.stockLotes?.restantes;
+  const areaLote = getCaracteristica(proyecto.caracteristicas, "Área");
 
   return (
     <>
       <Navbar />
 
       <main className="min-h-screen bg-white pt-20 lg:pt-[140px]">
-        {/* =========================
-            HERO (imagen + overlay)
-        ========================= */}
         <section className="relative">
           <div className="relative h-80 w-full md:h-[400px] lg:h-[555px]">
             <Image
@@ -184,6 +179,7 @@ export default async function ProyectoPage({
               className="object-cover"
               sizes="100vw"
             />
+
             <div className="absolute inset-0" />
             <div className="absolute inset-0 bg-linear-to-t bg-black/5 to-transparent" />
 
@@ -210,127 +206,165 @@ export default async function ProyectoPage({
             </div>
           </div>
 
-          {/* =========================
-              BANDA AMARILLA (PORTAL)
-              ✅ NO TOCAR DISEÑO PRECIO
-          ========================= */}
           <div className="relative bg-[#FFB200]">
             <div className="relative mx-auto max-w-[1400px] px-4 py-10">
-              <div className="">
-                <div className="md:flex items-start gap-10 justify-between">
-                  <div className="">
-                    <p className="text-[16px] font-extrabold text-slate-900/80">
-                      {proyecto.subtitulo}
-                    </p>
+              <div className="md:flex items-start gap-10 justify-between">
+                <div className="min-w-0 flex-1">
+                  <p className="text-[16px] font-extrabold text-slate-900/80">
+                    {proyecto.subtitulo}
+                  </p>
 
-                    <h2 className="mt-1 text-[32px] font-black tracking-tight text-slate-900 md:text-6xl">
-                      {proyecto.titulo ?? ""}
-                    </h2>
+                  <h2 className="mt-1 text-[32px] font-black tracking-tight text-slate-900 md:text-6xl">
+                    {proyecto.titulo ?? ""}
+                  </h2>
 
-                    {/* ✅ BADGES LOTES */}
-                    {proyecto.tipo === "proyecto" && totalLotes != null ? (
-                      <div className="mt-3 flex flex-wrap items-center gap-2">
-                        <span className="inline-flex items-center rounded-full border border-slate-900/15 bg-white/80 px-4 py-2 text-xs font-extrabold text-slate-900 shadow-sm ring-1 ring-black/5 backdrop-blur">
-                          {totalLotes} lotes
+                  {/* RESUMEN DE LOTES + METRAJE */}
+                  {proyecto.tipo === "proyecto" &&
+                  (totalLotes != null || lotesRestantes != null) ? (
+                    <div className="mt-4 flex flex-wrap items-center gap-3">
+                      {totalLotes != null ? (
+                        <div className="inline-flex items-center gap-2 rounded-2xl border border-slate-900/10 bg-white/85 px-4 py-2.5 shadow-sm ring-1 ring-black/5 backdrop-blur">
+                          <span className="grid h-8 w-8 place-items-center rounded-xl bg-[#01338C] text-sm font-black text-white">
+                            {totalLotes}
+                          </span>
+
+                          <div className="leading-tight">
+                            <p className="text-[10px] font-black uppercase tracking-wide text-slate-700/70">
+                              Total
+                            </p>
+                            <p className="text-sm font-black text-slate-950">
+                              Lotes
+                            </p>
+                          </div>
+                        </div>
+                      ) : null}
+
+                      {lotesRestantes != null ? (
+                        <div className="inline-flex items-center gap-2 rounded-2xl border border-[#01338C]/20 bg-white/85 px-4 py-2.5 shadow-sm ring-1 ring-black/5 backdrop-blur">
+                          <span className="grid h-8 w-8 place-items-center rounded-xl bg-white text-sm font-black text-[#01338C] ring-1 ring-[#01338C]/20">
+                            {lotesRestantes}
+                          </span>
+
+                          <div className="leading-tight">
+                            <p className="text-[10px] font-black uppercase tracking-wide text-slate-700/70">
+                              Lotes
+                            </p>
+                            <p className="text-sm font-black text-[#01338C]">
+                              Restantes
+                            </p>
+                          </div>
+                        </div>
+                      ) : null}
+                    </div>
+                  ) : null}
+
+                  <div className="mt-5 flex flex-col gap-3 text-sm text-slate-900 sm:flex-row sm:items-center sm:gap-8">
+                    {proyecto.mapsUrl ? (
+                      <a
+                        href={proyecto.mapsUrl}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="flex items-center gap-2 hover:underline"
+                        aria-label="Abrir ubicación en Maps"
+                        title="Abrir en Maps"
+                      >
+                        <MapPin className="h-4 w-4" />
+                        <span className="font-bold">{proyecto.ubicacion}</span>
+                      </a>
+                    ) : (
+                      <div className="flex items-center gap-2">
+                        <MapPin className="h-4 w-4" />
+                        <span className="font-bold">{proyecto.ubicacion}</span>
+                      </div>
+                    )}
+
+                    {proyecto.contacto.horario ? (
+                      <div className="flex items-center gap-2">
+                        <Clock className="h-4 w-4" />
+                        <span className="font-bold">
+                          {proyecto.contacto.horario}
                         </span>
-
-                        {disponibles != null ? (
-                          <span className="inline-flex items-center rounded-full border border-[#01338C]/30 bg-white/80 px-4 py-2 text-xs font-extrabold text-[#01338C] shadow-sm ring-1 ring-black/5 backdrop-blur">
-                            {disponibles} disponibles
-                          </span>
-                        ) : null}
-
-                        {actualizado ? (
-                          <span className="inline-flex items-center rounded-full border border-slate-900/10 bg-white/70 px-4 py-2 text-xs font-bold text-slate-700 shadow-sm ring-1 ring-black/5 backdrop-blur">
-                            Actualizado: {actualizado}
-                          </span>
-                        ) : null}
                       </div>
                     ) : null}
-
-                    <div className="mt-5 flex flex-col gap-3 text-sm text-slate-900 sm:flex-row sm:items-center sm:gap-8">
-                      {/* ✅ UBICACION: link a Maps (solo si hay url) */}
-                      {proyecto.mapsUrl ? (
-                        <a
-                          href={proyecto.mapsUrl}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          className="flex items-center gap-2 hover:underline"
-                          aria-label="Abrir ubicación en Maps"
-                          title="Abrir en Maps"
-                        >
-                          <MapPin className="h-4 w-4" />
-                          <span className="font-bold">
-                            {proyecto.ubicacion}
-                          </span>
-                        </a>
-                      ) : (
-                        <div className="flex items-center gap-2">
-                          <MapPin className="h-4 w-4" />
-                          <span className="font-bold">
-                            {proyecto.ubicacion}
-                          </span>
-                        </div>
-                      )}
-
-                      {proyecto.contacto.horario ? (
-                        <div className="flex items-center gap-2">
-                          <Clock className="h-4 w-4" />
-                          <span className="font-bold">
-                            {proyecto.contacto.horario}
-                          </span>
-                        </div>
-                      ) : null}
-                    </div>
-                  </div>
-
-                  {/* ✅ PRECIO (NO TOCAR) */}
-                  <div className="flex pt-10 w-full max-w-[450px]">
-                    <div className="flex max-md:flex-col w-full max-w-[520px] gap-3 rounded-3xl bg-[#01338C] px-6 py-5 text-white shadow-[0_26px_70px_rgba(2,6,23,0.35)] ring-1 ring-white/10">
-                      {/* CONTADO */}
-                      <div className="flex flex-1 flex-col justify-center rounded-2xl bg-white/15 px-5 py-4 ring-1 ring-white/10">
-                        <p className="text-xs font-extrabold uppercase text-white/80">
-                          Contado
-                        </p>
-
-                        <div className="mt-1 flex items-end gap-2">
-                          <span className="text-2xl font-black leading-none">
-                            S/
-                          </span>
-                          <span className="text-5xl font-black leading-none tracking-tight">
-                            {precioNum}
-                          </span>
-                        </div>
-                      </div>
-
-                      {/* CANTIDAD DE LOTES */}
-                      {proyecto.stockLotes?.total != null ? (
-                        <div className="flex flex-1 flex-col justify-center rounded-2xl bg-white/20 px-5 py-4 ring-1 ring-white/10">
-                          <p className="text-xs font-extrabold uppercase text-white/80">
-                            Cantidad de lotes
-                          </p>
-
-                          <p className="mt-1 text-4xl font-black leading-none">
-                            {proyecto.stockLotes.total} 
-                          </p>
-                        </div>
-                      ) : null}
-                    </div>
                   </div>
                 </div>
 
-                <div className="hidden lg:block" />
+                {/* PRECIO + INFORMACIÓN DEL LOTE */}
+                <div className="flex w-full max-w-[560px] pt-10 md:pt-0 max-md:flex-col">
+                  <div className="flex w-full max-md:flex-col gap-3 rounded-3xl bg-[#01338C] px-6 py-5 text-white shadow-[0_26px_70px_rgba(2,6,23,0.35)] ring-1 ring-white/10">
+                    <div className="flex flex-1 flex-col justify-center rounded-2xl bg-white/15 px-5 py-4 ring-1 ring-white/10">
+                      <p className="text-xs font-extrabold uppercase text-white/80">
+                        Contado
+                      </p>
+
+                      <div className="mt-1 flex items-end gap-2">
+                        <span className="text-2xl font-black leading-none">
+                          S/
+                        </span>
+                        <span className="text-5xl font-black leading-none tracking-tight">
+                          {precioNum}
+                        </span>
+                      </div>
+                    </div>
+
+                    {totalLotes != null ||
+                    areaLote ||
+                    lotesRestantes != null ? (
+                      <div className="flex flex-1 flex-col justify-center rounded-2xl bg-white/20 px-5 py-4 ring-1 ring-white/10">
+                        <p className="text-xs font-extrabold uppercase text-white/80"></p>
+
+                        <div className="mt-3 grid grid-cols-2 gap-3">
+                          {lotesRestantes != null ? (
+                            <div className="rounded-xl bg-white/15 px-3 py-3">
+                              <span className="text-[10px] font-bold uppercase text-white/70">
+                                Lotes
+                              </span>
+
+                              <span className="mt-1 block text-2xl font-black leading-none">
+                                {lotesRestantes}
+                              </span>
+
+                              <span className="mt-1 block text-[11px] font-bold text-white/75">
+                                restantes
+                              </span>
+                            </div>
+                          ) : null}
+
+                          {areaLote ? (
+                            <div className="rounded-xl bg-[#FFB200] px-3 py-3 text-slate-950">
+                              <span className="text-[10px] font-black uppercase text-slate-900/70">
+                                Metraje
+                              </span>
+                              <span className="mt-1 block text-xl font-black leading-none">
+                                {areaLote}
+                              </span>
+                              <span className="mt-1 block text-[11px] font-black text-slate-900/75"></span>
+                            </div>
+                          ) : null}
+                        </div>
+                      </div>
+                    ) : proyecto.pagoContado ? (
+                      <div className="flex flex-1 flex-col justify-center rounded-2xl bg-white/20 px-5 py-4 ring-1 ring-white/10">
+                        <p className="text-xs font-extrabold uppercase text-white/80">
+                          Crédito
+                        </p>
+
+                        <p className="mt-1 text-4xl font-black leading-none">
+                          {proyecto.pagoContado}
+                        </p>
+                      </div>
+                    ) : null}
+                  </div>
+                </div>
               </div>
+
+              <div className="hidden lg:block" />
             </div>
           </div>
         </section>
 
-        {/* =========================
-            CONTENIDO + FORM
-        ========================= */}
         <section className="mx-auto max-w-[1400px] px-1 pb-10">
           <div className="grid gap-10 lg:grid-cols-[1fr_420px] lg:items-start">
-            {/* IZQUIERDA */}
             <div className="pt-10 lg:pt-12 w-full min-w-0">
               {proyecto.descripcion ? (
                 <SectionAnimation>
@@ -395,7 +429,6 @@ export default async function ProyectoPage({
                 </div>
               </SectionAnimation>
 
-              {/* ✅ PLANOS (SOLO PLANO GENERAL) */}
               {proyecto.tipo === "proyecto" && planoImg ? (
                 <SectionAnimation>
                   <div className="pt-10">
@@ -412,7 +445,7 @@ export default async function ProyectoPage({
                           className="group block"
                           title="Ver plano del proyecto"
                         >
-                          <div className="relative aspect-16/7 w-full overflow-hidden">
+                          <div className="relative aspect-[16/7] w-full overflow-hidden">
                             <Image
                               src={planoImg}
                               alt={`Plano del proyecto - ${proyecto.titulo}`}
@@ -436,7 +469,6 @@ export default async function ProyectoPage({
                 </SectionAnimation>
               ) : null}
 
-              {/* ✅ UBICACIÓN */}
               {proyecto.mapsUrl ? (
                 <SectionAnimation>
                   <div className="pt-10">
@@ -482,11 +514,12 @@ export default async function ProyectoPage({
               ) : null}
             </div>
 
-            {/* FORM sticky */}
-            <div className="lg:sticky lg:top-[120px]  pt-10 sm:pt-72 lg:self-start">
+            <div className="lg:sticky lg:top-[120px] pt-10 sm:pt-72 lg:self-start">
               <div className="-mt-10 md:-mt-16 lg:-mt-[250px]">
                 <StickyContactoCardCentenario
-                  proyecto={`${proyecto.titulo} ${proyecto.subtitulo ?? ""}`.trim()}
+                  proyecto={`${proyecto.titulo} ${
+                    proyecto.subtitulo ?? ""
+                  }`.trim()}
                   tipo={proyecto.tipo === "proyecto" ? "LOTES" : "PROPIEDAD"}
                   whatsapp={proyecto.contacto.whatsapp}
                   telefono={proyecto.contacto.telefono}

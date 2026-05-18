@@ -116,6 +116,7 @@ const contactInfo: ContactInfoItemProps[] = [
 // LISTA DE CIUDADES (LEFT COLUMN)
 // -----------------------------
 const ciudadesProyectos = [
+  "LA PLANICIE",
   "MACHAYHUYCCO",
   "BUNGAVILIA",
   "HUANUPATA",
@@ -125,6 +126,17 @@ const ciudadesProyectos = [
 
 
 const proyectosDestacados: ProyectoDestacado[] = [
+  {
+    id: 5,
+    tipo: "PROYECTO",
+    ciudad: "LA PLANICIE",
+    nombre: "LA PLANICIE",
+    descripcion: "Naturaleza, aire puro y alta plusvalía en Qorihuillca.",
+    precioDesde: "S/ 18,000",
+    badgeColor: "bg-[#FFB200]",
+    imagen: "/LAPLANICIE/LAPLANICIE01.webp",
+    href: "/propiedades/la-planicie-ayacucho",
+  },
   {
     id: 1,
     tipo: "PROYECTO",
@@ -169,6 +181,7 @@ const proyectosDestacados: ProyectoDestacado[] = [
     imagen: "/CAÑONES/CAÑONES01.webp",
     href: "/proyectos/cañones-ayacucho-qorihuillca",
   },
+  
 ];
 
 // -----------------------------

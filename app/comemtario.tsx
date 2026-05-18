@@ -15,7 +15,7 @@ interface Testimonio {
 }
 
 const testimoniosData: Testimonio[] = [
-{
+  {
     id: 1,
     nombre: "Eduardo Diaz",
     ubicacion: "CAMPO REAL - Ayacucho",
@@ -23,6 +23,15 @@ const testimoniosData: Testimonio[] = [
       "Logramos asegurar nuestra inversión adquiriendo 2 lotes en CAMPO REAL 2. Un proyecto con excelente ubicación y el respaldo que buscábamos en Ayacucho.",
     titulo: "Asegurando el futuro en CAMPO REAL",
     imagenUrl: "/clientes01.webp",
+  },
+  {
+    id: 4,
+    nombre: "Heber Gómez",
+    ubicacion: "Huanupata - Ayacucho",
+    testimonio:
+      "Estoy muy contento con la adquisición de mis 2 lotes en Huanupata. Me gustó mucho el proyecto, la ubicación de los lotes y la buena asesoría que recibí por parte del equipo de Casagrande.",
+    titulo: "Contento con mis 2 lotes en Huanupata",
+    imagenUrl: "/clientes04.webp",
   },
   {
     id: 2,
@@ -42,8 +51,6 @@ const testimoniosData: Testimonio[] = [
     titulo: "Nuestro sueño hecho realidad en La Planicie",
     imagenUrl: "/clientes03.webp",
   },
-
-
 ];
 
 const TestimonioCard: FC<{ testimonio: Testimonio }> = ({ testimonio }) => (
@@ -69,7 +76,9 @@ const TestimonioCard: FC<{ testimonio: Testimonio }> = ({ testimonio }) => (
           {testimonio.testimonio}
         </p>
         <div>
-          <p className="font-bold text-base text-[#005BBB]">{testimonio.nombre}</p>
+          <p className="font-bold text-base text-[#005BBB]">
+            {testimonio.nombre}
+          </p>
           <p className="text-xs text-[#005BBB]">{testimonio.ubicacion}</p>
         </div>
       </div>
@@ -133,22 +142,35 @@ const Comentario = () => {
     if (desktopIndex > maxDesktopIndex) setDesktopIndex(maxDesktopIndex);
     if (tabletIndex > maxTabletIndex) setTabletIndex(maxTabletIndex);
     if (mobileIndex > maxMobileIndex) setMobileIndex(maxMobileIndex);
-  }, [maxDesktopIndex, maxTabletIndex, maxMobileIndex, desktopIndex, tabletIndex, mobileIndex]);
+  }, [
+    maxDesktopIndex,
+    maxTabletIndex,
+    maxMobileIndex,
+    desktopIndex,
+    tabletIndex,
+    mobileIndex,
+  ]);
 
-  const handleTouchStart = (e: React.TouchEvent, mode: "desktop" | "tablet" | "mobile") => {
+  const handleTouchStart = (
+    e: React.TouchEvent,
+    mode: "desktop" | "tablet" | "mobile",
+  ) => {
     const allowed =
       mode === "desktop"
         ? canSlideDesktop
         : mode === "tablet"
-        ? canSlideTablet
-        : canSlideMobile;
+          ? canSlideTablet
+          : canSlideMobile;
 
     if (!allowed) return;
     setIsDragging(true);
     setStartX(e.touches[0].clientX);
   };
 
-  const handleTouchMove = (e: React.TouchEvent, mode: "desktop" | "tablet" | "mobile") => {
+  const handleTouchMove = (
+    e: React.TouchEvent,
+    mode: "desktop" | "tablet" | "mobile",
+  ) => {
     if (!isDragging) return;
 
     const diff = startX - e.touches[0].clientX;
@@ -349,10 +371,7 @@ const Comentario = () => {
               transition={{ duration: 0.5, ease: "easeInOut" }}
             >
               {testimoniosData.map((testimonio) => (
-                <div
-                  key={testimonio.id}
-                  className="shrink-0 w-full"
-                >
+                <div key={testimonio.id} className="shrink-0 w-full">
                   <TestimonioCard testimonio={testimonio} />
                 </div>
               ))}

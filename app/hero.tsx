@@ -12,6 +12,11 @@ const slidesData: {
   buttonLink: string;
 }[] = [
   { 
+    id: 4, 
+    imageSrc: "/hero04.webp", 
+    buttonLink: "/inmuebles", 
+  },
+  { 
     id: 1, 
     imageSrc: "/hero01.webp", 
     buttonLink: "/inmuebles", 
