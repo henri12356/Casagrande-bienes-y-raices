@@ -3,6 +3,7 @@ import Comentario from "./comemtario";
 import Footer from "./footer";
 import Gana from "./gana";
 import HeroCarousel from "./hero";
+import LanzamientoPopup from "./LanzamientoPopup";
 import Navbar from "./navbar";
 import Proceso from "./proceso";
 import Proyectos from "./proyectos";
@@ -14,7 +15,7 @@ export default function Home() {
       <HeroCarousel />
       <Proceso />
       <Proyectos />
-       <Casas /> 
+      <Casas />
       <Comentario />
       <Gana />
       {/* <Formulario /> */}
