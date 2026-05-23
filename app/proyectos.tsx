@@ -38,7 +38,7 @@ const proyectosData: Proyecto[] = [
     nombre: "CAMPO REAL",
     subtitulo: "Ccorihuillca",
     ubicacion: "Huamanga – Qorihuillca",
-    precioDesdeSol: "S/ 15,000",
+    precioDesdeSol: "S/ 16,000",
     precioDesdeDolar: "",
     imagenSrc: "/MACHAYHUAYCCO/MACHAYHUAYCCO03.webp",
     etiqueta: "Proyecto",

@@ -12,7 +12,7 @@ export default function Home() {
       <Navbar />
       <Hero />
      <Beneficios />
-     <Mapa />
+     {/* <Mapa /> */}
     <Historia / >
       <Footer />
     </div>
