@@ -236,7 +236,7 @@ const Footer = () => {
         {/* Copyright and Legal Links */}
         <div className="flex flex-col md:flex-row justify-between items-center pt-2 sm:pt-4">
           <div className="text-white text-xs sm:text-sm mb-3 md:mb-0 text-center md:text-left leading-relaxed">
-            © {new Date().getFullYear()} Casagrande Bienes y raices. Todos los
+            © {new Date().getFullYear()} Casagrande Bienes y Raíces.. Todos los
             derechos reservados.
           </div>
           <nav className="flex flex-wrap justify-center gap-x-3 sm:gap-x-4 gap-y-1 sm:gap-y-2 items-center">

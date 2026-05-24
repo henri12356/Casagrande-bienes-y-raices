@@ -33,7 +33,7 @@ export const metadata: Metadata = {
     "terrenos en huamanga",
     "proyectos inmobiliarios ayacucho",
     "inmobiliaria en ayacucho",
-    "casagrande bienes y raices",
+    "Casagrande Bienes y Raíces.",
   ],
 
   authors: [{ name: BRAND_NAME }],

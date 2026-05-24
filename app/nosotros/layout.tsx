@@ -27,7 +27,7 @@ export const metadata: Metadata = {
     "Conoce Casagrande Bienes y Raíces, inmobiliaria en Ayacucho especializada en venta de terrenos y lotes en Huamanga y Ccorihuillca. Más de 400 lotes vendidos, procesos seguros y acompañamiento completo.",
 
   keywords: [
-    "casagrande bienes y raices",
+    "Casagrande Bienes y Raíces.",
     "inmobiliaria en ayacucho",
     "venta de terrenos ayacucho",
     "lotes en ayacucho",

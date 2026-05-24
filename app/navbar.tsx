@@ -485,7 +485,7 @@ const DesktopMenu = ({
           size="lg"
           className="cursor-pointer rounded-3xl border-2 border-[#FFB200] bg-[#FFB200] px-4 py-6 font-bold text-white shadow-md transition duration-300 ease-in-out hover:border-[#01338C] hover:bg-[#01338C] hover:text-white"
         >
-          Conctactanos
+          Contáctanos
         </Button>
       </a>
     </div>

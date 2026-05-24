@@ -16,8 +16,8 @@ interface Feature {
 const features: Feature[] = [
   {
     icon: FaSearch,
-    title: 'Encuentra tu propiedad ideal',
-    description: 'Explora nuestra cartera exclusiva de terrenos, casas y alquileres. Usa nuestros filtros para hallar lo que buscas.'
+    title: 'Encuentra tu lote ideal',
+    description: 'Ofrecemos proyectos y lotes en Ayacucho, ubicados en zonas con alta proyección de crecimiento para vivir o invertir.'
   },
   {
     icon: FaSign, // Icono de "letrero" (Venta/Alquiler)

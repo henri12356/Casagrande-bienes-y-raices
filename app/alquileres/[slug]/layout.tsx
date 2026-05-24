@@ -138,7 +138,7 @@ function keywordsFromProject(p: ProjectJson): string[] {
     "venta de lotes ayacucho",
     "terrenos en huamanga",
     "inmobiliaria en ayacucho",
-    "casagrande bienes y raices",
+    "Casagrande Bienes y Raíces.",
   ];
 
   const extra = (p.etiquetas ?? []).map((x) => x.toLowerCase());
