@@ -156,9 +156,9 @@ export default async function ProyectoPage({
     <>
       <Navbar />
 
-      <main className="min-h-screen bg-white pt-20 lg:pt-[140px]">
+      <main className="min-h-screen bg-white pt-20 lg:pt-[140px] ">
         <section className="relative">
-          <div className="relative h-80 w-full md:h-[400px] lg:h-[555px]">
+          <div className="relative h-80 w-full md:h-[400px] lg:h-[550px]">
             <Image
               src={proyecto.imagen}
               alt={`${proyecto.titulo} ${proyecto.subtitulo ?? ""}`.trim()}
@@ -174,7 +174,7 @@ export default async function ProyectoPage({
             <div className="absolute inset-0">
               <div className="mx-auto h-full max-w-7xl px-4">
                 <div className="flex h-full flex-col justify-end pb-10 md:pb-12">
-                  <div className="mt-4 flex flex-wrap gap-2">
+                  {/* <div className="mt-4 flex flex-wrap gap-2">
                     <Badge className="rounded-full bg-[#FFB200] px-4 py-2 text-xs font-extrabold text-slate-900 hover:bg-[#ffbf2e]">
                       {proyecto.tipo === "proyecto" ? "LOTES" : "PROPIEDAD"}
                     </Badge>
@@ -188,7 +188,7 @@ export default async function ProyectoPage({
                         {t}
                       </Badge>
                     ))}
-                  </div>
+                  </div> */}
                 </div>
               </div>
             </div>

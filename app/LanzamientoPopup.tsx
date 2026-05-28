@@ -42,10 +42,10 @@ export default function LanzamientoPopup() {
         {/* --- CABECERA VISUAL --- */}
         <div className="relative h-[240px] w-full overflow-hidden sm:h-[260px]">
           <Image
-            src="/LAPLANICIE/LAPLANICIE01.webp"
+            src="/ELGOLF/ELGOLF04.webp"
             alt="Lanzamiento proyecto inmobiliario Casagrande"
             fill
-            priority
+            priority 
             className="object-cover transition-transform duration-1000 ease-out group-hover:scale-105"
           />
 
@@ -108,23 +108,23 @@ export default function LanzamientoPopup() {
 
               <div className="mt-1 flex items-end gap-3">
                 <span className="text-3xl font-black text-white">
-                  S/ 18,000
+                  S/ 24,000
                 </span>
                 <span className="mb-1 text-sm font-medium text-white/40 line-through">
-                  S/ 20,000
+                  S/ 30,000
                 </span>
               </div>
 
               <div className="mt-3 inline-flex items-center gap-1.5 rounded-full bg-white/10 px-3 py-1.5 text-[11px] font-semibold text-white backdrop-blur-sm border border-white/5">
                 <Sparkles size={12} className="text-[#FDB515]" />
-                Ahorras S/ 2,000 por tiempo limitado
+                Ahorras S/ 6,000 por tiempo limitado
               </div>
             </div>
           </div>
 
           {/* --- BOTONES DE ACCIÓN --- */}
           <Link
-            href="/propiedades/la-planicie-ayacucho"
+            href="/propiedades/el-golf-de-ccorihuillca-ayacucho"
             onClick={cerrarPopup}
             // Agregado el group para animar la flecha y una sombra brillante que incita al clic
             className="group mt-6 flex w-full items-center justify-center gap-2 rounded-2xl bg-[#FDB515] px-5 py-4 text-[13px] font-black uppercase tracking-wide text-[#01338C] shadow-lg shadow-[#FDB515]/30 transition-all hover:-translate-y-0.5 hover:bg-[#ffc13b] hover:shadow-xl hover:shadow-[#FDB515]/40 active:translate-y-0"
