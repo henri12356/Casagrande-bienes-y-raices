@@ -20,6 +20,19 @@ interface Proyecto {
 }
 
 const proyectosData: Proyecto[] = [
+  {
+    id: 6,
+    nombre: "EL GOLF DE CCORIHUILLCA",
+    subtitulo: "Ccorihuillca centro",
+    ubicacion: "Huamanga – Qorihuillca",
+    precioDesdeSol: "S/ 24,000",
+    precioDesdeDolar: "",
+    imagenSrc: "/ELGOLF/ELGOLF01.webp",
+    etiqueta: "Proyecto",
+    metrosLote: "180 m²",
+    servicios: ["Agua", "Luz", "Acceso vehicular", "PREVENTA"],
+    link: "/propiedades/el-golf-de-ccorihuillca-ayacucho",
+  },
    {
     id: 5,
     nombre: "LA PLANICIE",
@@ -121,7 +134,7 @@ const ProjectCard: FC<{ p: Proyecto }> = ({ p }) => (
             e.currentTarget.src = "https://placehold.co/800x500/CCCCCC/000000?text=Imagen+no+disponible";
           }}
         />
-        <div className="absolute top-3 left-3 bg-[#FFD100] text-[#005BBB] font-extrabold text-[11px] uppercase px-3 py-1.5 rounded-full shadow">
+        <div className="absolute top-3 left-3 bg-[#FFB200] text-[#005BBB] font-extrabold text-[11px] uppercase px-3 py-1.5 rounded-full shadow">
           {p.etiqueta}
         </div>
       </div>
@@ -158,7 +171,7 @@ const ProjectCard: FC<{ p: Proyecto }> = ({ p }) => (
         </div>
 
         <div className="pt-1">
-          <div className="inline-flex items-center gap-2 bg-[#FFD100] text-[#005BBB] px-4 py-2.5 font-extrabold rounded-full shadow text-sm">
+          <div className="inline-flex items-center gap-2 bg-[#FFB200] text-[#005BBB] px-4 py-2.5 font-extrabold rounded-full shadow text-sm">
             <span className="font-normal">Desde:</span>
             {p.precioDesdeSol}
           </div>

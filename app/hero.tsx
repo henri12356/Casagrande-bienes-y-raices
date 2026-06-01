@@ -31,11 +31,11 @@ const slidesData: {
     imageSrc: "/hero02.webp", 
     buttonLink: "/inmuebles", 
   },
-  { 
-    id: 3, 
-    imageSrc: "/hero03.webp", 
-    buttonLink: "/inmuebles", 
-  },
+  // { 
+  //   id: 3, 
+  //   imageSrc: "/hero03.webp", 
+  //   buttonLink: "/inmuebles", 
+  // },
 ];
 
 // --- Variantes de Animación ---
