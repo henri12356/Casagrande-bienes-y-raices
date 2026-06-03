@@ -116,16 +116,28 @@ const contactInfo: ContactInfoItemProps[] = [
 // LISTA DE CIUDADES (LEFT COLUMN)
 // -----------------------------
 const ciudadesProyectos = [
+   "EL GOLF DE CCORIHUILLCA",
   "LA PLANICIE",
   "MACHAYHUYCCO",
   "BUNGAVILIA",
   "HUANUPATA",
-  "CAÑONES",
+
   
 ];
 
 
 const proyectosDestacados: ProyectoDestacado[] = [
+  {
+    id: 6,
+    tipo: "PROYECTO",
+    ciudad: "EL GOLF DE CCORIHUILLCA",
+    nombre: "EL GOLF DE CCORIHUILLCA",
+    descripcion: "Naturaleza, aire puro y alta plusvalía en Qorihuillca.",
+    precioDesde: "S/ 24,000",
+    badgeColor: "bg-[#FFB200]",
+    imagen: "/ELGOLF/ELGOLF01.webp",
+    href: "/propiedades/el-golf-de-ccorihuillca-ayacucho",
+  },
   {
     id: 5,
     tipo: "PROYECTO",
@@ -170,17 +182,7 @@ const proyectosDestacados: ProyectoDestacado[] = [
     imagen: "/HUANUPATA/HUANUPATA01.webp",
     href: "/propiedades/huanupata",
   },
-   {
-    id: 4,
-    tipo: "LOTES",
-    ciudad: "CAÑONES",
-    nombre: "CAÑONES",
-    descripcion: "Naturaleza, con servicios basicos y alta plusvalía en Qorihuillca.",
-    precioDesde: "S/ 30,000",
-    badgeColor: "bg-[#FFB200]",
-    imagen: "/CAÑONES/CAÑONES01.webp",
-    href: "/proyectos/cañones-ayacucho-qorihuillca",
-  },
+   
   
 ];
 
