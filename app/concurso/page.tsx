@@ -8,7 +8,7 @@ export default function Home() {
     <div className="flex min-h-screen flex-col bg-[#f3f5f9] text-slate-900">
       <Navbar />
 
-      <main className="flex-1 md:pt-48">
+      <main className="flex-1 md:pt-48 pt-20">
         <section className="mx-auto w-full max-w-7xl px-4 py-6 sm:px-6 md:py-10 lg:px-8 ">
           <div className="grid gap-6 lg:grid-cols-[360px_1fr] lg:items-start">
             
