@@ -1,6 +1,8 @@
 // app/concurso-dia-padre/layout.tsx
 import type { Metadata } from "next";
 import type { ReactNode } from "react";
+import LanzamientoPopup from "../LanzamientoPopup";
+import ConcursoPopup from "../concursopo";
 
 /**
  * SEO – Página Concurso Día del Padre
@@ -204,6 +206,7 @@ export default function ConcursoDiaPadreLayout({
 
   return (
     <>
+     <ConcursoPopup /> 
       {children}
 
       <script
