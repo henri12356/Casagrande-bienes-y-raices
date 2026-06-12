@@ -1,15 +1,17 @@
-// app/nosotros/layout.tsx
+// app/concurso-dia-padre/layout.tsx
 import type { Metadata } from "next";
+import type { ReactNode } from "react";
 
 /**
- * SEO – Página Nosotros
- * Empresa: Casagrande Bienes y Raíces (INMOBILIARIA)
+ * SEO – Página Concurso Día del Padre
+ * Empresa: Casagrande Bienes y Raíces
  * IMPORTANTE:
- * - NO incluir GoogleAnalytics aquí (va solo en app/layout.tsx)
+ * - NO incluir GoogleAnalytics aquí.
+ * - GoogleAnalytics debe ir solo en app/layout.tsx.
  */
 
 const SITE_URL = "https://www.casagrande-inmobiliaria.com";
-const PAGE_PATH = "/nosotros";
+const PAGE_PATH = "/concurso";
 const CANONICAL = `${SITE_URL}${PAGE_PATH}`;
 
 const BRAND_NAME = "Casagrande Bienes y Raíces";
@@ -18,23 +20,23 @@ const ALT_BRAND = "Casagrande Inmobiliaria Ayacucho";
 const PHONE = "+51916194372";
 const EMAIL = "u19217724@gmail.com";
 
-// Imagen OG (crear en /public/og-nosotros.jpg – 1200x630)
-const OG_IMAGE = `${SITE_URL}/og-nosotros.jpg`;
+// Imagen ubicada en /public/hero06.webp
+const OG_IMAGE = `${SITE_URL}/hero06.webp`;
 
 export const metadata: Metadata = {
-  title: "Nosotros | Casagrande Bienes y Raíces – Inmobiliaria en Ayacucho",
+  title: "Concurso Día del Padre | Bases Oficiales – Casagrande Bienes y Raíces",
   description:
-    "Conoce Casagrande Bienes y Raíces, inmobiliaria en Ayacucho especializada en venta de terrenos y lotes en Huamanga y Ccorihuillca. Más de 400 lotes vendidos, procesos seguros y acompañamiento completo.",
+    "Consulta las bases oficiales del concurso por el Día del Padre “¡Foto con Papá!” organizado por Casagrande Bienes y Raíces en Ayacucho.",
 
   keywords: [
-    "Casagrande Bienes y Raíces.",
-    "inmobiliaria en ayacucho",
-    "venta de terrenos ayacucho",
-    "lotes en ayacucho",
-    "terrenos en huamanga",
-    "lotes en ccorihuillca",
-    "empresa inmobiliaria ayacucho",
-    "compra y venta de terrenos",
+    "concurso día del padre",
+    "foto con papá",
+    "concurso casagrande",
+    "casagrande bienes y raíces",
+    "casagrande inmobiliaria ayacucho",
+    "concurso inmobiliaria ayacucho",
+    "bases concurso día del padre",
+    "sorteo día del padre ayacucho",
   ],
 
   authors: [{ name: BRAND_NAME }],
@@ -43,7 +45,9 @@ export const metadata: Metadata = {
 
   alternates: {
     canonical: CANONICAL,
-    languages: { "es-PE": CANONICAL },
+    languages: {
+      "es-PE": CANONICAL,
+    },
   },
 
   robots: {
@@ -59,62 +63,66 @@ export const metadata: Metadata = {
   },
 
   openGraph: {
-    title: "Nosotros | Casagrande Bienes y Raíces – Inmobiliaria en Ayacucho",
+    title: "Concurso Día del Padre | “¡Foto con Papá!”",
     description:
-      "Inmobiliaria especializada en terrenos y lotes en Ayacucho. Acompañamiento legal, procesos seguros y alta proyección de valorización.",
+      "Revisa las bases oficiales del concurso por el Día del Padre organizado por Casagrande Bienes y Raíces.",
     type: "website",
     url: CANONICAL,
+    siteName: BRAND_NAME,
+    locale: "es_PE",
     images: [
       {
         url: OG_IMAGE,
         width: 1200,
         height: 630,
-        alt: "Casagrande Bienes y Raíces - Nosotros",
+        alt: "Concurso Día del Padre - Casagrande Bienes y Raíces",
       },
     ],
-    siteName: BRAND_NAME,
-    locale: "es_PE",
     emails: [EMAIL],
     phoneNumbers: [PHONE],
   },
 
   twitter: {
     card: "summary_large_image",
-    title: "Nosotros | Casagrande Bienes y Raíces",
+    title: "Concurso Día del Padre | Casagrande Bienes y Raíces",
     description:
-      "Inmobiliaria en Ayacucho especializada en terrenos y lotes para vivienda e inversión.",
+      "Bases oficiales del concurso “¡Foto con Papá!” por el Día del Padre.",
     images: [OG_IMAGE],
   },
 
   category: "Real Estate",
-  classification: "Inmobiliaria – Venta de terrenos y lotes en Ayacucho",
+  classification: "Concurso promocional – Casagrande Bienes y Raíces",
 };
 
 function clean<T>(obj: T): T {
   return JSON.parse(JSON.stringify(obj)) as T;
 }
 
-export default function NosotrosLayout({
+export default function ConcursoDiaPadreLayout({
   children,
 }: {
-  children: React.ReactNode;
+  children: ReactNode;
 }) {
-  // ✅ Schema AboutPage – INMOBILIARIA
-  const schemaAboutPage = {
+  const schemaWebPage = {
     "@context": "https://schema.org",
-    "@type": "AboutPage",
-    "@id": `${CANONICAL}#about`,
-    name: `Nosotros | ${BRAND_NAME}`,
+    "@type": "WebPage",
+    "@id": `${CANONICAL}#webpage`,
+    name: "Concurso Día del Padre | Bases Oficiales",
     description:
-      "Casagrande Bienes y Raíces es una inmobiliaria en Ayacucho especializada en venta de terrenos y lotes con procesos seguros y acompañamiento completo.",
+      "Página oficial de bases del concurso por el Día del Padre “¡Foto con Papá!” organizado por Casagrande Bienes y Raíces.",
     url: CANONICAL,
     inLanguage: "es-PE",
+    primaryImageOfPage: {
+      "@type": "ImageObject",
+      url: OG_IMAGE,
+    },
     isPartOf: {
       "@type": "WebSite",
+      "@id": `${SITE_URL}#website`,
       url: SITE_URL,
       name: BRAND_NAME,
     },
-    mainEntity: {
+    publisher: {
       "@type": "RealEstateAgent",
       "@id": `${SITE_URL}#organization`,
       name: BRAND_NAME,
@@ -129,33 +137,14 @@ export default function NosotrosLayout({
         addressRegion: "Ayacucho",
         addressCountry: "PE",
       },
-      geo: {
-        "@type": "GeoCoordinates",
-        latitude: -13.155749,
-        longitude: -74.220991,
-      },
       areaServed: [
-        { "@type": "AdministrativeArea", name: "Ayacucho" },
-        { "@type": "City", name: "Huamanga" },
-      ],
-      knowsAbout: [
-        "Venta de terrenos",
-        "Venta de lotes",
-        "Inversión inmobiliaria",
-        "Terrenos en Ayacucho",
-        "Lotes en Ccorihuillca",
-        "Valorización de terrenos",
-        "Asesoría inmobiliaria",
-        "Compra y venta de posesión",
-      ],
-      contactPoint: [
         {
-          "@type": "ContactPoint",
-          contactType: "sales",
-          telephone: PHONE,
-          email: EMAIL,
-          availableLanguage: ["es"],
-          areaServed: "PE-AYA",
+          "@type": "AdministrativeArea",
+          name: "Ayacucho",
+        },
+        {
+          "@type": "City",
+          name: "Huamanga",
         },
       ],
       sameAs: [
@@ -166,7 +155,34 @@ export default function NosotrosLayout({
     },
   };
 
-  // ✅ Breadcrumb
+  const schemaContest = {
+    "@context": "https://schema.org",
+    "@type": "CreativeWork",
+    "@id": `${CANONICAL}#contest`,
+    name: "Concurso “¡Foto con Papá!”",
+    alternateName: "Concurso Día del Padre Casagrande",
+    description:
+      "Concurso fotográfico por el Día del Padre organizado por Casagrande Bienes y Raíces.",
+    image: OG_IMAGE,
+    url: CANONICAL,
+    inLanguage: "es-PE",
+    genre: "Concurso fotográfico",
+    about: [
+      "Día del Padre",
+      "Fotografía familiar",
+      "Concurso promocional",
+      "Casagrande Bienes y Raíces",
+    ],
+    publisher: {
+      "@type": "RealEstateAgent",
+      "@id": `${SITE_URL}#organization`,
+      name: BRAND_NAME,
+      url: SITE_URL,
+      telephone: PHONE,
+      email: EMAIL,
+    },
+  };
+
   const schemaBreadcrumb = {
     "@context": "https://schema.org",
     "@type": "BreadcrumbList",
@@ -180,7 +196,7 @@ export default function NosotrosLayout({
       {
         "@type": "ListItem",
         position: 2,
-        name: "Nosotros",
+        name: "Concurso Día del Padre",
         item: CANONICAL,
       },
     ],
@@ -190,15 +206,20 @@ export default function NosotrosLayout({
     <>
       {children}
 
-      {/* Schema AboutPage */}
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{
-          __html: JSON.stringify(clean(schemaAboutPage)),
+          __html: JSON.stringify(clean(schemaWebPage)),
         }}
       />
 
-      {/* Schema Breadcrumb */}
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify(clean(schemaContest)),
+        }}
+      />
+
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{

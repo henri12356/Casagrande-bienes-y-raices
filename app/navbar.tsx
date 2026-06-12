@@ -108,6 +108,7 @@ const socialLinks: SocialLink[] = [
 ];
 
 const contactInfo: ContactInfoItemProps[] = [
+  { text: "Concurso", href: "https://www.casagrande-inmobiliaria.com/concurso" },
   { text: "Ubicacion", href: "https://maps.app.goo.gl/oNfCpynqor7ykd756" },
   { text: "Llámanos:  916 194 372", href: "https://api.whatsapp.com/send/?phone=51916194372&text=Hola%2C+quiero+una+cotizaci%C3%B3n&type=phone_number&app_absent=0" },
 ];
