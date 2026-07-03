@@ -24,7 +24,7 @@ const proyectosData: Proyecto[] = [
     subtitulo: "",
     ubicacion:
       "cerca al reservorio de Ccorihuillca, a 12 minutos del grifo Ayacucho",
-    precioDesdeSol: "S/ 46,000",
+    precioDesdeSol: "S/ 45,000",
     imagenSrc: "/PAMPAHOCHA/PAMPAHOCHA04.webp",
     etiqueta: "LOTES",
     servicios: ["Agua", "Luz", "Acceso vehicular", "200 m²"],
@@ -36,7 +36,7 @@ const proyectosData: Proyecto[] = [
     subtitulo: "",
     ubicacion:
       "Al Frente de los cañones de Ccorihuillca, a 15 minutos del grifo Ayacucho",
-    precioDesdeSol: "S/ 27,000",
+    precioDesdeSol: "S/ 25,000",
     imagenSrc: "/CAÑONES/CAÑONES03.webp",
     etiqueta: "LOTES",
     servicios: ["Agua", "Luz", "Acceso vehicular", "200 m²"],
