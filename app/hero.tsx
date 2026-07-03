@@ -11,36 +11,36 @@ const slidesData: {
   imageSrc: string; 
   buttonLink: string;
 }[] = [
+  // { 
+  //   id: 6, 
+  //   imageSrc: "/hero06.webp", 
+  //   buttonLink: "/concurso", 
+  // },
   { 
-    id: 6, 
-    imageSrc: "/hero06.webp", 
-    buttonLink: "/concurso", 
+    id: 5, 
+    imageSrc: "/hero05.webp", 
+    buttonLink: "/inmuebles", 
   },
-  // { 
-  //   id: 5, 
-  //   imageSrc: "/hero05.webp", 
-  //   buttonLink: "/inmuebles", 
-  // },
-  // { 
-  //   id: 4, 
-  //   imageSrc: "/hero04.webp", 
-  //   buttonLink: "/inmuebles", 
-  // },
-  // { 
-  //   id: 1, 
-  //   imageSrc: "/hero01.webp", 
-  //   buttonLink: "/inmuebles", 
-  // },
-  // { 
-  //   id: 2, 
-  //   imageSrc: "/hero02.webp", 
-  //   buttonLink: "/inmuebles", 
-  // },
-  // { 
-  //   id: 3, 
-  //   imageSrc: "/hero03.webp", 
-  //   buttonLink: "/inmuebles", 
-  // },
+  { 
+    id: 4, 
+    imageSrc: "/hero04.webp", 
+    buttonLink: "/inmuebles", 
+  },
+  { 
+    id: 1, 
+    imageSrc: "/hero01.webp", 
+    buttonLink: "/inmuebles", 
+  },
+  { 
+    id: 2, 
+    imageSrc: "/hero02.webp", 
+    buttonLink: "/inmuebles", 
+  },
+  { 
+    id: 3, 
+    imageSrc: "/hero03.webp", 
+    buttonLink: "/inmuebles", 
+  },
 ];
 
 // --- Variantes de Animación ---
