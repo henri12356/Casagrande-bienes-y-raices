@@ -120,8 +120,8 @@ const ciudadesProyectos = [
    "EL GOLF DE CCORIHUILLCA",
   "LA PLANICIE",
   "MACHAYHUYCCO",
-  "BUNGAVILIA",
-  "HUANUPATA",
+  // "BUNGAVILIA",
+  // "HUANUPATA",
 
   
 ];
@@ -161,28 +161,28 @@ const proyectosDestacados: ProyectoDestacado[] = [
     imagen: "/MACHAYHUAYCCO/MACHAYHUAYCCO03.webp",
     href: "/propiedades/machayhuycco-ayacucho",
   },
-   {
-    id: 2,
-    tipo: "PROYECTO",
-    ciudad: "BUNGAVILIA",
-    nombre: "BUNGAVILIA",
-    descripcion: "Naturaleza, con servicios basicos y alta plusvalía en Qorihuillca.",
-    precioDesde: "S/ 18,000",
-    badgeColor: "bg-[#FFB200]",
-    imagen: "/BUNGAVILIA/BUGAMBILIAS01.webp",
-    href: "/propiedades/bungavilia-ayacucho",
-  },
-   {
-    id: 3,
-    tipo: "PROYECTO",
-    ciudad: "HUANUPATA",
-    nombre: "HUANUPATA",
-    descripcion: "Naturaleza, con servicios basicos y alta plusvalía en Qorihuillca.",
-    precioDesde: "S/ 16,000",
-    badgeColor: "bg-[#FFB200]",
-    imagen: "/HUANUPATA/HUANUPATA01.webp",
-    href: "/propiedades/huanupata",
-  },
+  //  {
+  //   id: 2,
+  //   tipo: "PROYECTO",
+  //   ciudad: "BUNGAVILIA",
+  //   nombre: "BUNGAVILIA",
+  //   descripcion: "Naturaleza, con servicios basicos y alta plusvalía en Qorihuillca.",
+  //   precioDesde: "S/ 18,000",
+  //   badgeColor: "bg-[#FFB200]",
+  //   imagen: "/BUNGAVILIA/BUGAMBILIAS01.webp",
+  //   href: "/propiedades/bungavilia-ayacucho",
+  // },
+  //  {
+  //   id: 3,
+  //   tipo: "PROYECTO",
+  //   ciudad: "HUANUPATA",
+  //   nombre: "HUANUPATA",
+  //   descripcion: "Naturaleza, con servicios basicos y alta plusvalía en Qorihuillca.",
+  //   precioDesde: "S/ 16,000",
+  //   badgeColor: "bg-[#FFB200]",
+  //   imagen: "/HUANUPATA/HUANUPATA01.webp",
+  //   href: "/propiedades/huanupata",
+  // },
    
   
 ];
