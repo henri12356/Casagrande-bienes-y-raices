@@ -5,6 +5,7 @@ import { Poppins } from "next/font/google";
 
 import FloatingButtons from "./floating-buttons";
 import "./globals.css";
+import LanzamientoPopup from "./LanzamientoPopup";
 
 const font = Poppins({
   subsets: ["latin"],
@@ -365,7 +366,7 @@ export default function RootLayout({
 
       <body className={`${font.className} antialiased`}>
         {children}
-          {/* <LanzamientoPopup /> */}
+          <LanzamientoPopup />
 
         <FloatingButtons />
 

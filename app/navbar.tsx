@@ -117,6 +117,7 @@ const contactInfo: ContactInfoItemProps[] = [
 // LISTA DE CIUDADES (LEFT COLUMN)
 // -----------------------------
 const ciudadesProyectos = [
+  "EL MIRADOR DE CCORIHUILLCA",
    "EL GOLF DE CCORIHUILLCA",
   "LA PLANICIE",
   "MACHAYHUYCCO",
@@ -128,6 +129,17 @@ const ciudadesProyectos = [
 
 
 const proyectosDestacados: ProyectoDestacado[] = [
+  {
+   id: 2,
+   tipo: "PROYECTO",
+   ciudad: "EL MIRADOR DE CCORIHUILLCA",
+   nombre: "EL MIRADOR DE CCORIHUILLCA",
+   descripcion: "Naturaleza, con servicios basicos y alta plusvalía en Qorihuillca.",
+   precioDesde: "S/ 18,000",
+   badgeColor: "bg-[#FFB200]",
+   imagen: "/MIRADOR/MIRADOR01.webp",
+   href: "/propiedades/el-mirador-de-ccorihuillca-ayacucho",
+ },
   {
     id: 6,
     tipo: "PROYECTO",
@@ -161,17 +173,6 @@ const proyectosDestacados: ProyectoDestacado[] = [
     imagen: "/MACHAYHUAYCCO/MACHAYHUAYCCO03.webp",
     href: "/propiedades/machayhuycco-ayacucho",
   },
-  //  {
-  //   id: 2,
-  //   tipo: "PROYECTO",
-  //   ciudad: "BUNGAVILIA",
-  //   nombre: "BUNGAVILIA",
-  //   descripcion: "Naturaleza, con servicios basicos y alta plusvalía en Qorihuillca.",
-  //   precioDesde: "S/ 18,000",
-  //   badgeColor: "bg-[#FFB200]",
-  //   imagen: "/BUNGAVILIA/BUGAMBILIAS01.webp",
-  //   href: "/propiedades/bungavilia-ayacucho",
-  // },
   //  {
   //   id: 3,
   //   tipo: "PROYECTO",

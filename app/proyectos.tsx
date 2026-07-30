@@ -17,9 +17,24 @@ interface Proyecto {
   metrosLote: string;
   servicios: string[];
   link: string; // ✅ SOLO LINK (sin slug)
+  estado: "disponible" | "vendido";
 }
 
 const proyectosData: Proyecto[] = [
+   {
+    id: 7,
+    nombre: "EL MIRADOR DE CCORIHUILLCA",
+    subtitulo: "Ccorihuillca centro",
+    ubicacion: "Huamanga – Qorihuillca",
+    precioDesdeSol: "S/ 18,000",
+    precioDesdeDolar: "",
+    imagenSrc: "/MIRADOR/MIRADOR01.webp",
+    etiqueta: "Proyecto",
+    metrosLote: "200 m²",
+    servicios: ["Agua", "Luz", "Acceso vehicular", "PREVENTA"],
+    link: "/propiedades/el-mirador-de-ccorihuillca-ayacucho",
+    estado: "disponible",
+  },
   {
     id: 6,
     nombre: "EL GOLF DE CCORIHUILLCA",
@@ -32,19 +47,7 @@ const proyectosData: Proyecto[] = [
     metrosLote: "180 m²",
     servicios: ["Agua", "Luz", "Acceso vehicular", "PREVENTA"],
     link: "/propiedades/el-golf-de-ccorihuillca-ayacucho",
-  },
-   {
-    id: 5,
-    nombre: "LA PLANICIE",
-    subtitulo: "Ccorihuillca",
-    ubicacion: "Huamanga – Qorihuillca",
-    precioDesdeSol: "S/ 18,000",
-    precioDesdeDolar: "",
-    imagenSrc: "/LAPLANICIE/LAPLANICIE01.webp",
-    etiqueta: "Proyecto",
-    metrosLote: "180 m²",
-    servicios: ["Agua", "Luz", "Acceso vehicular", "PREVENTA"],
-    link: "/propiedades/la-planicie-ayacucho",
+    estado: "disponible",
   },
   {
     id: 1,
@@ -58,6 +61,21 @@ const proyectosData: Proyecto[] = [
     metrosLote: "200 m²",
     servicios: ["Agua", "Luz", "Acceso vehicular", "Entorno bioambiental"],
     link: "/propiedades/machayhuycco-ayacucho",
+    estado: "disponible",
+  },
+   {
+    id: 5,
+    nombre: "LA PLANICIE",
+    subtitulo: "Ccorihuillca",
+    ubicacion: "Huamanga – Qorihuillca",
+    precioDesdeSol: "S/ 18,000",
+    precioDesdeDolar: "",
+    imagenSrc: "/LAPLANICIE/LAPLANICIE01.webp",
+    etiqueta: "Proyecto",
+    metrosLote: "180 m²",
+    servicios: ["Agua", "Luz", "Acceso vehicular", "PREVENTA"],
+    link: "/propiedades/la-planicie-ayacucho",
+    estado: "vendido",
   },
   // {
   //   id: 2,
@@ -116,7 +134,7 @@ const serviceKey = (s: string) => {
 };
 
 const ProjectCard: FC<{ p: Proyecto }> = ({ p }) => (
-  <Link href={p.link} className="block h-full">
+  <Link href={p.link} className="group block h-full">
     <motion.article
       initial={{ opacity: 0, y: 10 }}
       whileInView={{ opacity: 1, y: 0 }}
@@ -137,6 +155,20 @@ const ProjectCard: FC<{ p: Proyecto }> = ({ p }) => (
         <div className="absolute top-3 left-3 bg-[#FFB200] text-[#005BBB] font-extrabold text-[11px] uppercase px-3 py-1.5 rounded-full shadow">
           {p.etiqueta}
         </div>
+
+        {p.estado === "vendido" && (
+          <>
+            {/* Capa roja sobre toda la fotografía */}
+            <div className="absolute inset-0 z-10 bg-red-700/70" />
+
+            {/* Sello diagonal de vendido */}
+            <div className="absolute inset-0 z-20 flex items-center justify-center px-6">
+              <div className="-rotate-12 border-[4px] border-white px-7 py-2 text-center text-3xl font-black uppercase tracking-[0.12em] text-white drop-shadow-lg sm:text-4xl">
+                Vendido
+              </div>
+            </div>
+          </>
+        )}
       </div>
 
       <div className="px-4 py-4 flex flex-col gap-2 grow">
