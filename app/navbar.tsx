@@ -135,7 +135,7 @@ const proyectosDestacados: ProyectoDestacado[] = [
    ciudad: "EL MIRADOR DE CCORIHUILLCA",
    nombre: "EL MIRADOR DE CCORIHUILLCA",
    descripcion: "Naturaleza, con servicios basicos y alta plusvalía en Qorihuillca.",
-   precioDesde: "S/ 18,000",
+   precioDesde: "S/ 20,000",
    badgeColor: "bg-[#FFB200]",
    imagen: "/MIRADOR/MIRADOR01.webp",
    href: "/propiedades/el-mirador-de-ccorihuillca-ayacucho",

@@ -364,8 +364,10 @@ export default function RootLayout({
         <link rel="dns-prefetch" href="https://www.google-analytics.com" />
       </head>
 
-      <body className={`${font.className} antialiased`}>
-        {children}
+ <body
+    suppressHydrationWarning
+    className={`${font.className} antialiased`}
+  >        {children}
           <LanzamientoPopup />
 
         <FloatingButtons />

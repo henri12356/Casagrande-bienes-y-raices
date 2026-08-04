@@ -58,7 +58,7 @@ export default function LanzamientoPopup() {
           <div className="absolute left-5 top-5">
             <span className="inline-flex items-center gap-1.5 rounded-full bg-[#FDB515] px-3.5 py-1.5 text-[10px] font-black uppercase tracking-widest text-[#063B8E] shadow-lg">
               <Sparkles size={12} />
-              Preventa exclusiva
+              Prelanzamiento
             </span>
           </div>
 
@@ -84,11 +84,7 @@ export default function LanzamientoPopup() {
 
         {/* Contenido */}
         <div className="px-6 py-7 sm:px-7">
-          <div className="rounded-xl border border-[#FDB515]/30 bg-[#FDB515]/10 px-4 py-3">
-            <p className="text-center text-[12px] font-bold uppercase tracking-wider text-[#01338C]">
-              Sé de los primeros en descubrirlo
-            </p>
-          </div>
+        
 
           <p className="mt-5 text-[15px] leading-relaxed text-gray-600">
             Conoce antes que nadie nuestro nuevo proyecto en Ccorihuillca.
@@ -102,7 +98,6 @@ export default function LanzamientoPopup() {
           {/* Características */}
           <div className="mt-5 flex flex-wrap gap-2">
             {[
-              "Solo 70 lotes",
               "Agua y luz",
               "Acceso vehicular",
             ].map((item) => (
@@ -125,21 +120,21 @@ export default function LanzamientoPopup() {
             <div className="relative z-10">
               <div className="flex items-center justify-between gap-3">
                 <p className="text-[11px] font-bold uppercase tracking-widest text-[#FDB515]">
-                  Precio de preventa
+                  Precio de   
                 </p>
 
                 <span className="rounded-full bg-[#FDB515] px-2.5 py-1 text-[10px] font-black uppercase text-[#01338C]">
-                  Lanzamiento
+                  Prelanzamiento
                 </span>
               </div>
 
               <div className="mt-2 flex items-end gap-3">
                 <span className="text-4xl font-black tracking-tight text-white">
-                  S/ 18,000
+                  S/ 20,000
                 </span>
 
                 <span className="mb-1 text-sm font-semibold text-white/45 line-through">
-                  S/ 22,000
+                  S/ 24,000
                 </span>
               </div>
 
@@ -168,10 +163,7 @@ export default function LanzamientoPopup() {
             />
           </Link>
 
-          <p className="mt-3 text-center text-[11px] font-medium text-gray-400">
-            Precio especial sujeto a disponibilidad
-          </p>
-
+       
           <button
             type="button"
             onClick={cerrarPopup}

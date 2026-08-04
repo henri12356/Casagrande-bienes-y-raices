@@ -9,20 +9,22 @@ import {
   CheckCircle2,
   ChevronRight,
   CircleDollarSign,
+  Database,
   Download,
-  FileClock,
   FileUp,
   Filter,
+  FolderSync,
+  HardDrive,
   History,
-  LockKeyhole,
   MapPin,
   Pencil,
   RefreshCw,
-  RotateCcw,
   Save,
+  ShieldCheck,
   Search,
   ShieldAlert,
   Trash2,
+  Undo2,
   UserRound,
   Users,
   WalletCards,
@@ -35,15 +37,27 @@ import type {
   InputHTMLAttributes,
   ReactNode,
 } from "react";
+import {
+  connectSharedMasterFile,
+  disconnectSharedMasterFile,
+  downloadPanelBackup,
+  getPanelVaultStatus,
+  loadPanelVault,
+  restorePreviousSnapshot,
+  savePanelVault,
+  subscribePanelVault,
+  syncSharedMasterFile,
+  type VaultStatus,
+} from "@/lib/panel-vault";
 
-type EstadoLote = "disponible" | "reservado" | "vendido" | "bloqueado";
+type EstadoLote = "disponible" | "reservado" | "vendido";
 type ModalidadPago = "Contado" | "Financiado";
 type Vista = "lotes" | "clientes";
 type AccionMovimiento =
   | "reserva"
   | "venta"
-  | "bloqueo"
   | "actualizacion"
+  | "pago_cuota"
   | "liberacion"
   | "vencimiento";
 
@@ -51,23 +65,46 @@ type Cliente = {
   nombres: string;
   dni: string;
   celular: string;
-  direccion: string;
   asesor: string;
   observaciones: string;
+};
+
+type CuotaMensual = {
+  numero: number;
+  fechaVencimiento: string;
+  monto: number;
+  pagada: boolean;
+  fechaPago?: string;
 };
 
 type Operacion = {
   fechaOperacion: string;
   precioVenta: number;
+
+  // La reserva se paga al separar el lote y forma parte del precio total.
   montoReserva: number;
+  fechaPagoReserva?: string;
+
+  // En financiamiento, la inicial total incluye la reserva ya pagada.
   inicial: number;
+  fechaCompromisoPago?: string;
+  pagoInicialConfirmado?: boolean;
+  fechaPagoInicial?: string;
+
+  // En contado, se registra la fecha acordada y la confirmación del pago total.
+  pagoTotalConfirmado?: boolean;
+  fechaPagoTotal?: string;
+
   saldo: number;
   modalidadPago: ModalidadPago;
   cuotas: number;
+  fechaPrimeraCuota?: string;
+  cuotasMensuales?: CuotaMensual[];
+  liberacionAutomatica?: boolean;
+
+  // Campos anteriores mantenidos únicamente para migrar respaldos viejos.
   fechaLimiteReserva?: string;
   pagoReservaConfirmado?: boolean;
-  fechaPagoReserva?: string;
-  liberacionAutomatica?: boolean;
 };
 
 type MovimientoLote = {
@@ -111,24 +148,38 @@ type FormularioFicha = {
   nombres: string;
   dni: string;
   celular: string;
-  direccion: string;
   asesor: string;
   observaciones: string;
+
   fechaOperacion: string;
   precioVenta: string;
   montoReserva: string;
-  inicial: string;
-  modalidadPago: ModalidadPago;
-  cuotas: string;
-  fechaLimiteReserva: string;
-  pagoReservaConfirmado: boolean;
   fechaPagoReserva: string;
+  modalidadPago: ModalidadPago;
+
+  inicial: string;
+  fechaCompromisoPago: string;
+  pagoInicialConfirmado: boolean;
+  fechaPagoInicial: string;
+
+  pagoTotalConfirmado: boolean;
+  fechaPagoTotal: string;
+
+  cuotas: string;
+  fechaPrimeraCuota: string;
+  cuotasMensuales: CuotaMensual[];
   liberacionAutomatica: boolean;
 };
 
-const STORAGE_KEY = "casagrande-panel-clientes-lotes-v2";
-const STORAGE_KEY_ANTERIOR = "casagrande-panel-clientes-lotes-v1";
-const DIAS_RESERVA_POR_DEFECTO = 3;
+const STORAGE_KEY = "casagrande-panel-clientes-lotes-v5";
+const STORAGE_KEYS_ANTERIORES = [
+  "casagrande-panel-clientes-lotes-v4",
+  "casagrande-panel-clientes-lotes-v3",
+  "casagrande-panel-clientes-lotes-v2",
+  "casagrande-panel-clientes-lotes-v1",
+];
+const MONTO_RESERVA_POR_DEFECTO = 1000;
+const DIAS_COMPROMISO_POR_DEFECTO = 3;
 const MAX_MOVIMIENTOS_POR_LOTE = 50;
 
 const PROYECTO_SLUG_ALIASES: Record<string, string> = {
@@ -137,13 +188,23 @@ const PROYECTO_SLUG_ALIASES: Record<string, string> = {
 
 const PROYECTOS_BASE: ProyectoBase[] = [
   {
+    slug: "el-mirador-de-ccorihuillca-ayacucho",
+    titulo: "EL MIRADOR",
+    ubicacion: "Ccorihuillca Chico, Huamanga – Ayacucho",
+    imagen: "/MACHAYHUAYCCO/MACHAYHUAYCCOHERO.webp",
+    areaTipica: 200,
+    precioDesde: 20000,
+    cantidadLotes: 64,
+    prefijo: "MC",
+  },
+  {
     slug: "el-golf-de-ccorihuillca-ayacucho",
     titulo: "EL GOLF DE CCORIHUILLCA",
     ubicacion: "Al lado de Ccorihuillca Chico, en el mismo pueblo",
     imagen: "/ELGOLF/ELGOLF01.webp",
     areaTipica: 180,
     precioDesde: 24000,
-    cantidadLotes: 20,
+    cantidadLotes: 55,
     prefijo: "G",
   },
   {
@@ -163,18 +224,8 @@ const PROYECTOS_BASE: ProyectoBase[] = [
     imagen: "/MACHAYHUAYCCO/MACHAYHUAYCCOHERO.webp",
     areaTipica: 200,
     precioDesde: 15000,
-    cantidadLotes: 12,
-    prefijo: "C",
-  },
-  {
-    slug: "el-mirador-de-ccorihuillca-ayacucho",
-    titulo: "EL MIRADOR",
-    ubicacion: "Ccorihuillca Chico, Huamanga – Ayacucho",
-    imagen: "/MACHAYHUAYCCO/MACHAYHUAYCCOHERO.webp",
-    areaTipica: 500,
-    precioDesde: 15000,
-    cantidadLotes: 12,
-    prefijo: "M",
+    cantidadLotes: 18,
+    prefijo: "P",
   },
 ];
 
@@ -200,40 +251,210 @@ const ESTADO_CONFIG: Record<
     dot: "bg-rose-500",
     badge: "bg-rose-100 text-rose-800",
   },
-  bloqueado: {
-    label: "Bloqueado",
-    card: "border-slate-300 bg-slate-100 hover:border-slate-500",
-    dot: "bg-slate-500",
-    badge: "bg-slate-200 text-slate-800",
-  },
 };
 
+function formatearFechaISO(fecha: Date) {
+  const anio = fecha.getFullYear();
+  const mes = String(fecha.getMonth() + 1).padStart(2, "0");
+  const dia = String(fecha.getDate()).padStart(2, "0");
+  return `${anio}-${mes}-${dia}`;
+}
+
+function parsearFechaISO(valor?: string) {
+  if (!valor || !/^\d{4}-\d{2}-\d{2}$/.test(valor)) return null;
+
+  const [anio, mes, dia] = valor.split("-").map(Number);
+  const fecha = new Date(anio, mes - 1, dia, 12, 0, 0, 0);
+
+  if (
+    Number.isNaN(fecha.getTime()) ||
+    fecha.getFullYear() !== anio ||
+    fecha.getMonth() !== mes - 1 ||
+    fecha.getDate() !== dia
+  ) {
+    return null;
+  }
+
+  return fecha;
+}
+
 function fechaActualISO() {
-  const fecha = new Date();
-  const offset = fecha.getTimezoneOffset();
-  return new Date(fecha.getTime() - offset * 60 * 1000)
-    .toISOString()
-    .split("T")[0];
+  return formatearFechaISO(new Date());
 }
 
 function sumarDiasISO(fechaISO: string, dias: number) {
-  const fecha = new Date(`${fechaISO}T12:00:00`);
-  fecha.setDate(fecha.getDate() + dias);
-  const offset = fecha.getTimezoneOffset();
-  return new Date(fecha.getTime() - offset * 60 * 1000)
-    .toISOString()
-    .split("T")[0];
+  const fecha = parsearFechaISO(fechaISO) ?? new Date();
+  const cantidadDias = Number.isFinite(dias) ? Math.trunc(dias) : 0;
+
+  fecha.setDate(fecha.getDate() + cantidadDias);
+  return formatearFechaISO(fecha);
+}
+
+function sumarMesesISO(fechaISO: string, meses: number) {
+  const fechaOrigen = parsearFechaISO(fechaISO);
+  if (!fechaOrigen) return "";
+
+  const cantidadMeses = Number.isFinite(meses) ? Math.trunc(meses) : 0;
+  const anio = fechaOrigen.getFullYear();
+  const mes = fechaOrigen.getMonth();
+  const dia = fechaOrigen.getDate();
+
+  const base = new Date(anio, mes + cantidadMeses, 1, 12, 0, 0, 0);
+  const ultimoDia = new Date(
+    base.getFullYear(),
+    base.getMonth() + 1,
+    0,
+    12,
+    0,
+    0,
+  ).getDate();
+
+  base.setDate(Math.min(dia, ultimoDia));
+  return formatearFechaISO(base);
+}
+
+function generarCuotasMensuales(
+  saldoFinanciar: number,
+  cantidad: number,
+  fechaPrimeraCuota: string,
+  existentes: CuotaMensual[] = [],
+): CuotaMensual[] {
+  const totalCentimos = Math.max(Math.round(saldoFinanciar * 100), 0);
+  const numeroCuotas = Math.max(Math.trunc(cantidad), 0);
+
+  if (
+    totalCentimos <= 0 ||
+    numeroCuotas <= 0 ||
+    !fechaEsValida(fechaPrimeraCuota)
+  ) {
+    return [];
+  }
+
+  const baseCentimos = Math.floor(totalCentimos / numeroCuotas);
+  const sobrante = totalCentimos % numeroCuotas;
+  const existentesPorNumero = new Map(
+    existentes.map((cuota) => [cuota.numero, cuota]),
+  );
+
+  return Array.from({ length: numeroCuotas }, (_, indice) => {
+    const numero = indice + 1;
+    const anterior = existentesPorNumero.get(numero);
+    const montoCentimos = baseCentimos + (indice < sobrante ? 1 : 0);
+
+    const fechaVencimiento = sumarMesesISO(fechaPrimeraCuota, indice);
+    const monto = montoCentimos / 100;
+    const coincideConAnterior =
+      anterior &&
+      anterior.fechaVencimiento === fechaVencimiento &&
+      Math.abs(anterior.monto - monto) < 0.001;
+
+    return {
+      numero,
+      fechaVencimiento,
+      monto,
+      pagada: coincideConAnterior ? anterior.pagada : false,
+      fechaPago:
+        coincideConAnterior && anterior.pagada
+          ? anterior.fechaPago
+          : undefined,
+    };
+  });
+}
+
+function totalCuotasPagadas(cuotas: CuotaMensual[] = []) {
+  return cuotas.reduce(
+    (total, cuota) => total + (cuota.pagada ? cuota.monto : 0),
+    0,
+  );
+}
+
+function cuotaEstaVencida(cuota: CuotaMensual) {
+  return !cuota.pagada && cuota.fechaVencimiento < fechaActualISO();
+}
+
+function siguienteCuotaPendiente(cuotas: CuotaMensual[] = []) {
+  return cuotas
+    .filter((cuota) => !cuota.pagada)
+    .sort((a, b) =>
+      a.fechaVencimiento.localeCompare(b.fechaVencimiento),
+    )[0];
+}
+
+function fechaCompromisoOperacion(operacion?: Operacion) {
+  return operacion?.fechaCompromisoPago ?? operacion?.fechaLimiteReserva;
+}
+
+function compromisoPagoCumplido(operacion?: Operacion) {
+  if (!operacion) return false;
+  return operacion.modalidadPago === "Contado"
+    ? Boolean(operacion.pagoTotalConfirmado)
+    : Boolean(operacion.pagoInicialConfirmado);
+}
+
+function totalPagadoOperacion(operacion?: Operacion) {
+  if (!operacion) return 0;
+
+  if (operacion.modalidadPago === "Contado") {
+    return operacion.pagoTotalConfirmado
+      ? operacion.precioVenta
+      : operacion.montoReserva;
+  }
+
+  const basePagada = operacion.pagoInicialConfirmado
+    ? operacion.inicial
+    : operacion.montoReserva;
+
+  return basePagada + totalCuotasPagadas(operacion.cuotasMensuales);
+}
+
+function calcularResumenFormulario(formulario: FormularioFicha) {
+  const precio = Math.max(Number(formulario.precioVenta) || 0, 0);
+  const reserva = Math.max(Number(formulario.montoReserva) || 0, 0);
+  const inicialTotal =
+    formulario.modalidadPago === "Financiado"
+      ? Math.max(Number(formulario.inicial) || 0, 0)
+      : 0;
+  const cuotasPagadas = totalCuotasPagadas(formulario.cuotasMensuales);
+
+  const totalPagado =
+    formulario.modalidadPago === "Contado"
+      ? formulario.pagoTotalConfirmado
+        ? precio
+        : reserva
+      : (formulario.pagoInicialConfirmado ? inicialTotal : reserva) +
+        cuotasPagadas;
+
+  return {
+    precio,
+    reserva,
+    inicialTotal,
+    pendienteInicial:
+      formulario.modalidadPago === "Financiado"
+        ? Math.max(inicialTotal - reserva, 0)
+        : 0,
+    saldoPendiente: Math.max(precio - totalPagado, 0),
+    totalPagado: Math.min(totalPagado, precio),
+    cuotaMensual:
+      formulario.modalidadPago === "Financiado"
+        ? formulario.cuotasMensuales[0]?.monto ?? 0
+        : 0,
+    pagoPendienteContado:
+      formulario.modalidadPago === "Contado"
+        ? Math.max(precio - reserva, 0)
+        : 0,
+  };
 }
 
 function diasHasta(fechaISO?: string) {
-  if (!fechaISO) return null;
-  const hoy = new Date(`${fechaActualISO()}T12:00:00`).getTime();
-  const objetivo = new Date(`${fechaISO}T12:00:00`).getTime();
-  return Math.round((objetivo - hoy) / 86_400_000);
+  const objetivo = parsearFechaISO(fechaISO);
+  const hoy = parsearFechaISO(fechaActualISO());
+
+  if (!objetivo || !hoy) return null;
+  return Math.round((objetivo.getTime() - hoy.getTime()) / 86_400_000);
 }
 
 function fechaEsValida(valor?: string) {
-  return Boolean(valor && /^\d{4}-\d{2}-\d{2}$/.test(valor));
+  return parsearFechaISO(valor) !== null;
 }
 
 function idSeguro() {
@@ -283,9 +504,9 @@ function moneda(valor: number) {
 }
 
 function textoFecha(valor?: string) {
-  if (!valor) return "Sin fecha";
-  const fecha = new Date(`${valor}T12:00:00`);
-  if (Number.isNaN(fecha.getTime())) return "Fecha inválida";
+  const fecha = parsearFechaISO(valor);
+  if (!fecha) return valor ? "Fecha inválida" : "Sin fecha";
+
   return new Intl.DateTimeFormat("es-PE", {
     day: "2-digit",
     month: "2-digit",
@@ -354,47 +575,189 @@ function respaldoValido(valor: unknown): valor is Proyecto[] {
 }
 
 function normalizarLoteGuardado(lote: Lote): Lote {
-  const estado: EstadoLote = [
-    "disponible",
-    "reservado",
-    "vendido",
-    "bloqueado",
-  ].includes(lote.estado)
-    ? lote.estado
-    : "disponible";
+  const cliente = lote.cliente
+    ? {
+        nombres: String(lote.cliente.nombres ?? ""),
+        dni: String(lote.cliente.dni ?? ""),
+        celular: String(lote.cliente.celular ?? ""),
+        asesor: String(lote.cliente.asesor ?? ""),
+        observaciones: String(lote.cliente.observaciones ?? ""),
+      }
+    : undefined;
+
+  const estadoGuardado = String(lote.estado);
+  const estado: EstadoLote =
+    estadoGuardado === "reservado" || estadoGuardado === "vendido"
+      ? estadoGuardado
+      : estadoGuardado === "bloqueado" && cliente
+        ? "reservado"
+        : "disponible";
+
+  const operacionAnterior = lote.operacion;
+  const precioVenta =
+    Number(operacionAnterior?.precioVenta) || Number(lote.precioLista) || 0;
+  const modalidadPago: ModalidadPago =
+    operacionAnterior?.modalidadPago === "Contado"
+      ? "Contado"
+      : "Financiado";
+  const fechaOperacion = fechaEsValida(
+    operacionAnterior?.fechaOperacion,
+  )
+    ? String(operacionAnterior?.fechaOperacion)
+    : fechaActualISO();
+
+  const reservaAnterior = Number(operacionAnterior?.montoReserva) || 0;
+  const montoReserva =
+    estado === "disponible"
+      ? 0
+      : Math.min(
+          Math.max(
+            reservaAnterior || MONTO_RESERVA_POR_DEFECTO,
+            0,
+          ),
+          precioVenta,
+        );
+
+  const fechaCompromisoGuardada =
+    operacionAnterior?.fechaCompromisoPago ??
+    operacionAnterior?.fechaLimiteReserva;
+  const fechaCompromisoPago = fechaEsValida(fechaCompromisoGuardada)
+    ? String(fechaCompromisoGuardada)
+    : sumarDiasISO(fechaOperacion, DIAS_COMPROMISO_POR_DEFECTO);
+
+  const inicialAnterior = Number(operacionAnterior?.inicial) || 0;
+  const inicial =
+    modalidadPago === "Financiado"
+      ? Math.min(
+          Math.max(inicialAnterior || montoReserva, montoReserva),
+          precioVenta,
+        )
+      : 0;
+
+  const cuotasAnteriores = Math.trunc(
+    Number(operacionAnterior?.cuotas) || 12,
+  );
+  const cuotas =
+    modalidadPago === "Financiado"
+      ? Math.min(Math.max(cuotasAnteriores, 1), 120)
+      : 0;
+
+  const fechaPrimeraCuotaGuardada =
+    operacionAnterior?.fechaPrimeraCuota ||
+    operacionAnterior?.cuotasMensuales?.[0]?.fechaVencimiento;
+  const fechaPrimeraCuota = fechaEsValida(fechaPrimeraCuotaGuardada)
+    ? String(fechaPrimeraCuotaGuardada)
+    : sumarMesesISO(fechaCompromisoPago, 1);
+
+  const cuotasMensuales =
+    modalidadPago === "Financiado" && inicial < precioVenta
+      ? generarCuotasMensuales(
+          Math.max(precioVenta - inicial, 0),
+          cuotas,
+          fechaPrimeraCuota,
+          Array.isArray(operacionAnterior?.cuotasMensuales)
+            ? operacionAnterior.cuotasMensuales
+            : [],
+        )
+      : [];
+
+  const pagoInicialConfirmado =
+    modalidadPago === "Financiado"
+      ? estado === "vendido"
+        ? true
+        : operacionAnterior?.pagoInicialConfirmado ??
+          operacionAnterior?.pagoReservaConfirmado ??
+          false
+      : false;
+
+  const pagoTotalConfirmado =
+    modalidadPago === "Contado"
+      ? operacionAnterior?.pagoTotalConfirmado ??
+        (estado === "vendido" &&
+          (Number(operacionAnterior?.saldo) === 0 ||
+            inicialAnterior >= precioVenta))
+      : false;
+
+  const operacionBase: Operacion | undefined = operacionAnterior
+    ? {
+        fechaOperacion,
+        precioVenta,
+        montoReserva,
+        fechaPagoReserva:
+          operacionAnterior.fechaPagoReserva ?? fechaOperacion,
+        inicial,
+        fechaCompromisoPago,
+        pagoInicialConfirmado,
+        fechaPagoInicial:
+          modalidadPago === "Financiado" && pagoInicialConfirmado
+            ? operacionAnterior.fechaPagoInicial ??
+              operacionAnterior.fechaPagoReserva ??
+              fechaCompromisoPago
+            : undefined,
+        pagoTotalConfirmado,
+        fechaPagoTotal:
+          modalidadPago === "Contado" && pagoTotalConfirmado
+            ? operacionAnterior.fechaPagoTotal ?? fechaCompromisoPago
+            : undefined,
+        saldo: 0,
+        modalidadPago,
+        cuotas,
+        fechaPrimeraCuota:
+          modalidadPago === "Financiado" ? fechaPrimeraCuota : undefined,
+        cuotasMensuales,
+        liberacionAutomatica:
+          operacionAnterior.liberacionAutomatica ?? true,
+        fechaLimiteReserva: fechaCompromisoPago,
+        pagoReservaConfirmado: montoReserva > 0,
+      }
+    : undefined;
+
+  const operacion = operacionBase
+    ? {
+        ...operacionBase,
+        saldo: Math.max(
+          precioVenta - totalPagadoOperacion(operacionBase),
+          0,
+        ),
+      }
+    : undefined;
 
   return {
     ...lote,
     estado,
+    cliente: estado === "disponible" ? undefined : cliente,
     area: Number(lote.area) || 0,
     precioLista: Number(lote.precioLista) || 0,
     movimientos: Array.isArray(lote.movimientos) ? lote.movimientos : [],
-    operacion: lote.operacion
-      ? {
-          ...lote.operacion,
-          precioVenta: Number(lote.operacion.precioVenta) || 0,
-          montoReserva: Number(lote.operacion.montoReserva) || 0,
-          inicial: Number(lote.operacion.inicial) || 0,
-          saldo: Number(lote.operacion.saldo) || 0,
-          cuotas: Number(lote.operacion.cuotas) || 0,
-          pagoReservaConfirmado:
-            lote.operacion.pagoReservaConfirmado ?? false,
-          liberacionAutomatica:
-            lote.operacion.liberacionAutomatica ?? true,
-        }
-      : undefined,
+    operacion: estado === "disponible" ? undefined : operacion,
   };
 }
 
 function fusionarProyectosGuardados(guardados: Proyecto[]): Proyecto[] {
   const proyectosActuales = crearProyectosIniciales();
-  const guardadosNormalizados = guardados.map((proyecto) => ({
-    ...proyecto,
-    slug: PROYECTO_SLUG_ALIASES[proyecto.slug] ?? proyecto.slug,
-    lotes: Array.isArray(proyecto.lotes)
-      ? proyecto.lotes.map(normalizarLoteGuardado)
-      : [],
-  }));
+  const guardadosNormalizados = guardados.map((proyecto) => {
+    const slugAnterior = proyecto.slug;
+    const slugNormalizado =
+      PROYECTO_SLUG_ALIASES[slugAnterior] ?? slugAnterior;
+
+    return {
+      ...proyecto,
+      slug: slugNormalizado,
+      lotes: Array.isArray(proyecto.lotes)
+        ? proyecto.lotes.map((lote) =>
+            normalizarLoteGuardado({
+              ...lote,
+              id: lote.id.startsWith(`${slugAnterior}-`)
+                ? lote.id.replace(
+                    `${slugAnterior}-`,
+                    `${slugNormalizado}-`,
+                  )
+                : lote.id,
+            }),
+          )
+        : [],
+    };
+  });
   const guardadosPorSlug = new Map(
     guardadosNormalizados.map((proyecto) => [proyecto.slug, proyecto]),
   );
@@ -451,11 +814,15 @@ function fusionarProyectosGuardados(guardados: Proyecto[]): Proyecto[] {
 
 function reservaDebeLiberarse(lote: Lote) {
   if (lote.estado !== "reservado") return false;
+
   const operacion = lote.operacion;
-  if (!operacion?.fechaLimiteReserva) return false;
-  if (operacion.pagoReservaConfirmado) return false;
-  if (operacion.liberacionAutomatica === false) return false;
-  return operacion.fechaLimiteReserva < fechaActualISO();
+  const fechaCompromiso = fechaCompromisoOperacion(operacion);
+
+  if (!fechaEsValida(fechaCompromiso)) return false;
+  if (compromisoPagoCumplido(operacion)) return false;
+  if (operacion?.liberacionAutomatica === false) return false;
+
+  return fechaCompromiso != null && fechaCompromiso < fechaActualISO();
 }
 
 function liberarReservasVencidas(proyectos: Proyecto[]) {
@@ -468,7 +835,13 @@ function liberarReservasVencidas(proyectos: Proyecto[]) {
       liberados += 1;
       const movimiento = crearMovimiento(
         "vencimiento",
-        `Reserva vencida el ${textoFecha(lote.operacion?.fechaLimiteReserva)}. El lote fue liberado automáticamente por falta de pago confirmado.`,
+        `Compromiso de pago vencido el ${textoFecha(
+          fechaCompromisoOperacion(lote.operacion),
+        )}. El lote fue liberado automáticamente porque el ${
+          lote.operacion?.modalidadPago === "Contado"
+            ? "pago total"
+            : "pago de la inicial"
+        } no fue confirmado.`,
         lote.cliente,
         lote.operacion,
       );
@@ -488,28 +861,81 @@ function liberarReservasVencidas(proyectos: Proyecto[]) {
 }
 
 function formularioVacio(lote?: Lote): FormularioFicha {
-  const fechaOperacion = lote?.operacion?.fechaOperacion ?? fechaActualISO();
+  const fechaOperacion = fechaEsValida(lote?.operacion?.fechaOperacion)
+    ? String(lote?.operacion?.fechaOperacion)
+    : fechaActualISO();
+  const precioVenta =
+    Number(lote?.operacion?.precioVenta ?? lote?.precioLista ?? 0) || 0;
+  const modalidadPago = lote?.operacion?.modalidadPago ?? "Financiado";
+  const montoReserva =
+    Number(lote?.operacion?.montoReserva ?? MONTO_RESERVA_POR_DEFECTO) || 0;
+  const inicial =
+    modalidadPago === "Financiado"
+      ? Number(lote?.operacion?.inicial ?? 0) || 0
+      : 0;
+  const fechaCompromisoGuardada = fechaCompromisoOperacion(
+    lote?.operacion,
+  );
+  const fechaCompromisoPago = fechaEsValida(fechaCompromisoGuardada)
+    ? String(fechaCompromisoGuardada)
+    : sumarDiasISO(fechaOperacion, DIAS_COMPROMISO_POR_DEFECTO);
+  const cuotasGuardadas = Math.trunc(
+    Number(lote?.operacion?.cuotas) || 12,
+  );
+  const cuotas =
+    modalidadPago === "Financiado"
+      ? Math.min(Math.max(cuotasGuardadas, 1), 120)
+      : 0;
+  const fechaPrimeraGuardada =
+    lote?.operacion?.fechaPrimeraCuota ??
+    lote?.operacion?.cuotasMensuales?.[0]?.fechaVencimiento;
+  const fechaPrimeraCuota = fechaEsValida(fechaPrimeraGuardada)
+    ? String(fechaPrimeraGuardada)
+    : sumarMesesISO(fechaCompromisoPago, 1);
+  const cuotasMensuales =
+    modalidadPago === "Financiado" && inicial > 0 && inicial < precioVenta
+      ? generarCuotasMensuales(
+          Math.max(precioVenta - inicial, 0),
+          cuotas,
+          fechaPrimeraCuota,
+          lote?.operacion?.cuotasMensuales ?? [],
+        )
+      : [];
+
   return {
     estado: lote?.estado ?? "reservado",
     nombres: lote?.cliente?.nombres ?? "",
     dni: lote?.cliente?.dni ?? "",
     celular: lote?.cliente?.celular ?? "",
-    direccion: lote?.cliente?.direccion ?? "",
     asesor: lote?.cliente?.asesor ?? "",
     observaciones: lote?.cliente?.observaciones ?? "",
+
     fechaOperacion,
-    precioVenta: String(lote?.operacion?.precioVenta ?? lote?.precioLista ?? ""),
-    montoReserva: String(lote?.operacion?.montoReserva ?? ""),
-    inicial: String(lote?.operacion?.inicial ?? ""),
-    modalidadPago: lote?.operacion?.modalidadPago ?? "Contado",
-    cuotas: String(lote?.operacion?.cuotas ?? 0),
-    fechaLimiteReserva:
-      lote?.operacion?.fechaLimiteReserva ??
-      sumarDiasISO(fechaOperacion, DIAS_RESERVA_POR_DEFECTO),
-    pagoReservaConfirmado:
-      lote?.operacion?.pagoReservaConfirmado ?? false,
-    fechaPagoReserva: lote?.operacion?.fechaPagoReserva ?? "",
-    liberacionAutomatica: lote?.operacion?.liberacionAutomatica ?? true,
+    precioVenta: String(precioVenta || ""),
+    montoReserva: String(montoReserva || MONTO_RESERVA_POR_DEFECTO),
+    fechaPagoReserva: fechaEsValida(lote?.operacion?.fechaPagoReserva)
+      ? String(lote?.operacion?.fechaPagoReserva)
+      : fechaOperacion,
+    modalidadPago,
+
+    inicial:
+      modalidadPago === "Financiado" && inicial > 0
+        ? String(inicial)
+        : "",
+    fechaCompromisoPago,
+    pagoInicialConfirmado:
+      lote?.operacion?.pagoInicialConfirmado ?? false,
+    fechaPagoInicial: lote?.operacion?.fechaPagoInicial ?? "",
+
+    pagoTotalConfirmado:
+      lote?.operacion?.pagoTotalConfirmado ?? false,
+    fechaPagoTotal: lote?.operacion?.fechaPagoTotal ?? "",
+
+    cuotas: String(cuotas || 12),
+    fechaPrimeraCuota,
+    cuotasMensuales,
+    liberacionAutomatica:
+      lote?.operacion?.liberacionAutomatica ?? true,
   };
 }
 
@@ -522,47 +948,243 @@ export default function PanelComercial() {
   const [busquedaProyecto, setBusquedaProyecto] = useState("");
   const [loteSeleccionadoId, setLoteSeleccionadoId] = useState<string | null>(null);
   const [formulario, setFormulario] = useState<FormularioFicha>(formularioVacio());
+  const [montado, setMontado] = useState(false);
   const [hidratado, setHidratado] = useState(false);
   const [mensaje, setMensaje] = useState("");
+  const [vaultStatus, setVaultStatus] = useState<VaultStatus>({
+    indexedDb: true,
+    persistent: null,
+    saving: false,
+    sharedFileSupported: false,
+    sharedFilePermission: "unknown",
+  });
   const inputArchivoRef = useRef<HTMLInputElement | null>(null);
+  const ultimoHashAplicadoRef = useRef("");
+
+  function aplicarDatosExternos(
+    datos: unknown,
+    hash: string,
+    mensajeSincronizacion?: string,
+  ) {
+    if (!respaldoValido(datos)) return;
+
+    const fusionados = fusionarProyectosGuardados(datos);
+    const resultado = liberarReservasVencidas(fusionados);
+
+    ultimoHashAplicadoRef.current = hash;
+    setProyectos(resultado.proyectos);
+    setLoteSeleccionadoId(null);
+    setFormulario(formularioVacio());
+
+    if (resultado.liberados > 0) {
+      setMensaje(
+        `${resultado.liberados} reserva${
+          resultado.liberados === 1 ? "" : "s"
+        } vencida${resultado.liberados === 1 ? "" : "s"} liberada${
+          resultado.liberados === 1 ? "" : "s"
+        }.`,
+      );
+    } else if (mensajeSincronizacion) {
+      setMensaje(mensajeSincronizacion);
+    }
+  }
 
   useEffect(() => {
-    try {
-      const guardado =
-        window.localStorage.getItem(STORAGE_KEY) ??
-        window.localStorage.getItem(STORAGE_KEY_ANTERIOR);
+    setMontado(true);
+  }, []);
 
-      if (guardado) {
-        const datos: unknown = JSON.parse(guardado);
-        if (respaldoValido(datos)) {
-          const fusionados = fusionarProyectosGuardados(datos);
-          const resultado = liberarReservasVencidas(fusionados);
-          setProyectos(resultado.proyectos);
-          if (resultado.liberados > 0) {
-            setMensaje(
-              `${resultado.liberados} reserva${resultado.liberados === 1 ? "" : "s"} vencida${resultado.liberados === 1 ? "" : "s"} liberada${resultado.liberados === 1 ? "" : "s"}.`,
-            );
-          }
-        }
+  useEffect(() => {
+    let activo = true;
+
+    const iniciar = async () => {
+      try {
+        const envelope = await loadPanelVault<Proyecto[]>({
+          initialData: crearProyectosIniciales(),
+          legacyKeys: [STORAGE_KEY, ...STORAGE_KEYS_ANTERIORES],
+        });
+
+        if (!activo) return;
+
+        aplicarDatosExternos(envelope.data, envelope.hash);
+        setVaultStatus(await getPanelVaultStatus());
+      } catch (error) {
+        console.error("No se pudo iniciar el almacenamiento protegido:", error);
+
+        if (!activo) return;
+
+        setProyectos(crearProyectosIniciales());
+        setMensaje(
+          "No se pudo abrir el almacén protegido. Se cargó la configuración base.",
+        );
+        setVaultStatus((actual) => ({
+          ...actual,
+          indexedDb: false,
+          lastError:
+            error instanceof Error
+              ? error.message
+              : "Error de almacenamiento.",
+        }));
+      } finally {
+        if (activo) setHidratado(true);
       }
-    } catch (error) {
-      console.error("No se pudo leer el panel guardado:", error);
-      setMensaje("No se pudo leer el respaldo local. Se cargó la configuración base.");
-      setProyectos(crearProyectosIniciales());
-    } finally {
-      setHidratado(true);
-    }
+    };
+
+    void iniciar();
+
+    return () => {
+      activo = false;
+    };
   }, []);
 
   useEffect(() => {
     if (!hidratado) return;
-    try {
-      window.localStorage.setItem(STORAGE_KEY, JSON.stringify(proyectos));
-    } catch (error) {
-      console.error("No se pudo guardar el panel:", error);
-      setMensaje("No se pudo guardar en este navegador. Descarga un respaldo.");
-    }
+
+    const timer = window.setTimeout(async () => {
+      setVaultStatus((actual) => ({
+        ...actual,
+        saving: true,
+        lastError: undefined,
+      }));
+
+      try {
+        const envelope = await savePanelVault(
+          proyectos,
+          "Cambio guardado desde el panel comercial",
+        );
+        ultimoHashAplicadoRef.current = envelope.hash;
+
+        const status = await getPanelVaultStatus();
+        setVaultStatus((actual) => ({
+          ...actual,
+          ...status,
+          saving: false,
+          lastSavedAt: envelope.updatedAt,
+        }));
+      } catch (error) {
+        console.error("No se pudo guardar el panel:", error);
+        setVaultStatus((actual) => ({
+          ...actual,
+          saving: false,
+          lastError:
+            error instanceof Error ? error.message : "Error al guardar.",
+        }));
+        setMensaje(
+          "No se pudo completar el guardado protegido. Descarga un respaldo.",
+        );
+      }
+    }, 700);
+
+    return () => window.clearTimeout(timer);
   }, [proyectos, hidratado]);
+
+  useEffect(() => {
+    return subscribePanelVault<Proyecto[]>((envelope) => {
+      if (envelope.hash === ultimoHashAplicadoRef.current) return;
+
+      aplicarDatosExternos(
+        envelope.data,
+        envelope.hash,
+        "Cambios sincronizados desde otra pestaña de este navegador.",
+      );
+    });
+  }, []);
+
+  useEffect(() => {
+    if (!hidratado) return;
+
+    let sincronizando = false;
+
+    const sincronizar = async (pedirPermiso = false) => {
+      if (sincronizando) return;
+      sincronizando = true;
+
+      try {
+        const envelope = await syncSharedMasterFile<Proyecto[]>(pedirPermiso);
+
+        if (
+          envelope &&
+          envelope.hash !== ultimoHashAplicadoRef.current
+        ) {
+          aplicarDatosExternos(
+            envelope.data,
+            envelope.hash,
+            "Se recibió una versión más reciente del archivo maestro.",
+          );
+        }
+
+        const status = await getPanelVaultStatus();
+        setVaultStatus((actual) => ({
+          ...actual,
+          ...status,
+          lastSharedSyncAt: envelope ? new Date().toISOString() : actual.lastSharedSyncAt,
+        }));
+      } catch (error) {
+        if (pedirPermiso) {
+          setMensaje(
+            error instanceof Error
+              ? error.message
+              : "No se pudo sincronizar el archivo maestro.",
+          );
+        }
+      } finally {
+        sincronizando = false;
+      }
+    };
+
+    void sincronizar(false);
+
+    const intervalo = window.setInterval(() => {
+      void sincronizar(false);
+    }, 15_000);
+
+    const alRecuperarFoco = () => {
+      void sincronizar(false);
+    };
+
+    window.addEventListener("focus", alRecuperarFoco);
+
+    return () => {
+      window.clearInterval(intervalo);
+      window.removeEventListener("focus", alRecuperarFoco);
+    };
+  }, [hidratado]);
+
+  useEffect(() => {
+    if (!loteSeleccionadoId) return;
+
+    setFormulario((actual) => {
+      const precio = Number(actual.precioVenta) || 0;
+      const inicial = Number(actual.inicial) || 0;
+
+      if (
+        actual.modalidadPago !== "Financiado" ||
+        inicial <= 0 ||
+        inicial >= precio
+      ) {
+        return actual.cuotasMensuales.length === 0
+          ? actual
+          : { ...actual, cuotasMensuales: [] };
+      }
+
+      const plan = generarCuotasMensuales(
+        Math.max(precio - inicial, 0),
+        Number(actual.cuotas) || 0,
+        actual.fechaPrimeraCuota,
+        actual.cuotasMensuales,
+      );
+
+      return JSON.stringify(actual.cuotasMensuales) === JSON.stringify(plan)
+        ? actual
+        : { ...actual, cuotasMensuales: plan };
+    });
+  }, [
+    loteSeleccionadoId,
+    formulario.precioVenta,
+    formulario.inicial,
+    formulario.modalidadPago,
+    formulario.cuotas,
+    formulario.fechaPrimeraCuota,
+  ]);
 
   useEffect(() => {
     if (!hidratado) return;
@@ -598,6 +1220,11 @@ export default function PanelComercial() {
     (lote) => lote.id === loteSeleccionadoId,
   );
 
+  const resumenFormularioActual = useMemo(
+    () => calcularResumenFormulario(formulario),
+    [formulario],
+  );
+
   const proyectosFiltrados = useMemo(() => {
     const termino = busquedaProyecto.trim().toLowerCase();
     if (!termino) return proyectos;
@@ -614,22 +1241,30 @@ export default function PanelComercial() {
       disponible: 0,
       reservado: 0,
       vendido: 0,
-      bloqueado: 0,
     };
     let valorVendido = 0;
+    let reservasConPago = 0;
     let reservasPorVencer = 0;
-    let reservasPagadas = 0;
+    let cuotasVencidas = 0;
 
     proyecto?.lotes.forEach((lote) => {
       conteo[lote.estado] += 1;
+
       if (lote.estado === "vendido") {
         valorVendido += lote.operacion?.precioVenta ?? lote.precioLista;
       }
+
       if (lote.estado === "reservado") {
-        if (lote.operacion?.pagoReservaConfirmado) reservasPagadas += 1;
-        const dias = diasHasta(lote.operacion?.fechaLimiteReserva);
+        if ((lote.operacion?.montoReserva ?? 0) > 0) {
+          reservasConPago += 1;
+        }
+
+        const dias = diasHasta(
+          fechaCompromisoOperacion(lote.operacion),
+        );
+
         if (
-          !lote.operacion?.pagoReservaConfirmado &&
+          !compromisoPagoCumplido(lote.operacion) &&
           dias !== null &&
           dias >= 0 &&
           dias <= 3
@@ -637,29 +1272,42 @@ export default function PanelComercial() {
           reservasPorVencer += 1;
         }
       }
+
+      cuotasVencidas +=
+        lote.operacion?.cuotasMensuales?.filter(cuotaEstaVencida).length ?? 0;
     });
 
-    return { ...conteo, valorVendido, reservasPorVencer, reservasPagadas };
+    return {
+      ...conteo,
+      valorVendido,
+      reservasConPago,
+      reservasPorVencer,
+      cuotasVencidas,
+    };
   }, [proyecto]);
+
 
   const reservasPorVencer = useMemo(() => {
     if (!proyecto) return [];
+
     return proyecto.lotes
       .filter((lote) => {
-        const dias = diasHasta(lote.operacion?.fechaLimiteReserva);
+        const dias = diasHasta(
+          fechaCompromisoOperacion(lote.operacion),
+        );
+
         return (
           lote.estado === "reservado" &&
-          !lote.operacion?.pagoReservaConfirmado &&
+          !compromisoPagoCumplido(lote.operacion) &&
           dias !== null &&
           dias >= 0 &&
           dias <= 3
         );
       })
-      .sort(
-        (a, b) =>
-          (a.operacion?.fechaLimiteReserva ?? "").localeCompare(
-            b.operacion?.fechaLimiteReserva ?? "",
-          ),
+      .sort((a, b) =>
+        (fechaCompromisoOperacion(a.operacion) ?? "").localeCompare(
+          fechaCompromisoOperacion(b.operacion) ?? "",
+        ),
       );
   }, [proyecto]);
 
@@ -677,7 +1325,11 @@ export default function PanelComercial() {
         lote.cliente?.dni,
         lote.cliente?.celular,
         lote.cliente?.asesor,
-        lote.operacion?.fechaLimiteReserva,
+        fechaCompromisoOperacion(lote.operacion),
+        ...(lote.operacion?.cuotasMensuales ?? []).flatMap((cuota) => [
+          cuota.fechaVencimiento,
+          cuota.pagada ? "pagada" : "pendiente",
+        ]),
       ]
         .filter(Boolean)
         .join(" ")
@@ -725,15 +1377,58 @@ export default function PanelComercial() {
     setFormulario((actual) => ({
       ...actual,
       estado,
-      fechaLimiteReserva:
-        estado === "reservado" && !actual.fechaLimiteReserva
+      fechaCompromisoPago:
+        estado === "reservado" && !actual.fechaCompromisoPago
           ? sumarDiasISO(
               actual.fechaOperacion || fechaActualISO(),
-              DIAS_RESERVA_POR_DEFECTO,
+              DIAS_COMPROMISO_POR_DEFECTO,
             )
-          : actual.fechaLimiteReserva,
+          : actual.fechaCompromisoPago,
     }));
   }
+
+  function cambiarModalidadPago(modalidadPago: ModalidadPago) {
+    setFormulario((actual) => {
+      if (modalidadPago === "Contado") {
+        return {
+          ...actual,
+          modalidadPago,
+          inicial: "",
+          pagoInicialConfirmado: false,
+          fechaPagoInicial: "",
+          cuotas: "0",
+          fechaPrimeraCuota: "",
+          cuotasMensuales: [],
+        };
+      }
+
+      const reserva = Number(actual.montoReserva) || MONTO_RESERVA_POR_DEFECTO;
+      const inicialActual = Number(actual.inicial) || 0;
+      const fechaCompromisoPago =
+        actual.fechaCompromisoPago ||
+        sumarDiasISO(
+          actual.fechaOperacion || fechaActualISO(),
+          DIAS_COMPROMISO_POR_DEFECTO,
+        );
+
+      return {
+        ...actual,
+        modalidadPago,
+        inicial:
+          inicialActual >= reserva ? actual.inicial : String(reserva),
+        pagoTotalConfirmado: false,
+        fechaPagoTotal: "",
+        cuotas:
+          Number(actual.cuotas) >= 1 && Number(actual.cuotas) <= 120
+            ? actual.cuotas
+            : "12",
+        fechaPrimeraCuota:
+          actual.fechaPrimeraCuota ||
+          sumarMesesISO(fechaCompromisoPago, 1),
+      };
+    });
+  }
+
 
   function validarFormulario() {
     const requiereCliente =
@@ -741,6 +1436,7 @@ export default function PanelComercial() {
     const precioVenta = Number(formulario.precioVenta) || 0;
     const montoReserva = Number(formulario.montoReserva) || 0;
     const inicial = Number(formulario.inicial) || 0;
+    const cantidadCuotas = Number(formulario.cuotas) || 0;
 
     if (requiereCliente && !formulario.nombres.trim()) {
       return "Ingresa los nombres y apellidos del cliente.";
@@ -748,51 +1444,105 @@ export default function PanelComercial() {
     if (formulario.dni && !/^\d{8}$/.test(formulario.dni.trim())) {
       return "El DNI debe tener exactamente 8 dígitos.";
     }
-    if (formulario.celular && !/^\d{9}$/.test(formulario.celular.replace(/\s/g, ""))) {
+    if (
+      formulario.celular &&
+      !/^\d{9}$/.test(formulario.celular.replace(/\s/g, ""))
+    ) {
       return "El celular debe tener 9 dígitos.";
     }
     if (requiereCliente && precioVenta <= 0) {
-      return "El precio de venta debe ser mayor que cero.";
+      return "El precio acordado debe ser mayor que cero.";
     }
-    if (montoReserva < 0 || inicial < 0) {
-      return "Los importes no pueden ser negativos.";
+    if (requiereCliente && montoReserva <= 0) {
+      return "Registra el monto entregado para reservar el lote.";
     }
-    if (montoReserva + inicial > precioVenta && precioVenta > 0) {
-      return "La reserva más la inicial no puede superar el precio de venta.";
+    if (montoReserva > precioVenta && precioVenta > 0) {
+      return "La reserva no puede superar el precio acordado.";
     }
+    if (!fechaEsValida(formulario.fechaOperacion)) {
+      return "Indica la fecha en que se realizó la reserva.";
+    }
+    if (!fechaEsValida(formulario.fechaPagoReserva)) {
+      return "Indica la fecha en que se recibió el pago de la reserva.";
+    }
+    if (!fechaEsValida(formulario.fechaCompromisoPago)) {
+      return formulario.modalidadPago === "Contado"
+        ? "Indica cuándo regresará el cliente para cancelar el saldo total."
+        : "Indica cuándo regresará el cliente para completar la inicial.";
+    }
+    if (formulario.fechaCompromisoPago < formulario.fechaOperacion) {
+      return "La fecha del próximo pago no puede ser anterior a la reserva.";
+    }
+
+    const compromisoConfirmado =
+      formulario.modalidadPago === "Contado"
+        ? formulario.pagoTotalConfirmado
+        : formulario.pagoInicialConfirmado;
+
     if (
-      formulario.modalidadPago === "Financiado" &&
-      requiereCliente &&
-      Number(formulario.cuotas) < 1
+      formulario.estado === "reservado" &&
+      !compromisoConfirmado &&
+      formulario.fechaCompromisoPago < fechaActualISO()
     ) {
-      return "Indica al menos una cuota para una venta financiada.";
+      return "No puedes guardar una reserva con una fecha de pago ya vencida.";
     }
-    if (formulario.estado === "reservado") {
+
+    if (formulario.modalidadPago === "Contado") {
       if (
-        formulario.liberacionAutomatica &&
-        !fechaEsValida(formulario.fechaLimiteReserva)
+        formulario.pagoTotalConfirmado &&
+        !fechaEsValida(formulario.fechaPagoTotal)
       ) {
-        return "Indica hasta qué fecha se bloqueará la reserva.";
+        return "Indica la fecha en que se recibió el pago total.";
       }
+
       if (
-        formulario.fechaLimiteReserva &&
-        formulario.fechaOperacion &&
-        formulario.fechaLimiteReserva < formulario.fechaOperacion
+        formulario.estado === "vendido" &&
+        !formulario.pagoTotalConfirmado
       ) {
-        return "La fecha límite no puede ser anterior a la fecha de reserva.";
-      }
-      if (formulario.pagoReservaConfirmado && montoReserva <= 0) {
-        return "Para confirmar el pago registra un monto de reserva mayor que cero.";
-      }
-      if (
-        formulario.pagoReservaConfirmado &&
-        !fechaEsValida(formulario.fechaPagoReserva)
-      ) {
-        return "Indica la fecha en que se confirmó el pago de la reserva.";
+        return "Para marcar el lote como vendido al contado, confirma el pago total.";
       }
     }
+
+    if (formulario.modalidadPago === "Financiado") {
+      if (inicial < montoReserva) {
+        return "La inicial total debe ser igual o mayor que la reserva recibida.";
+      }
+      if (inicial >= precioVenta && precioVenta > 0) {
+        return "Si el cliente pagará todo el precio, selecciona la modalidad Contado.";
+      }
+      if (
+        !Number.isInteger(cantidadCuotas) ||
+        cantidadCuotas < 1 ||
+        cantidadCuotas > 120
+      ) {
+        return "La cantidad de cuotas debe ser un número entero entre 1 y 120.";
+      }
+      if (!fechaEsValida(formulario.fechaPrimeraCuota)) {
+        return "Indica la fecha de vencimiento de la primera cuota.";
+      }
+      if (formulario.fechaPrimeraCuota < formulario.fechaCompromisoPago) {
+        return "La primera cuota no puede vencer antes de completar la inicial.";
+      }
+      if (formulario.cuotasMensuales.length !== cantidadCuotas) {
+        return "No se pudo generar correctamente el cronograma mensual.";
+      }
+      if (
+        formulario.pagoInicialConfirmado &&
+        !fechaEsValida(formulario.fechaPagoInicial)
+      ) {
+        return "Indica la fecha en que se completó la inicial.";
+      }
+      if (
+        formulario.estado === "vendido" &&
+        !formulario.pagoInicialConfirmado
+      ) {
+        return "Para marcar el lote como vendido financiado, confirma primero la inicial.";
+      }
+    }
+
     return null;
   }
+
 
   function guardarFicha(evento: FormEvent<HTMLFormElement>) {
     evento.preventDefault();
@@ -806,8 +1556,16 @@ export default function PanelComercial() {
 
     const precioVenta = Number(formulario.precioVenta) || 0;
     const montoReserva = Number(formulario.montoReserva) || 0;
-    const inicial = Number(formulario.inicial) || 0;
-    const saldo = Math.max(precioVenta - montoReserva - inicial, 0);
+    const inicial =
+      formulario.modalidadPago === "Financiado"
+        ? Number(formulario.inicial) || 0
+        : 0;
+    const cuotasMensuales =
+      formulario.modalidadPago === "Financiado"
+        ? formulario.cuotasMensuales
+        : [];
+
+    const resumen = calcularResumenFormulario(formulario);
     const ahora = new Date().toISOString();
 
     setProyectos((actuales) =>
@@ -826,6 +1584,7 @@ export default function PanelComercial() {
                 lote.cliente,
                 lote.operacion,
               );
+
               return {
                 ...lote,
                 estado: "disponible",
@@ -836,64 +1595,122 @@ export default function PanelComercial() {
               };
             }
 
-            const cliente: Cliente | undefined = formulario.nombres.trim()
-              ? {
-                  nombres: formulario.nombres.trim(),
-                  dni: formulario.dni.trim(),
-                  celular: formulario.celular.replace(/\s/g, ""),
-                  direccion: formulario.direccion.trim(),
-                  asesor: formulario.asesor.trim(),
-                  observaciones: formulario.observaciones.trim(),
-                }
-              : undefined;
+            const cliente: Cliente = {
+              nombres: formulario.nombres.trim(),
+              dni: formulario.dni.trim(),
+              celular: formulario.celular.replace(/\s/g, ""),
+              asesor: formulario.asesor.trim(),
+              observaciones: formulario.observaciones.trim(),
+            };
 
             const operacion: Operacion = {
               fechaOperacion: formulario.fechaOperacion,
               precioVenta,
               montoReserva,
+              fechaPagoReserva: formulario.fechaPagoReserva,
               inicial,
-              saldo,
+              fechaCompromisoPago: formulario.fechaCompromisoPago,
+              pagoInicialConfirmado:
+                formulario.modalidadPago === "Financiado"
+                  ? formulario.pagoInicialConfirmado
+                  : false,
+              fechaPagoInicial:
+                formulario.modalidadPago === "Financiado" &&
+                formulario.pagoInicialConfirmado
+                  ? formulario.fechaPagoInicial
+                  : undefined,
+              pagoTotalConfirmado:
+                formulario.modalidadPago === "Contado"
+                  ? formulario.pagoTotalConfirmado
+                  : false,
+              fechaPagoTotal:
+                formulario.modalidadPago === "Contado" &&
+                formulario.pagoTotalConfirmado
+                  ? formulario.fechaPagoTotal
+                  : undefined,
+              saldo: resumen.saldoPendiente,
               modalidadPago: formulario.modalidadPago,
               cuotas:
                 formulario.modalidadPago === "Financiado"
                   ? Number(formulario.cuotas) || 0
                   : 0,
-              fechaLimiteReserva:
-                formulario.estado === "reservado"
-                  ? formulario.fechaLimiteReserva
+              fechaPrimeraCuota:
+                formulario.modalidadPago === "Financiado"
+                  ? formulario.fechaPrimeraCuota
                   : undefined,
-              pagoReservaConfirmado:
-                formulario.estado === "reservado"
-                  ? formulario.pagoReservaConfirmado
-                  : undefined,
-              fechaPagoReserva:
-                formulario.estado === "reservado" &&
-                formulario.pagoReservaConfirmado
-                  ? formulario.fechaPagoReserva
-                  : undefined,
+              cuotasMensuales,
               liberacionAutomatica:
                 formulario.estado === "reservado"
                   ? formulario.liberacionAutomatica
                   : undefined,
+
+              // Alias para que respaldos anteriores sigan siendo compatibles.
+              fechaLimiteReserva: formulario.fechaCompromisoPago,
+              pagoReservaConfirmado: montoReserva > 0,
             };
 
+            const cuotasAnteriores = lote.operacion?.cuotasMensuales ?? [];
+            const cuotasModificadas =
+              JSON.stringify(
+                cuotasAnteriores.map((cuota) => ({
+                  numero: cuota.numero,
+                  pagada: cuota.pagada,
+                  fechaPago: cuota.fechaPago,
+                })),
+              ) !==
+              JSON.stringify(
+                cuotasMensuales.map((cuota) => ({
+                  numero: cuota.numero,
+                  pagada: cuota.pagada,
+                  fechaPago: cuota.fechaPago,
+                })),
+              );
+
             const accion: AccionMovimiento =
+              lote.estado !== "reservado" &&
               formulario.estado === "reservado"
                 ? "reserva"
-                : formulario.estado === "vendido"
+                : lote.estado !== "vendido" &&
+                    formulario.estado === "vendido"
                   ? "venta"
-                  : formulario.estado === "bloqueado"
-                    ? "bloqueo"
+                  : cuotasModificadas
+                    ? "pago_cuota"
                     : "actualizacion";
 
             const descripcion =
-              formulario.estado === "reservado"
-                ? `Reserva registrada hasta el ${textoFecha(formulario.fechaLimiteReserva)}. ${formulario.pagoReservaConfirmado ? "Pago confirmado." : "Pago pendiente."}`
-                : formulario.estado === "vendido"
-                  ? "Venta registrada y lote marcado como vendido."
-                  : formulario.estado === "bloqueado"
-                    ? "Lote bloqueado temporalmente."
-                    : "Ficha actualizada.";
+              accion === "reserva"
+                ? formulario.modalidadPago === "Contado"
+                  ? `Reserva de ${moneda(
+                      montoReserva,
+                    )} registrada. El cliente acordó cancelar ${moneda(
+                      resumen.pagoPendienteContado,
+                    )} el ${textoFecha(formulario.fechaCompromisoPago)}.`
+                  : `Reserva de ${moneda(
+                      montoReserva,
+                    )} registrada. Inicial total de ${moneda(
+                      inicial,
+                    )}; falta completar ${moneda(
+                      resumen.pendienteInicial,
+                    )} hasta el ${textoFecha(
+                      formulario.fechaCompromisoPago,
+                    )}. Financiamiento en ${
+                      cuotasMensuales.length
+                    } cuotas de aproximadamente ${moneda(
+                      resumen.cuotaMensual,
+                    )}.`
+                : accion === "venta"
+                  ? formulario.modalidadPago === "Financiado"
+                    ? `Venta financiada registrada con inicial total de ${moneda(
+                        inicial,
+                      )} y ${cuotasMensuales.length} cuotas mensuales.`
+                    : `Venta al contado registrada. Pago total de ${moneda(
+                        precioVenta,
+                      )} confirmado.`
+                  : accion === "pago_cuota"
+                    ? `Cronograma actualizado: ${
+                        cuotasMensuales.filter((cuota) => cuota.pagada).length
+                      } de ${cuotasMensuales.length} cuotas pagadas.`
+                    : "Información comercial del lote actualizada.";
 
             const movimiento = crearMovimiento(
               accion,
@@ -918,6 +1735,22 @@ export default function PanelComercial() {
     setMensaje(`Lote ${loteSeleccionado.numero} actualizado correctamente.`);
     cerrarFicha();
   }
+
+  function marcarCuotaFormulario(numero: number, pagada: boolean) {
+    setFormulario((actual) => ({
+      ...actual,
+      cuotasMensuales: actual.cuotasMensuales.map((cuota) =>
+        cuota.numero === numero
+          ? {
+              ...cuota,
+              pagada,
+              fechaPago: pagada ? fechaActualISO() : undefined,
+            }
+          : cuota,
+      ),
+    }));
+  }
+
 
   function liberarLoteAhora() {
     if (!loteSeleccionado) return;
@@ -970,15 +1803,8 @@ export default function PanelComercial() {
 
   function descargarRespaldo() {
     try {
-      const blob = new Blob([JSON.stringify(proyectos, null, 2)], {
-        type: "application/json",
-      });
-      const url = URL.createObjectURL(blob);
-      const enlace = document.createElement("a");
-      enlace.href = url;
-      enlace.download = `respaldo-clientes-lotes-${fechaActualISO()}.json`;
-      enlace.click();
-      URL.revokeObjectURL(url);
+      downloadPanelBackup(proyectos);
+      setMensaje("Respaldo descargado correctamente.");
     } catch (error) {
       console.error(error);
       setMensaje("No se pudo generar el respaldo.");
@@ -1018,17 +1844,146 @@ export default function PanelComercial() {
     lector.readAsText(archivo);
   }
 
-  function reiniciarPanel() {
+  async function conectarArchivoMaestro() {
+    try {
+      setVaultStatus((actual) => ({
+        ...actual,
+        saving: true,
+        lastError: undefined,
+      }));
+
+      const envelope = await connectSharedMasterFile(proyectos);
+
+      if (respaldoValido(envelope.data)) {
+        aplicarDatosExternos(
+          envelope.data,
+          envelope.hash,
+          "Archivo maestro conectado correctamente.",
+        );
+      }
+
+      const status = await getPanelVaultStatus();
+      setVaultStatus((actual) => ({
+        ...actual,
+        ...status,
+        saving: false,
+        lastSharedSyncAt: new Date().toISOString(),
+      }));
+
+      setMensaje(
+        `Archivo maestro conectado: ${
+          status.sharedFileName ?? "casagrande-panel-maestro.json"
+        }.`,
+      );
+    } catch (error) {
+      if (error instanceof DOMException && error.name === "AbortError") {
+        setVaultStatus((actual) => ({ ...actual, saving: false }));
+        return;
+      }
+
+      console.error(error);
+      setVaultStatus((actual) => ({
+        ...actual,
+        saving: false,
+        lastError:
+          error instanceof Error
+            ? error.message
+            : "No se pudo conectar el archivo.",
+      }));
+      setMensaje(
+        error instanceof Error
+          ? error.message
+          : "No se pudo conectar el archivo maestro.",
+      );
+    }
+  }
+
+  async function sincronizarArchivoMaestro() {
+    try {
+      setVaultStatus((actual) => ({ ...actual, saving: true }));
+
+      const envelope = await syncSharedMasterFile<Proyecto[]>(true);
+
+      if (envelope && respaldoValido(envelope.data)) {
+        aplicarDatosExternos(
+          envelope.data,
+          envelope.hash,
+          "Archivo maestro sincronizado.",
+        );
+      }
+
+      const status = await getPanelVaultStatus();
+      setVaultStatus((actual) => ({
+        ...actual,
+        ...status,
+        saving: false,
+        lastSharedSyncAt: new Date().toISOString(),
+      }));
+
+      setMensaje("Archivo maestro sincronizado correctamente.");
+    } catch (error) {
+      console.error(error);
+      setVaultStatus((actual) => ({
+        ...actual,
+        saving: false,
+        lastError:
+          error instanceof Error
+            ? error.message
+            : "No se pudo sincronizar.",
+      }));
+      setMensaje(
+        error instanceof Error
+          ? error.message
+          : "No se pudo sincronizar el archivo maestro.",
+      );
+    }
+  }
+
+  async function desconectarArchivoMaestro() {
     const confirmar = window.confirm(
-      "Se borrarán los clientes, reservas, ventas, bloqueos e historial guardados en este navegador. ¿Continuar?",
+      "¿Desconectar el archivo maestro? Los datos locales protegidos se conservarán.",
     );
     if (!confirmar) return;
 
-    const iniciales = crearProyectosIniciales();
-    setProyectos(iniciales);
-    setProyectoActivo(iniciales[0].slug);
-    setLoteSeleccionadoId(null);
-    setMensaje("Panel reiniciado.");
+    await disconnectSharedMasterFile();
+    setVaultStatus(await getPanelVaultStatus());
+    setMensaje("Archivo maestro desconectado.");
+  }
+
+  async function recuperarVersionAnterior() {
+    const confirmar = window.confirm(
+      "¿Recuperar la versión anterior guardada? La versión actual quedará registrada en el historial local.",
+    );
+    if (!confirmar) return;
+
+    try {
+      const envelope = await restorePreviousSnapshot<Proyecto[]>();
+
+      if (!envelope) {
+        setMensaje("No existe una versión anterior diferente para recuperar.");
+        return;
+      }
+
+      aplicarDatosExternos(
+        envelope.data,
+        envelope.hash,
+        "Versión anterior recuperada correctamente.",
+      );
+      setVaultStatus(await getPanelVaultStatus());
+    } catch (error) {
+      console.error(error);
+      setMensaje("No se pudo recuperar la versión anterior.");
+    }
+  }
+
+  if (!montado) {
+    return (
+      <main className="min-h-screen bg-slate-50">
+        <div className="mx-auto max-w-[1500px] px-4 py-10 sm:px-6 lg:px-8">
+          <div className="h-32 animate-pulse rounded-3xl bg-slate-200" />
+        </div>
+      </main>
+    );
   }
 
   if (!proyecto) return null;
@@ -1082,22 +2037,120 @@ export default function PanelComercial() {
               />
               <button
                 type="button"
-                onClick={reiniciarPanel}
-                className="inline-flex items-center gap-2 rounded-xl border border-rose-200 bg-rose-50 px-4 py-2.5 text-sm font-bold text-rose-700 transition hover:bg-rose-100"
+                onClick={() => void conectarArchivoMaestro()}
+                disabled={!vaultStatus.sharedFileSupported || vaultStatus.saving}
+                className="inline-flex items-center gap-2 rounded-xl border border-indigo-200 bg-indigo-50 px-4 py-2.5 text-sm font-bold text-indigo-800 transition hover:bg-indigo-100 disabled:cursor-not-allowed disabled:opacity-50"
+                title={
+                  vaultStatus.sharedFileSupported
+                    ? "Conecta un archivo JSON que puede guardarse dentro de una carpeta sincronizada."
+                    : "El navegador no admite escritura directa de archivos."
+                }
               >
-                <RotateCcw className="h-4 w-4" /> Reiniciar
+                <FolderSync className="h-4 w-4" />
+                {vaultStatus.sharedFileName
+                  ? "Cambiar archivo maestro"
+                  : "Conectar archivo maestro"}
+              </button>
+
+              {vaultStatus.sharedFileName && (
+                <>
+                  <button
+                    type="button"
+                    onClick={() => void sincronizarArchivoMaestro()}
+                    disabled={vaultStatus.saving}
+                    className="inline-flex items-center gap-2 rounded-xl border border-sky-200 bg-sky-50 px-4 py-2.5 text-sm font-bold text-sky-800 transition hover:bg-sky-100 disabled:opacity-50"
+                  >
+                    <RefreshCw className="h-4 w-4" /> Sincronizar archivo
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => void desconectarArchivoMaestro()}
+                    className="inline-flex items-center gap-2 rounded-xl border border-slate-300 bg-white px-4 py-2.5 text-sm font-bold text-slate-600 transition hover:bg-slate-50"
+                  >
+                    Desconectar
+                  </button>
+                </>
+              )}
+
+              <button
+                type="button"
+                onClick={() => void recuperarVersionAnterior()}
+                disabled={vaultStatus.saving}
+                className="inline-flex items-center gap-2 rounded-xl border border-violet-200 bg-violet-50 px-4 py-2.5 text-sm font-bold text-violet-800 transition hover:bg-violet-100 disabled:opacity-50"
+              >
+                <Undo2 className="h-4 w-4" /> Recuperar anterior
               </button>
             </div>
           </div>
 
-          <div className="mt-5 flex items-start gap-3 rounded-2xl border border-amber-200 bg-amber-50 p-4 text-sm text-amber-900">
-            <ShieldAlert className="mt-0.5 h-5 w-5 shrink-0" />
-            <p>
-              Al ser puro frontend, la liberación se ejecuta al abrir o recargar
-              esta página y cada minuto mientras permanezca abierta. Los datos solo
-              se guardan en este navegador; descarga respaldos con frecuencia.
-            </p>
-          </div>
+          {/* <div className="mt-5 rounded-2xl border border-slate-200 bg-slate-50 p-4">
+            <div className="flex items-start gap-3">
+              <ShieldCheck className="mt-0.5 h-5 w-5 shrink-0 text-emerald-700" />
+              <div>
+                <p className="font-black text-slate-900">
+                  Almacenamiento protegido 100% frontend
+                </p>
+                <p className="mt-1 text-sm leading-6 text-slate-600">
+                  La información se guarda en IndexedDB, solicita persistencia al
+                  navegador, conserva hasta 100 versiones y se sincroniza entre
+                  pestañas del mismo navegador. Para trasladar cambios entre
+                  navegadores o computadoras sin crear un backend, conecta el mismo
+                  archivo maestro dentro de una carpeta sincronizada por OneDrive,
+                  Dropbox o Google Drive para escritorio. Cada navegador debe
+                  autorizar ese archivo una vez.
+                </p>
+              </div>
+            </div>
+
+            <div className="mt-4 grid gap-3 sm:grid-cols-2 xl:grid-cols-4">
+              <EstadoAlmacenamiento
+                icono={<Database className="h-4 w-4" />}
+                titulo="Base local"
+                valor={vaultStatus.indexedDb ? "IndexedDB activa" : "Con error"}
+                correcto={vaultStatus.indexedDb}
+              />
+              <EstadoAlmacenamiento
+                icono={<HardDrive className="h-4 w-4" />}
+                titulo="Persistencia"
+                valor={
+                  vaultStatus.persistent === true
+                    ? "Protegida"
+                    : vaultStatus.persistent === false
+                      ? "No concedida"
+                      : "Por confirmar"
+                }
+                correcto={vaultStatus.persistent === true}
+              />
+              <EstadoAlmacenamiento
+                icono={<FolderSync className="h-4 w-4" />}
+                titulo="Archivo maestro"
+                valor={vaultStatus.sharedFileName ?? "No conectado"}
+                correcto={
+                  Boolean(vaultStatus.sharedFileName) &&
+                  vaultStatus.sharedFilePermission === "granted"
+                }
+              />
+              <EstadoAlmacenamiento
+                icono={<Save className="h-4 w-4" />}
+                titulo="Guardado"
+                valor={
+                  vaultStatus.saving
+                    ? "Guardando..."
+                    : vaultStatus.lastSavedAt
+                      ? textoFechaHora(vaultStatus.lastSavedAt)
+                      : "Pendiente"
+                }
+                correcto={!vaultStatus.saving && !vaultStatus.lastError}
+              />
+            </div>
+
+            {vaultStatus.lastError && (
+              <div className="mt-3 flex items-start gap-2 rounded-xl border border-rose-200 bg-rose-50 p-3 text-sm text-rose-800">
+                <ShieldAlert className="mt-0.5 h-4 w-4 shrink-0" />
+                {vaultStatus.lastError}
+              </div>
+            )}
+          </div> */}
         </div>
       </section>
 
@@ -1223,13 +2276,21 @@ export default function PanelComercial() {
                 icono={<WalletCards className="h-5 w-5" />}
                 titulo="Reservados"
                 valor={resumenProyecto.reservado}
-                detalle={`${resumenProyecto.reservasPagadas} con pago`}
+                detalle={`${resumenProyecto.reservasConPago} con reserva pagada`}
               />
               <ResumenCard
                 icono={<AlertTriangle className="h-5 w-5" />}
                 titulo="Por vencer"
                 valor={resumenProyecto.reservasPorVencer}
-                detalle="En los próximos 3 días"
+                detalle={
+                  resumenProyecto.cuotasVencidas > 0
+                    ? `${resumenProyecto.cuotasVencidas} cuota${
+                        resumenProyecto.cuotasVencidas === 1 ? "" : "s"
+                      } vencida${
+                        resumenProyecto.cuotasVencidas === 1 ? "" : "s"
+                      }`
+                    : "Reservas en los próximos 3 días"
+                }
                 destacado={resumenProyecto.reservasPorVencer > 0}
               />
               <ResumenCard
@@ -1253,7 +2314,7 @@ export default function PanelComercial() {
                 </div>
                 <div className="mt-3 flex flex-wrap gap-2">
                   {reservasPorVencer.map((lote) => {
-                    const dias = diasHasta(lote.operacion?.fechaLimiteReserva) ?? 0;
+                    const dias = diasHasta(fechaCompromisoOperacion(lote.operacion)) ?? 0;
                     return (
                       <button
                         key={lote.id}
@@ -1295,7 +2356,6 @@ export default function PanelComercial() {
                   <option value="disponible">Disponibles</option>
                   <option value="reservado">Reservados</option>
                   <option value="vendido">Vendidos</option>
-                  <option value="bloqueado">Bloqueados</option>
                 </select>
               </label>
             </div>
@@ -1385,24 +2445,26 @@ export default function PanelComercial() {
                     <label className="mb-2 block text-sm font-black text-slate-800">
                       Estado del lote
                     </label>
-                    <div className="grid grid-cols-2 gap-2">
-                      {(Object.keys(ESTADO_CONFIG) as EstadoLote[]).map((estado) => {
-                        const seleccionado = formulario.estado === estado;
-                        return (
-                          <button
-                            key={estado}
-                            type="button"
-                            onClick={() => cambiarEstadoFormulario(estado)}
-                            className={`rounded-xl border px-3 py-3 text-sm font-bold transition ${
-                              seleccionado
-                                ? "border-[#123B68] bg-[#123B68] text-white ring-4 ring-[#123B68]/10"
-                                : "border-slate-200 bg-white text-slate-600 hover:bg-slate-50"
-                            }`}
-                          >
-                            {ESTADO_CONFIG[estado].label}
-                          </button>
-                        );
-                      })}
+                    <div className="grid grid-cols-3 gap-2">
+                      {(Object.keys(ESTADO_CONFIG) as EstadoLote[]).map(
+                        (estado) => {
+                          const seleccionado = formulario.estado === estado;
+                          return (
+                            <button
+                              key={estado}
+                              type="button"
+                              onClick={() => cambiarEstadoFormulario(estado)}
+                              className={`rounded-xl border px-2 py-3 text-xs font-bold transition sm:text-sm ${
+                                seleccionado
+                                  ? "border-[#123B68] bg-[#123B68] text-white ring-4 ring-[#123B68]/10"
+                                  : "border-slate-200 bg-white text-slate-600 hover:bg-slate-50"
+                              }`}
+                            >
+                              {ESTADO_CONFIG[estado].label}
+                            </button>
+                          );
+                        },
+                      )}
                     </div>
                   </div>
 
@@ -1411,28 +2473,30 @@ export default function PanelComercial() {
                   )}
 
                   <div className="rounded-2xl border border-slate-200 bg-slate-50 p-4 text-sm text-slate-600">
-                    <p className="font-black text-slate-800">Reglas</p>
+                    <p className="font-black text-slate-800">
+                      Flujo comercial
+                    </p>
                     <p className="mt-2 leading-6">
-                      <strong>Reservado:</strong> bloquea hasta la fecha límite.
+                      <strong>Disponible:</strong> se puede ofrecer.
                       <br />
-                      <strong>Sin pago:</strong> se libera al vencer si está activa la
-                      liberación automática.
+                      <strong>Reservado:</strong> se mantiene hasta la fecha
+                      límite. Si la inicial no se confirma, vuelve a disponible.
                       <br />
-                      <strong>Pago confirmado:</strong> la reserva no se libera.
-                      <br />
-                      <strong>Vendido:</strong> confirma el cierre definitivo.
+                      <strong>Vendido:</strong> la inicial debe estar confirmada
+                      y el cronograma queda registrado.
                     </p>
                   </div>
 
                   <div className="rounded-2xl border border-slate-200 bg-white p-4">
                     <div className="flex items-center gap-2 font-black text-slate-900">
-                      <History className="h-4 w-4 text-[#123B68]" /> Historial del lote
+                      <History className="h-4 w-4 text-[#123B68]" />
+                      Historial del lote
                     </div>
                     <div className="mt-3 max-h-64 space-y-3 overflow-y-auto">
                       {(loteSeleccionado.movimientos ?? []).length > 0 ? (
                         [...(loteSeleccionado.movimientos ?? [])]
                           .reverse()
-                          .slice(0, 8)
+                          .slice(0, 10)
                           .map((movimiento) => (
                             <div
                               key={movimiento.id}
@@ -1466,8 +2530,10 @@ export default function PanelComercial() {
                     className="space-y-4 disabled:opacity-50"
                   >
                     <legend className="mb-4 flex items-center gap-2 text-base font-black text-slate-950">
-                      <UserRound className="h-5 w-5 text-[#123B68]" /> Datos del cliente
+                      <UserRound className="h-5 w-5 text-[#123B68]" />
+                      Datos del cliente
                     </legend>
+
                     <div className="grid gap-4 sm:grid-cols-2">
                       <Campo
                         label="Nombres y apellidos"
@@ -1490,18 +2556,14 @@ export default function PanelComercial() {
                         label="Celular"
                         value={formulario.celular}
                         onChange={(valor) =>
-                          actualizarCampo("celular", valor.replace(/\D/g, ""))
+                          actualizarCampo(
+                            "celular",
+                            valor.replace(/\D/g, ""),
+                          )
                         }
                         placeholder="9 dígitos"
                         inputMode="tel"
                         maxLength={9}
-                      />
-                      <Campo
-                        label="Dirección"
-                        value={formulario.direccion}
-                        onChange={(valor) => actualizarCampo("direccion", valor)}
-                        placeholder="Dirección del cliente"
-                        className="sm:col-span-2"
                       />
                       <Campo
                         label="Asesor responsable"
@@ -1518,151 +2580,436 @@ export default function PanelComercial() {
                     className="space-y-5 disabled:opacity-50"
                   >
                     <legend className="mb-4 flex items-center gap-2 text-base font-black text-slate-950">
-                      <WalletCards className="h-5 w-5 text-[#123B68]" /> Datos de la operación
+                      <WalletCards className="h-5 w-5 text-[#123B68]" />
+                      Datos de la operación
                     </legend>
 
                     <div className="grid gap-4 sm:grid-cols-2">
                       <Campo
-                        label="Fecha de operación"
+                        label="Fecha de reserva"
                         type="date"
                         value={formulario.fechaOperacion}
-                        onChange={(valor) => actualizarCampo("fechaOperacion", valor)}
+                        onChange={(valor) =>
+                          setFormulario((actual) => {
+                            if (!fechaEsValida(valor)) {
+                              return {
+                                ...actual,
+                                fechaOperacion: valor,
+                              };
+                            }
+
+                            const nuevoCompromiso = sumarDiasISO(
+                              valor,
+                              DIAS_COMPROMISO_POR_DEFECTO,
+                            );
+
+                            return {
+                              ...actual,
+                              fechaOperacion: valor,
+                              fechaPagoReserva: fechaEsValida(
+                                actual.fechaPagoReserva,
+                              )
+                                ? actual.fechaPagoReserva
+                                : valor,
+                              fechaCompromisoPago: nuevoCompromiso,
+                              fechaPrimeraCuota:
+                                actual.cuotasMensuales.some(
+                                  (cuota) => cuota.pagada,
+                                )
+                                  ? actual.fechaPrimeraCuota
+                                  : sumarMesesISO(nuevoCompromiso, 1),
+                            };
+                          })
+                        }
                       />
+
                       <Campo
-                        label="Precio de venta"
+                        label="Precio acordado"
                         type="number"
                         value={formulario.precioVenta}
-                        onChange={(valor) => actualizarCampo("precioVenta", valor)}
-                        min="0"
-                        step="0.01"
-                      />
-                      <Campo
-                        label="Monto de reserva"
-                        type="number"
-                        value={formulario.montoReserva}
-                        onChange={(valor) => actualizarCampo("montoReserva", valor)}
-                        min="0"
-                        step="0.01"
-                      />
-                      <Campo
-                        label="Inicial adicional"
-                        type="number"
-                        value={formulario.inicial}
-                        onChange={(valor) => actualizarCampo("inicial", valor)}
+                        onChange={(valor) =>
+                          actualizarCampo("precioVenta", valor)
+                        }
                         min="0"
                         step="0.01"
                       />
 
-                      <label className="block">
+                      <Campo
+                        label="Reserva recibida"
+                        type="number"
+                        value={formulario.montoReserva}
+                        onChange={(valor) =>
+                          actualizarCampo("montoReserva", valor)
+                        }
+                        min="0"
+                        step="0.01"
+                        placeholder="1000"
+                      />
+
+                      <Campo
+                        label="Fecha de pago de la reserva"
+                        type="date"
+                        value={formulario.fechaPagoReserva}
+                        onChange={(valor) =>
+                          actualizarCampo("fechaPagoReserva", valor)
+                        }
+                      />
+
+                      <label className="block sm:col-span-2">
                         <span className="mb-2 block text-sm font-bold text-slate-700">
-                          Modalidad de pago
+                          Modalidad después de la reserva
                         </span>
                         <select
                           value={formulario.modalidadPago}
                           onChange={(evento) =>
-                            actualizarCampo(
-                              "modalidadPago",
+                            cambiarModalidadPago(
                               evento.target.value as ModalidadPago,
                             )
                           }
                           className="h-11 w-full rounded-xl border border-slate-300 bg-white px-3 text-sm outline-none transition focus:border-[#123B68] focus:ring-4 focus:ring-[#123B68]/10"
                         >
-                          <option value="Contado">Contado</option>
-                          <option value="Financiado">Financiado</option>
+                          <option value="Contado">
+                            Contado
+                          </option>
+                          <option value="Financiado">
+                            Financiado
+                          </option>
                         </select>
                       </label>
-
-                      <Campo
-                        label="Cantidad de cuotas"
-                        type="number"
-                        value={formulario.cuotas}
-                        onChange={(valor) => actualizarCampo("cuotas", valor)}
-                        min="0"
-                        disabled={formulario.modalidadPago === "Contado"}
-                      />
                     </div>
 
-                    {formulario.estado === "reservado" && (
-                      <div className="rounded-2xl border border-amber-200 bg-amber-50 p-4 sm:p-5">
-                        <div className="flex items-center gap-2 font-black text-amber-950">
-                          <FileClock className="h-5 w-5" /> Control de la reserva
+                    <div className="rounded-2xl border border-emerald-200 bg-emerald-50 p-4 sm:p-5">
+                      <div className="flex items-center gap-2 font-black text-emerald-950">
+                        <BadgeCheck className="h-5 w-5" />
+                        Reserva registrada
+                      </div>
+                      <p className="mt-2 text-sm leading-6 text-emerald-800">
+                        El cliente separa el lote con{" "}
+                        <strong>
+                          {moneda(resumenFormularioActual.reserva)}
+                        </strong>
+                        . Este importe forma parte del precio total del lote.
+                      </p>
+                    </div>
+
+                    {formulario.modalidadPago === "Contado" ? (
+                      <div className="rounded-2xl border border-sky-200 bg-sky-50 p-4 sm:p-5">
+                        <div className="flex items-center gap-2 font-black text-sky-950">
+                          <CircleDollarSign className="h-5 w-5" />
+                          Compromiso de pago al contado
                         </div>
-                        <p className="mt-1 text-sm text-amber-800">
-                          Define hasta cuándo se bloqueará el lote y confirma si el
-                          cliente realizó el pago.
+                        <p className="mt-1 text-sm leading-6 text-sky-800">
+                          Después de la reserva, el cliente debe cancelar el
+                          saldo de{" "}
+                          <strong>
+                            {moneda(
+                              resumenFormularioActual.pagoPendienteContado,
+                            )}
+                          </strong>{" "}
+                          en la fecha acordada.
                         </p>
 
                         <div className="mt-4 grid gap-4 sm:grid-cols-2">
                           <Campo
-                            label="Bloquear reserva hasta"
+                            label="Fecha acordada para pagar el saldo total"
                             type="date"
-                            value={formulario.fechaLimiteReserva}
+                            value={formulario.fechaCompromisoPago}
                             onChange={(valor) =>
-                              actualizarCampo("fechaLimiteReserva", valor)
+                              actualizarCampo(
+                                "fechaCompromisoPago",
+                                valor,
+                              )
                             }
-                            min={formulario.fechaOperacion || fechaActualISO()}
-                          />
-                          <Campo
-                            label="Fecha de pago de reserva"
-                            type="date"
-                            value={formulario.fechaPagoReserva}
-                            onChange={(valor) =>
-                              actualizarCampo("fechaPagoReserva", valor)
+                            min={
+                              formulario.fechaOperacion ||
+                              fechaActualISO()
                             }
-                            disabled={!formulario.pagoReservaConfirmado}
                           />
-                        </div>
 
-                        <div className="mt-4 grid gap-3 sm:grid-cols-2">
                           <ToggleCard
-                            checked={formulario.pagoReservaConfirmado}
+                            checked={formulario.pagoTotalConfirmado}
                             onChange={(checked) => {
-                              actualizarCampo("pagoReservaConfirmado", checked);
-                              if (checked && !formulario.fechaPagoReserva) {
-                                actualizarCampo("fechaPagoReserva", fechaActualISO());
-                              }
+                              actualizarCampo(
+                                "pagoTotalConfirmado",
+                                checked,
+                              );
+                              actualizarCampo(
+                                "fechaPagoTotal",
+                                checked
+                                  ? formulario.fechaPagoTotal ||
+                                      fechaActualISO()
+                                  : "",
+                              );
                             }}
-                            titulo="Pago de reserva confirmado"
-                            descripcion="Evita que el lote se libere por vencimiento."
+                            titulo="Pago total confirmado"
+                            descripcion="El cliente ya canceló todo el precio acordado."
                             icono={<BadgeCheck className="h-5 w-5" />}
                           />
+
+                          <Campo
+                            label="Fecha real del pago total"
+                            type="date"
+                            value={formulario.fechaPagoTotal}
+                            onChange={(valor) =>
+                              actualizarCampo("fechaPagoTotal", valor)
+                            }
+                            disabled={!formulario.pagoTotalConfirmado}
+                            className="sm:col-span-2"
+                          />
+                        </div>
+                      </div>
+                    ) : (
+                      <>
+                        <div className="rounded-2xl border border-amber-200 bg-amber-50 p-4 sm:p-5">
+                          <div className="flex items-center gap-2 font-black text-amber-950">
+                            <WalletCards className="h-5 w-5" />
+                            Inicial del financiamiento
+                          </div>
+                          <p className="mt-1 text-sm leading-6 text-amber-800">
+                            La inicial total incluye la reserva de{" "}
+                            {moneda(resumenFormularioActual.reserva)}.
+                            Registra cuánto será la inicial completa y cuándo
+                            regresará el cliente para terminar de pagarla.
+                          </p>
+
+                          <div className="mt-4 grid gap-4 sm:grid-cols-2">
+                            <Campo
+                              label="Inicial total acordada (incluye reserva)"
+                              type="number"
+                              value={formulario.inicial}
+                              onChange={(valor) =>
+                                actualizarCampo("inicial", valor)
+                              }
+                              min={formulario.montoReserva || "0"}
+                              step="0.01"
+                              placeholder="Ej. 10000"
+                            />
+
+                            <Campo
+                              label="Fecha para completar la inicial"
+                              type="date"
+                              value={formulario.fechaCompromisoPago}
+                              onChange={(valor) =>
+                                setFormulario((actual) => ({
+                                  ...actual,
+                                  fechaCompromisoPago: valor,
+                                  fechaPrimeraCuota:
+                                    actual.cuotasMensuales.some(
+                                      (cuota) => cuota.pagada,
+                                    )
+                                      ? actual.fechaPrimeraCuota
+                                      : sumarMesesISO(valor, 1),
+                                }))
+                              }
+                              min={
+                                formulario.fechaOperacion ||
+                                fechaActualISO()
+                              }
+                            />
+
+                            <div className="rounded-xl border border-amber-200 bg-white p-3">
+                              <p className="text-xs font-bold uppercase tracking-wide text-amber-700">
+                                Falta para completar la inicial
+                              </p>
+                              <p className="mt-1 text-xl font-black text-slate-950">
+                                {moneda(
+                                  resumenFormularioActual.pendienteInicial,
+                                )}
+                              </p>
+                            </div>
+
+                            <ToggleCard
+                              checked={formulario.pagoInicialConfirmado}
+                              onChange={(checked) => {
+                                actualizarCampo(
+                                  "pagoInicialConfirmado",
+                                  checked,
+                                );
+                                actualizarCampo(
+                                  "fechaPagoInicial",
+                                  checked
+                                    ? formulario.fechaPagoInicial ||
+                                        fechaActualISO()
+                                    : "",
+                                );
+                              }}
+                              titulo="Inicial completada"
+                              descripcion="La reserva y el resto de la inicial ya fueron pagados."
+                              icono={<BadgeCheck className="h-5 w-5" />}
+                            />
+
+                            <Campo
+                              label="Fecha real de pago de la inicial"
+                              type="date"
+                              value={formulario.fechaPagoInicial}
+                              onChange={(valor) =>
+                                actualizarCampo(
+                                  "fechaPagoInicial",
+                                  valor,
+                                )
+                              }
+                              disabled={!formulario.pagoInicialConfirmado}
+                              className="sm:col-span-2"
+                            />
+                          </div>
+                        </div>
+
+                        <div className="rounded-2xl border border-[#123B68]/20 bg-[#123B68]/5 p-4 sm:p-5">
+                          <div className="flex items-center gap-2 font-black text-slate-950">
+                            <CalendarDays className="h-5 w-5 text-[#123B68]" />
+                            Cuotas mensuales
+                          </div>
+                          <p className="mt-1 text-sm leading-6 text-slate-600">
+                            El saldo financiado es el precio menos la inicial
+                            total. El gerente define libremente la cantidad de
+                            cuotas mensuales.
+                          </p>
+
+                          <div className="mt-4 grid gap-4 sm:grid-cols-2">
+                            <Campo
+                              label="Cantidad de cuotas mensuales"
+                              type="number"
+                              value={formulario.cuotas}
+                              onChange={(valor) =>
+                                actualizarCampo(
+                                  "cuotas",
+                                  valor.replace(/\D/g, ""),
+                                )
+                              }
+                              min="1"
+                              max="120"
+                              step="1"
+                              inputMode="numeric"
+                              placeholder="Ej. 12, 18, 24"
+                            />
+
+                            <Campo
+                              label="Vencimiento de la primera cuota"
+                              type="date"
+                              value={formulario.fechaPrimeraCuota}
+                              onChange={(valor) =>
+                                actualizarCampo(
+                                  "fechaPrimeraCuota",
+                                  valor,
+                                )
+                              }
+                              min={
+                                formulario.fechaCompromisoPago ||
+                                formulario.fechaOperacion ||
+                                fechaActualISO()
+                              }
+                            />
+                          </div>
+
+                          <div className="mt-4 rounded-xl border border-[#123B68]/15 bg-white p-4">
+                            <p className="text-xs font-bold uppercase tracking-wide text-slate-400">
+                              Cuota mensual referencial
+                            </p>
+                            <p className="mt-1 text-2xl font-black text-[#123B68]">
+                              {moneda(
+                                resumenFormularioActual.cuotaMensual,
+                              )}
+                            </p>
+                            <p className="mt-1 text-xs text-slate-500">
+                              {formulario.cuotas} pagos mensuales. La última
+                              cuota se ajusta por redondeo.
+                            </p>
+                          </div>
+                        </div>
+                      </>
+                    )}
+
+                    {formulario.estado === "reservado" && (
+                      <div className="rounded-2xl border border-rose-200 bg-rose-50 p-4 sm:p-5">
+                        <div className="flex items-center gap-2 font-black text-rose-950">
+                          <AlarmClock className="h-5 w-5" />
+                          Control de vencimiento
+                        </div>
+                        <p className="mt-1 text-sm leading-6 text-rose-800">
+                          Si el cliente no cumple el{" "}
+                          {formulario.modalidadPago === "Contado"
+                            ? "pago total"
+                            : "pago de la inicial"}{" "}
+                          en la fecha acordada, el lote puede volver a
+                          disponible.
+                        </p>
+                        <div className="mt-4">
                           <ToggleCard
                             checked={formulario.liberacionAutomatica}
                             onChange={(checked) =>
-                              actualizarCampo("liberacionAutomatica", checked)
+                              actualizarCampo(
+                                "liberacionAutomatica",
+                                checked,
+                              )
                             }
-                            titulo="Liberar automáticamente"
-                            descripcion="Si vence sin pago confirmado, vuelve a disponible."
+                            titulo="Liberar automáticamente al vencer"
+                            descripcion={`Fecha límite: ${textoFecha(
+                              formulario.fechaCompromisoPago,
+                            )}`}
                             icono={<AlarmClock className="h-5 w-5" />}
                           />
                         </div>
                       </div>
                     )}
 
-                    <div className="grid gap-3 rounded-2xl border border-slate-200 bg-slate-50 p-4 sm:grid-cols-3">
+                    <div className="grid gap-3 rounded-2xl border border-slate-200 bg-slate-50 p-4 sm:grid-cols-2 xl:grid-cols-3">
                       <Calculo
-                        label="Precio"
-                        value={moneda(Number(formulario.precioVenta) || 0)}
+                        label="Precio acordado"
+                        value={moneda(resumenFormularioActual.precio)}
                       />
                       <Calculo
-                        label="Pagado"
+                        label="Reserva pagada"
+                        value={moneda(resumenFormularioActual.reserva)}
+                      />
+                      <Calculo
+                        label={
+                          formulario.modalidadPago === "Financiado"
+                            ? "Inicial total"
+                            : "Pago pendiente al contado"
+                        }
                         value={moneda(
-                          (Number(formulario.montoReserva) || 0) +
-                            (Number(formulario.inicial) || 0),
+                          formulario.modalidadPago === "Financiado"
+                            ? resumenFormularioActual.inicialTotal
+                            : resumenFormularioActual.pagoPendienteContado,
                         )}
                       />
                       <Calculo
-                        label="Saldo"
+                        label="Total pagado"
                         value={moneda(
-                          Math.max(
-                            (Number(formulario.precioVenta) || 0) -
-                              (Number(formulario.montoReserva) || 0) -
-                              (Number(formulario.inicial) || 0),
-                            0,
-                          ),
+                          resumenFormularioActual.totalPagado,
                         )}
+                      />
+                      <Calculo
+                        label="Saldo pendiente"
+                        value={moneda(
+                          resumenFormularioActual.saldoPendiente,
+                        )}
+                      />
+                      <Calculo
+                        label={
+                          formulario.modalidadPago === "Financiado"
+                            ? "Cuota mensual"
+                            : "Fecha de pago total"
+                        }
+                        value={
+                          formulario.modalidadPago === "Financiado"
+                            ? moneda(
+                                resumenFormularioActual.cuotaMensual,
+                              )
+                            : textoFecha(
+                                formulario.fechaCompromisoPago,
+                              )
+                        }
                       />
                     </div>
+
+                    {formulario.modalidadPago === "Financiado" && (
+                      <PlanCuotas
+                        cuotas={formulario.cuotasMensuales}
+                        onCambiarEstado={marcarCuotaFormulario}
+                        editable={formulario.pagoInicialConfirmado}
+                      />
+                    )}
 
                     <label className="block">
                       <span className="mb-2 block text-sm font-bold text-slate-700">
@@ -1671,10 +3018,13 @@ export default function PanelComercial() {
                       <textarea
                         value={formulario.observaciones}
                         onChange={(evento) =>
-                          actualizarCampo("observaciones", evento.target.value)
+                          actualizarCampo(
+                            "observaciones",
+                            evento.target.value,
+                          )
                         }
                         rows={4}
-                        placeholder="Acuerdos, documentación pendiente, fecha de próximo pago, seguimiento, etc."
+                        placeholder="Acuerdos, documentación pendiente, seguimiento o condiciones especiales."
                         className="w-full rounded-xl border border-slate-300 bg-white px-3 py-3 text-sm outline-none transition focus:border-[#123B68] focus:ring-4 focus:ring-[#123B68]/10"
                       />
                     </label>
@@ -1690,7 +3040,8 @@ export default function PanelComercial() {
                       onClick={liberarLoteAhora}
                       className="inline-flex items-center justify-center gap-2 rounded-xl border border-rose-200 bg-rose-50 px-4 py-2.5 text-sm font-black text-rose-700 transition hover:bg-rose-100"
                     >
-                      <Trash2 className="h-4 w-4" /> Liberar lote ahora
+                      <Trash2 className="h-4 w-4" />
+                      Liberar lote ahora
                     </button>
                   )}
                 </div>
@@ -1706,7 +3057,8 @@ export default function PanelComercial() {
                     type="submit"
                     className="inline-flex flex-1 items-center justify-center gap-2 rounded-xl bg-[#123B68] px-5 py-2.5 text-sm font-black text-white shadow-lg shadow-[#123B68]/20 transition hover:bg-[#0d2f54] sm:flex-none"
                   >
-                    <Save className="h-4 w-4" /> Guardar cambios
+                    <Save className="h-4 w-4" />
+                    Guardar cambios
                   </button>
                 </div>
               </div>
@@ -1726,27 +3078,38 @@ export default function PanelComercial() {
 
 function LoteCard({ lote, onClick }: { lote: Lote; onClick: () => void }) {
   const config = ESTADO_CONFIG[lote.estado];
-  const dias = diasHasta(lote.operacion?.fechaLimiteReserva);
-  const pagoConfirmado = lote.operacion?.pagoReservaConfirmado;
+  const operacion = lote.operacion;
+  const fechaCompromiso = fechaCompromisoOperacion(operacion);
+  const dias = diasHasta(fechaCompromiso);
+  const compromisoCumplido = compromisoPagoCumplido(operacion);
+  const siguienteCuota = siguienteCuotaPendiente(
+    operacion?.cuotasMensuales,
+  );
+  const vencidas =
+    operacion?.cuotasMensuales?.filter(cuotaEstaVencida).length ?? 0;
 
   return (
     <button
       type="button"
       onClick={onClick}
-      className={`group min-h-40 rounded-2xl border p-4 text-left transition hover:-translate-y-0.5 hover:shadow-md ${config.card}`}
+      className={`group min-h-44 rounded-2xl border p-4 text-left transition hover:-translate-y-0.5 hover:shadow-md ${config.card}`}
     >
       <div className="flex items-start justify-between gap-2">
         <span className="text-xl font-black text-slate-950">{lote.numero}</span>
-        {lote.estado === "bloqueado" ? (
-          <LockKeyhole className="h-4 w-4 text-slate-500" />
-        ) : (
-          <span className={`h-3 w-3 rounded-full ${config.dot}`} />
-        )}
+        <span className={`h-3 w-3 rounded-full ${config.dot}`} />
       </div>
-      <p className="mt-2 text-sm font-semibold text-slate-600">{lote.area} m²</p>
-      <p className="mt-1 text-xs text-slate-500">{moneda(lote.precioLista)}</p>
+
+      <p className="mt-2 text-sm font-semibold text-slate-600">
+        {lote.area} m²
+      </p>
+      <p className="mt-1 text-xs text-slate-500">
+        {moneda(operacion?.precioVenta ?? lote.precioLista)}
+      </p>
+
       <div className="mt-3">
-        <span className={`inline-flex rounded-full px-2.5 py-1 text-[11px] font-black ${config.badge}`}>
+        <span
+          className={`inline-flex rounded-full px-2.5 py-1 text-[11px] font-black ${config.badge}`}
+        >
           {config.label}
         </span>
       </div>
@@ -1754,24 +3117,62 @@ function LoteCard({ lote, onClick }: { lote: Lote; onClick: () => void }) {
       {lote.estado === "reservado" && (
         <div
           className={`mt-3 rounded-lg px-2.5 py-2 text-[11px] font-bold ${
-            pagoConfirmado
+            compromisoCumplido
               ? "bg-emerald-100 text-emerald-800"
               : dias !== null && dias <= 1
                 ? "bg-rose-100 text-rose-800"
                 : "bg-white/70 text-amber-900"
           }`}
         >
-          {pagoConfirmado
-            ? "Pago confirmado"
+          {compromisoCumplido
+            ? operacion?.modalidadPago === "Contado"
+              ? "Pago total confirmado"
+              : "Inicial completada"
             : dias === null
-              ? "Sin fecha límite"
+              ? "Sin fecha de próximo pago"
               : dias < 0
-                ? "Reserva vencida"
+                ? "Compromiso vencido"
                 : dias === 0
-                  ? "Vence hoy"
-                  : `Vence en ${dias} día${dias === 1 ? "" : "s"}`}
+                  ? `${
+                      operacion?.modalidadPago === "Contado"
+                        ? "Pago total"
+                        : "Inicial"
+                    } vence hoy`
+                  : `${
+                      operacion?.modalidadPago === "Contado"
+                        ? "Pago total"
+                        : "Inicial"
+                    } en ${dias} día${dias === 1 ? "" : "s"}`}
         </div>
       )}
+
+      {lote.estado === "vendido" &&
+        operacion?.modalidadPago === "Financiado" && (
+          <div
+            className={`mt-3 rounded-lg px-2.5 py-2 text-[11px] font-bold ${
+              vencidas > 0
+                ? "bg-rose-100 text-rose-800"
+                : "bg-white/70 text-slate-700"
+            }`}
+          >
+            {vencidas > 0
+              ? `${vencidas} cuota${vencidas === 1 ? "" : "s"} vencida${
+                  vencidas === 1 ? "" : "s"
+                }`
+              : siguienteCuota
+                ? `Próxima: ${textoFecha(
+                    siguienteCuota.fechaVencimiento,
+                  )} · ${moneda(siguienteCuota.monto)}`
+                : "Plan de cuotas completado"}
+          </div>
+        )}
+
+      {lote.estado === "vendido" &&
+        operacion?.modalidadPago === "Contado" && (
+          <div className="mt-3 rounded-lg bg-emerald-100 px-2.5 py-2 text-[11px] font-bold text-emerald-800">
+            Pago total confirmado
+          </div>
+        )}
 
       {lote.cliente?.nombres && (
         <p className="mt-3 line-clamp-2 text-xs font-semibold text-slate-700">
@@ -1782,6 +3183,7 @@ function LoteCard({ lote, onClick }: { lote: Lote; onClick: () => void }) {
   );
 }
 
+
 function ClienteCard({
   lote,
   onEditar,
@@ -1789,7 +3191,17 @@ function ClienteCard({
   lote: Lote;
   onEditar: () => void;
 }) {
-  const dias = diasHasta(lote.operacion?.fechaLimiteReserva);
+  const operacion = lote.operacion;
+  const fechaCompromiso = fechaCompromisoOperacion(operacion);
+  const dias = diasHasta(fechaCompromiso);
+  const cuotas = operacion?.cuotasMensuales ?? [];
+  const cuotasPagadas = cuotas.filter((cuota) => cuota.pagada).length;
+  const cuotasVencidas = cuotas.filter(cuotaEstaVencida).length;
+  const proximaCuota = siguienteCuotaPendiente(cuotas);
+  const totalPagado = totalPagadoOperacion(operacion);
+  const reserva = operacion?.montoReserva ?? 0;
+  const inicial = operacion?.inicial ?? 0;
+
   return (
     <article className="rounded-2xl border border-slate-200 bg-slate-50 p-5">
       <div className="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
@@ -1798,14 +3210,19 @@ function ClienteCard({
             <UserRound className="h-5 w-5" />
           </div>
           <div>
-            <h3 className="font-black text-slate-950">{lote.cliente?.nombres}</h3>
+            <h3 className="font-black text-slate-950">
+              {lote.cliente?.nombres}
+            </h3>
             <p className="mt-1 text-sm text-slate-500">
               DNI: {lote.cliente?.dni || "No registrado"}
             </p>
           </div>
         </div>
+
         <div className="flex items-center gap-2">
-          <span className={`rounded-full px-3 py-1 text-xs font-black ${ESTADO_CONFIG[lote.estado].badge}`}>
+          <span
+            className={`rounded-full px-3 py-1 text-xs font-black ${ESTADO_CONFIG[lote.estado].badge}`}
+          >
             {ESTADO_CONFIG[lote.estado].label}
           </span>
           <button
@@ -1822,34 +3239,105 @@ function ClienteCard({
       <dl className="mt-5 grid gap-3 text-sm sm:grid-cols-2">
         <FichaDato etiqueta="Lote" valor={`${lote.numero} · ${lote.area} m²`} />
         <FichaDato
-          etiqueta="Precio registrado"
-          valor={moneda(lote.operacion?.precioVenta ?? lote.precioLista)}
+          etiqueta="Precio acordado"
+          valor={moneda(operacion?.precioVenta ?? lote.precioLista)}
         />
-        <FichaDato etiqueta="Celular" valor={lote.cliente?.celular || "No registrado"} />
-        <FichaDato etiqueta="Asesor" valor={lote.cliente?.asesor || "No registrado"} />
-        <FichaDato etiqueta="Fecha" valor={textoFecha(lote.operacion?.fechaOperacion)} />
-        <FichaDato etiqueta="Saldo" valor={moneda(lote.operacion?.saldo ?? 0)} />
-        {lote.estado === "reservado" && (
+        <FichaDato etiqueta="Reserva pagada" valor={moneda(reserva)} />
+        <FichaDato
+          etiqueta="Modalidad"
+          valor={operacion?.modalidadPago ?? "No registrada"}
+        />
+        <FichaDato etiqueta="Total pagado" valor={moneda(totalPagado)} />
+        <FichaDato
+          etiqueta="Saldo pendiente"
+          valor={moneda(operacion?.saldo ?? 0)}
+        />
+        <FichaDato
+          etiqueta="Celular"
+          valor={lote.cliente?.celular || "No registrado"}
+        />
+        <FichaDato
+          etiqueta="Asesor"
+          valor={lote.cliente?.asesor || "No registrado"}
+        />
+
+        {lote.estado === "reservado" &&
+          operacion?.modalidadPago === "Contado" && (
+            <>
+              <FichaDato
+                etiqueta="Pagará el saldo total"
+                valor={textoFecha(fechaCompromiso)}
+              />
+              <FichaDato
+                etiqueta="Situación"
+                valor={
+                  operacion.pagoTotalConfirmado
+                    ? "Pago total confirmado"
+                    : dias === 0
+                      ? "Pago pendiente · vence hoy"
+                      : dias !== null && dias > 0
+                        ? `Pago pendiente · ${dias} día${
+                            dias === 1 ? "" : "s"
+                          }`
+                        : "Pago pendiente"
+                }
+              />
+            </>
+          )}
+
+        {operacion?.modalidadPago === "Financiado" && (
           <>
             <FichaDato
-              etiqueta="Reserva hasta"
-              valor={textoFecha(lote.operacion?.fechaLimiteReserva)}
+              etiqueta="Inicial total"
+              valor={moneda(inicial)}
             />
             <FichaDato
-              etiqueta="Pago de reserva"
+              etiqueta="Falta para la inicial"
+              valor={moneda(
+                operacion.pagoInicialConfirmado
+                  ? 0
+                  : Math.max(inicial - reserva, 0),
+              )}
+            />
+            <FichaDato
+              etiqueta="Fecha para completar inicial"
+              valor={textoFecha(fechaCompromiso)}
+            />
+            <FichaDato
+              etiqueta="Financiamiento"
+              valor={`${operacion.cuotas || cuotas.length} meses`}
+            />
+            <FichaDato
+              etiqueta="Cuota mensual"
+              valor={moneda(cuotas[0]?.monto ?? 0)}
+            />
+            <FichaDato
+              etiqueta="Cuotas pagadas"
+              valor={`${cuotasPagadas}/${cuotas.length}`}
+            />
+            <FichaDato
+              etiqueta="Próxima cuota"
               valor={
-                lote.operacion?.pagoReservaConfirmado
-                  ? "Confirmado"
-                  : dias === 0
-                    ? "Pendiente · vence hoy"
-                    : dias !== null && dias > 0
-                      ? `Pendiente · ${dias} día${dias === 1 ? "" : "s"}`
-                      : "Pendiente"
+                proximaCuota
+                  ? `${textoFecha(
+                      proximaCuota.fechaVencimiento,
+                    )} · ${moneda(proximaCuota.monto)}`
+                  : operacion.pagoInicialConfirmado
+                    ? "Plan completado"
+                    : "Pendiente de completar inicial"
               }
             />
           </>
         )}
       </dl>
+
+      {cuotasVencidas > 0 && (
+        <div className="mt-4 rounded-xl border border-rose-200 bg-rose-50 p-3 text-sm font-bold text-rose-800">
+          {cuotasVencidas} cuota{cuotasVencidas === 1 ? "" : "s"} vencida
+          {cuotasVencidas === 1 ? "" : "s"} pendiente
+          {cuotasVencidas === 1 ? "" : "s"}.
+        </div>
+      )}
 
       {lote.cliente?.observaciones && (
         <div className="mt-4 rounded-xl border border-slate-200 bg-white p-3 text-sm text-slate-600">
@@ -1861,14 +3349,18 @@ function ClienteCard({
   );
 }
 
+
 function EstadoReservaPreview({ formulario }: { formulario: FormularioFicha }) {
-  const dias = diasHasta(formulario.fechaLimiteReserva);
-  const pagado = formulario.pagoReservaConfirmado;
+  const dias = diasHasta(formulario.fechaCompromisoPago);
+  const cumplido =
+    formulario.modalidadPago === "Contado"
+      ? formulario.pagoTotalConfirmado
+      : formulario.pagoInicialConfirmado;
 
   return (
     <div
       className={`rounded-2xl border p-4 text-sm ${
-        pagado
+        cumplido
           ? "border-emerald-200 bg-emerald-50 text-emerald-900"
           : dias !== null && dias <= 1
             ? "border-rose-200 bg-rose-50 text-rose-900"
@@ -1876,19 +3368,138 @@ function EstadoReservaPreview({ formulario }: { formulario: FormularioFicha }) {
       }`}
     >
       <div className="flex items-center gap-2 font-black">
-        {pagado ? <BadgeCheck className="h-5 w-5" /> : <AlarmClock className="h-5 w-5" />}
-        {pagado ? "Reserva protegida" : "Pago pendiente"}
+        {cumplido ? (
+          <BadgeCheck className="h-5 w-5" />
+        ) : (
+          <AlarmClock className="h-5 w-5" />
+        )}
+        {cumplido
+          ? formulario.modalidadPago === "Contado"
+            ? "Pago total confirmado"
+            : "Inicial completada"
+          : formulario.modalidadPago === "Contado"
+            ? "Pago total pendiente"
+            : "Inicial pendiente"}
       </div>
+
       <p className="mt-2 leading-6">
-        {pagado
-          ? `Pago confirmado el ${textoFecha(formulario.fechaPagoReserva)}. No se liberará automáticamente.`
+        {cumplido
+          ? formulario.modalidadPago === "Contado"
+            ? `El pago total fue confirmado el ${textoFecha(
+                formulario.fechaPagoTotal,
+              )}.`
+            : `La inicial fue completada el ${textoFecha(
+                formulario.fechaPagoInicial,
+              )}.`
           : formulario.liberacionAutomatica
-            ? `El lote se liberará después del ${textoFecha(formulario.fechaLimiteReserva)} si el pago continúa pendiente.`
-            : `La reserva vence el ${textoFecha(formulario.fechaLimiteReserva)}, pero la liberación automática está desactivada.`}
+            ? `El lote volverá a disponible después del ${textoFecha(
+                formulario.fechaCompromisoPago,
+              )} si el cliente no cumple el pago acordado.`
+            : `El pago está programado para el ${textoFecha(
+                formulario.fechaCompromisoPago,
+              )}, pero la liberación automática está desactivada.`}
       </p>
     </div>
   );
 }
+
+
+function PlanCuotas({
+  cuotas,
+  onCambiarEstado,
+  editable,
+}: {
+  cuotas: CuotaMensual[];
+  onCambiarEstado: (numero: number, pagada: boolean) => void;
+  editable: boolean;
+}) {
+  if (cuotas.length === 0) {
+    return (
+      <div className="rounded-2xl border border-dashed border-slate-300 bg-slate-50 p-6 text-center text-sm text-slate-500">
+        Completa la cantidad de cuotas y la fecha de la primera cuota para
+        generar el cronograma.
+      </div>
+    );
+  }
+
+  const pagadas = cuotas.filter((cuota) => cuota.pagada).length;
+  const vencidas = cuotas.filter(cuotaEstaVencida).length;
+  const total = cuotas.reduce((suma, cuota) => suma + cuota.monto, 0);
+
+  return (
+    <div className="overflow-hidden rounded-2xl border border-slate-200 bg-white">
+      <div className="flex flex-col gap-2 border-b border-slate-200 bg-slate-50 px-4 py-3 sm:flex-row sm:items-center sm:justify-between">
+        <div>
+          <p className="font-black text-slate-900">Cuotas mensuales</p>
+          <p className="text-xs text-slate-500">
+            {pagadas} de {cuotas.length} pagadas · Total financiado{" "}
+            {moneda(total)}
+            {!editable && " · confirma la inicial para registrar pagos"}
+          </p>
+        </div>
+        {vencidas > 0 && (
+          <span className="rounded-full bg-rose-100 px-3 py-1 text-xs font-black text-rose-800">
+            {vencidas} vencida{vencidas === 1 ? "" : "s"}
+          </span>
+        )}
+      </div>
+
+      <div className="max-h-80 overflow-y-auto">
+        <div className="min-w-[560px]">
+          <div className="grid grid-cols-[70px_1fr_1fr_130px] border-b border-slate-200 bg-white px-4 py-2 text-xs font-black uppercase tracking-wide text-slate-400">
+            <span>Cuota</span>
+            <span>Vencimiento</span>
+            <span>Monto</span>
+            <span>Estado</span>
+          </div>
+
+          {cuotas.map((cuota) => {
+            const vencida = cuotaEstaVencida(cuota);
+            return (
+              <div
+                key={cuota.numero}
+                className={`grid grid-cols-[70px_1fr_1fr_130px] items-center border-b border-slate-100 px-4 py-3 text-sm last:border-b-0 ${
+                  vencida ? "bg-rose-50" : ""
+                }`}
+              >
+                <strong className="text-slate-900">
+                  {String(cuota.numero).padStart(2, "0")}
+                </strong>
+                <span className="text-slate-600">
+                  {textoFecha(cuota.fechaVencimiento)}
+                </span>
+                <span className="font-bold text-slate-900">
+                  {moneda(cuota.monto)}
+                </span>
+                <button
+                  type="button"
+                  onClick={() =>
+                    onCambiarEstado(cuota.numero, !cuota.pagada)
+                  }
+                  disabled={!editable}
+                  className={`rounded-lg px-3 py-2 text-xs font-black transition disabled:cursor-not-allowed disabled:opacity-50 ${
+                    cuota.pagada
+                      ? "bg-emerald-100 text-emerald-800 hover:bg-emerald-200"
+                      : vencida
+                        ? "bg-rose-100 text-rose-800 hover:bg-rose-200"
+                        : "bg-slate-100 text-slate-700 hover:bg-slate-200"
+                  }`}
+                >
+                  {cuota.pagada
+                    ? `Pagada ${textoFecha(cuota.fechaPago)}`
+                    : vencida
+                      ? "Vencida"
+                      : "Pendiente"}
+                </button>
+              </div>
+            );
+          })}
+        </div>
+      </div>
+    </div>
+  );
+}
+
 
 function ToggleCard({
   checked,
@@ -2005,6 +3616,37 @@ function FichaDato({ etiqueta, valor }: { etiqueta: string; valor: string }) {
     <div>
       <dt className="text-xs font-bold uppercase tracking-wide text-slate-400">{etiqueta}</dt>
       <dd className="mt-1 font-semibold text-slate-800">{valor}</dd>
+    </div>
+  );
+}
+
+function EstadoAlmacenamiento({
+  icono,
+  titulo,
+  valor,
+  correcto,
+}: {
+  icono: ReactNode;
+  titulo: string;
+  valor: string;
+  correcto: boolean;
+}) {
+  return (
+    <div className="rounded-xl border border-slate-200 bg-white p-3">
+      <div className="flex items-center gap-2 text-xs font-bold uppercase tracking-wide text-slate-400">
+        {icono}
+        {titulo}
+      </div>
+      <div className="mt-2 flex items-center gap-2">
+        <span
+          className={`h-2.5 w-2.5 shrink-0 rounded-full ${
+            correcto ? "bg-emerald-500" : "bg-amber-500"
+          }`}
+        />
+        <p className="min-w-0 truncate text-sm font-black text-slate-800">
+          {valor}
+        </p>
+      </div>
     </div>
   );
 }

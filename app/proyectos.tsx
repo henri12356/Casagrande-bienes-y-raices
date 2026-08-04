@@ -26,7 +26,7 @@ const proyectosData: Proyecto[] = [
     nombre: "EL MIRADOR DE CCORIHUILLCA",
     subtitulo: "Ccorihuillca centro",
     ubicacion: "Huamanga – Qorihuillca",
-    precioDesdeSol: "S/ 18,000",
+    precioDesdeSol: "S/ 20,000",
     precioDesdeDolar: "",
     imagenSrc: "/MIRADOR/MIRADOR01.webp",
     etiqueta: "Proyecto",

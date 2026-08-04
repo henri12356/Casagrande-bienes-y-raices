@@ -7,24 +7,24 @@
     "subtitulo": "",
     "categoria": "Proyecto",
     "ubicacion": "Sector Ccorihuillca, a 15 minutos del Grifo Ayacucho",
-    "precioDesdeSol": "S/ 18,000",
+    "precioDesdeSol": "S/ 20,000",
     "imagen": "/MIRADOR/MIRADOR01.webp",
     "etiquetas": ["Preventa", "Lotes desde 200 m²", "Acceso vehicular"],
-    "descripcion": "EL MIRADOR DE CCORIHUILLCA es un nuevo proyecto inmobiliario ubicado en el sector de Ccorihuillca, a solo 15 minutos del Grifo Ayacucho y a 4 minutos del centro de Ccorihuillca Chico. El proyecto se encuentra en etapa de preventa y cuenta con 70 lotes de 200 m², 500 m² y 1,000 m². Los lotes de 200 m² están disponibles desde S/ 18,000. Todos los terrenos cuentan con acceso vehicular y se encuentran en un sector con servicios de agua, luz, centro educativo inicial, posta médica, parque y cancha de fútbol. Es una excelente alternativa para construir una casa de campo, vivienda familiar o realizar una inversión con proyección de valorización.",
+    "descripcion": "EL MIRADOR DE CCORIHUILLCA es un nuevo proyecto inmobiliario ubicado en el sector de Ccorihuillca, a solo 15 minutos del Grifo Ayacucho y a 4 minutos del centro de Ccorihuillca Chico. El proyecto se encuentra en etapa de preventa y cuenta con 70 lotes de 200 m², 500 m² y 1,000 m². Los lotes de 200 m² están disponibles desde S/ 20,000. Todos los terrenos cuentan con acceso vehicular y se encuentran en un sector con servicios de agua, luz, centro educativo initial, posta médica, parque y cancha de fútbol. Es una excelente alternativa para construir una casa de campo, vivienda familiar o realizar una inversión con proyección de valorización.",
     "equipamiento": [
      "Acceso vehicular",
       "Agua",
       "Luz"
     ],
     "stockLotes": {
-      "total": 70,
-      "restantes": 70,
+      "total": 64,
+      "restantes": 64,
       "actualizado": "30/07/2026"
     },
     "planos": {
       "titulo": "Plano general del proyecto",
-      "imagen": "",
-      "pdf": "",
+      "imagen": "/BUNGAVILIA/BUNGAVILIAPLANO.webp",
+      "pdf": "/EL-MIRADOR-DE-CCORIHUILLCA/EL-MIRADOR-DE-CCORIHUILLCA.pdf",
       "nota": "Plano referencial del proyecto"
     },
     "lotes": {
@@ -101,7 +101,7 @@
       "youtubeId": ""
     },
     "ubicacionImagen": "/hero03.webp",
-    "mapsUrl": "",
+    "mapsUrl": "https://maps.app.goo.gl/QHiL6G21HVgjy6pL6",
     "descuento": {
       "titulo": "Preventa: lotes de 200 m² en El Mirador de Ccorihuillca desde S/ 18,000",
       "imagen": "/ELMIRADOR/ELMIRADOR-PROMO.webp"
@@ -133,9 +133,9 @@
       "Zona con proyección de valorización"
     ],
     "stockLotes": {
-      "total": 54,
+      "total": 55,
       "restantes": 2,
-      "actualizado": "28/05/2026"
+      "actualizado": "04/08/2026"
     },
     "planos": {
       "titulo": "Plano general del proyecto",
@@ -235,9 +235,9 @@
       "Proyección de valorización"
     ],
     "stockLotes": {
-      "total": 12,
-      "restantes": 7,
-      "actualizado": "28/05/2026"
+      "total": 18,
+      "restantes": 10,
+      "actualizado": "04/08/2026"
     },
 
     "planos": {
@@ -305,7 +305,7 @@
     "subtitulo": "",
     "categoria": "Proyecto",
     "ubicacion": "La Planicie, a 10 minutos de La Picota – Ccorihuillca, Ayacucho",
-    "precioDesdeSol": "S/ 18000",
+    "precioDesdeSol": "S/ 20,000",
     "imagen": "/LAPLANICIE/LAPLANICIE01.webp",
     "etiquetas": [],
     "descripcion": "LA PLANICIE es un nuevo proyecto de lotes ubicado a solo 10 minutos de La Picota, en Ccorihuillca – Ayacucho. Cuenta con 24 lotes de 180 m², con precio desde S/ 18,000. Es una excelente alternativa para vivienda, casa de campo o inversión, en una zona con buena proyección de crecimiento y fácil acceso.",
@@ -318,7 +318,7 @@
     ],
     "stockLotes": {
       "total": 24,
-      "restantes": 11,
+      "restantes": 0,
       "actualizado": "28/05/2026"
     },
     "planos": {
