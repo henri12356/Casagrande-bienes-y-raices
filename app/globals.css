@@ -120,3 +120,46 @@
     @apply bg-background text-foreground;
   }
 }
+
+/* ---- Croquis / Leaflet ---- */
+.croquis-pin .pin-wrap {
+  position: relative;
+  width: 30px;
+  height: 30px;
+}
+.croquis-pin .pin-body {
+  position: absolute;
+  inset: 8px;
+  border-radius: 9999px;
+  border: 2px solid rgba(255, 255, 255, 0.9);
+  box-shadow: 0 6px 14px rgba(0, 0, 0, 0.5);
+}
+.croquis-pin .pin-pulse {
+  position: absolute;
+  inset: 0;
+  border-radius: 9999px;
+  opacity: 0.35;
+  animation: pinPulse 2.2s ease-out infinite;
+}
+.croquis-pin .pin-activo .pin-body {
+  animation: pinBounce 1.2s ease-in-out infinite;
+}
+@keyframes pinPulse {
+  0% { transform: scale(0.5); opacity: 0.6; }
+  100% { transform: scale(1.6); opacity: 0; }
+}
+@keyframes pinBounce {
+  0%, 100% { transform: translateY(0) scale(1); }
+  50% { transform: translateY(-5px) scale(1.12); }
+}
+.leaflet-tooltip.croquis-tooltip {
+  background: rgba(10, 10, 10, 0.9);
+  color: #fff;
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  border-radius: 10px;
+  font-size: 12px;
+  padding: 4px 10px;
+}
+.leaflet-tooltip.croquis-tooltip::before { display: none; }
+.ruta-animada { animation: dash 1.2s linear infinite; }
+@keyframes dash { to { stroke-dashoffset: -26; } }

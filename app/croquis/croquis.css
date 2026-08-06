@@ -1,0 +1,363 @@
+.croquis-div-icon {
+  background: transparent !important;
+  border: 0 !important;
+}
+
+.croquis-map-pin {
+  position: relative;
+  display: flex;
+  width: 50px;
+  height: 58px;
+  align-items: flex-start;
+  justify-content: center;
+  filter: drop-shadow(0 14px 18px rgba(0, 0, 0, 0.4));
+  transform-origin: 50% 100%;
+  transition: transform 220ms ease;
+}
+
+.croquis-map-pin.is-selected {
+  transform: scale(1.2) translateY(-4px);
+}
+
+.croquis-map-pin__body {
+  position: relative;
+  z-index: 3;
+  display: flex;
+  min-width: 40px;
+  height: 40px;
+  align-items: center;
+  justify-content: center;
+  border: 4px solid white;
+  border-radius: 14px;
+  color: white;
+  font-size: 11px;
+  font-weight: 900;
+  letter-spacing: -0.02em;
+  box-shadow: 0 12px 28px rgba(0, 0, 0, 0.32);
+}
+
+.croquis-map-pin__tip {
+  position: absolute;
+  top: 32px;
+  z-index: 2;
+  width: 16px;
+  height: 16px;
+  border-right: 4px solid white;
+  border-bottom: 4px solid white;
+  transform: rotate(45deg);
+}
+
+.croquis-map-pin--origin .croquis-map-pin__body,
+.croquis-map-pin--origin .croquis-map-pin__tip {
+  background: #071c31;
+}
+
+.croquis-map-pin--sector .croquis-map-pin__body,
+.croquis-map-pin--sector .croquis-map-pin__tip {
+  background: #c88a16;
+}
+
+.croquis-map-pin--project .croquis-map-pin__body,
+.croquis-map-pin--project .croquis-map-pin__tip {
+  background: #123b68;
+}
+
+.croquis-map-pin__pulse {
+  position: absolute;
+  bottom: 1px;
+  left: 50%;
+  width: 28px;
+  height: 11px;
+  border-radius: 999px;
+  background: rgba(245, 170, 23, 0.5);
+  transform: translateX(-50%);
+  animation: croquisPulse 1.8s ease-out infinite;
+}
+
+.croquis-route-line {
+  animation: croquisRoute 1.05s linear infinite;
+}
+
+.leaflet-container {
+  background: #081923;
+  font-family: inherit;
+}
+
+.leaflet-control-zoom {
+  overflow: hidden;
+  border: 0 !important;
+  border-radius: 14px !important;
+  box-shadow: 0 15px 40px rgba(0, 0, 0, 0.35) !important;
+}
+
+.leaflet-control-zoom a {
+  width: 42px !important;
+  height: 42px !important;
+  border: 0 !important;
+  color: #123b68 !important;
+  font-weight: 800 !important;
+  line-height: 42px !important;
+}
+
+.leaflet-control-attribution {
+  border-radius: 10px 0 0 0;
+  background: rgba(7, 28, 49, 0.82) !important;
+  color: rgba(255, 255, 255, 0.72) !important;
+  font-size: 9px !important;
+  backdrop-filter: blur(10px);
+}
+
+.leaflet-control-attribution a {
+  color: #f5aa17 !important;
+}
+
+.croquis-marker-label {
+  border: 1px solid rgba(255, 255, 255, 0.75) !important;
+  border-radius: 999px !important;
+  background: rgba(7, 28, 49, 0.9) !important;
+  color: white !important;
+  font-size: 10px !important;
+  font-weight: 900 !important;
+  box-shadow: 0 10px 28px rgba(0, 0, 0, 0.28) !important;
+  backdrop-filter: blur(10px);
+}
+
+.croquis-marker-label::before {
+  border-top-color: rgba(7, 28, 49, 0.9) !important;
+}
+
+.croquis-popup .leaflet-popup-content-wrapper {
+  border-radius: 18px;
+  box-shadow: 0 22px 60px rgba(0, 0, 0, 0.32);
+}
+
+.croquis-popup .leaflet-popup-content {
+  margin: 15px;
+}
+
+@keyframes croquisRoute {
+  to {
+    stroke-dashoffset: -36;
+  }
+}
+
+@keyframes croquisPulse {
+  0% {
+    opacity: 0.9;
+    transform: translateX(-50%) scale(0.45);
+  }
+  100% {
+    opacity: 0;
+    transform: translateX(-50%) scale(1.9);
+  }
+}
+
+/* Controles y carruseles */
+.leaflet-bottom.leaflet-left {
+  margin-bottom: 118px;
+}
+
+.croquis-project-strip,
+.croquis-destination-strip {
+  scrollbar-width: none;
+  overscroll-behavior-x: contain;
+}
+
+.croquis-project-strip::-webkit-scrollbar,
+.croquis-destination-strip::-webkit-scrollbar {
+  display: none;
+}
+
+@media (max-width: 767px) {
+  .leaflet-bottom.leaflet-left {
+    margin-bottom: 108px;
+  }
+
+  .leaflet-control-zoom {
+    margin-left: 10px !important;
+  }
+
+  .leaflet-control-zoom a {
+    width: 36px !important;
+    height: 36px !important;
+    line-height: 36px !important;
+  }
+
+  .leaflet-control-attribution {
+    max-width: 66vw;
+    white-space: normal;
+    font-size: 8px !important;
+  }
+
+  .croquis-marker-label {
+    font-size: 9px !important;
+  }
+}
+
+@media (max-width: 420px) {
+  .leaflet-bottom.leaflet-left {
+    margin-bottom: 105px;
+  }
+
+  .croquis-map-pin {
+    transform: scale(0.9);
+  }
+
+  .croquis-map-pin.is-selected {
+    transform: scale(1.02) translateY(-3px);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .croquis-route-line,
+  .croquis-map-pin__pulse {
+    animation: none;
+  }
+}
+
+
+/* Roles interactivos: A = origen, B = destino */
+.croquis-map-pin__role {
+  position: absolute;
+  right: 0;
+  top: -7px;
+  z-index: 8;
+  display: none;
+  min-width: 20px;
+  height: 20px;
+  align-items: center;
+  justify-content: center;
+  border: 2px solid white;
+  border-radius: 999px;
+  background: #071c31;
+  color: white;
+  font-size: 9px;
+  font-weight: 900;
+  box-shadow: 0 8px 18px rgba(0, 0, 0, 0.32);
+}
+
+.croquis-map-pin.is-origin .croquis-map-pin__role,
+.croquis-map-pin.is-destination .croquis-map-pin__role,
+.croquis-map-pin.is-pending .croquis-map-pin__role {
+  display: flex;
+}
+
+.croquis-map-pin.is-origin {
+  transform: scale(1.08) translateY(-2px);
+}
+
+.croquis-map-pin.is-origin .croquis-map-pin__body,
+.croquis-map-pin.is-origin .croquis-map-pin__tip {
+  background: #0f766e;
+}
+
+.croquis-map-pin.is-destination {
+  transform: scale(1.18) translateY(-4px);
+}
+
+.croquis-map-pin.is-destination .croquis-map-pin__body,
+.croquis-map-pin.is-destination .croquis-map-pin__tip {
+  background: #f5aa17;
+  color: #071c31;
+}
+
+.croquis-map-pin.is-destination .croquis-map-pin__role {
+  background: #c2410c;
+}
+
+.croquis-map-pin.is-pending {
+  transform: scale(1.2) translateY(-5px);
+}
+
+.croquis-map-pin.is-pending .croquis-map-pin__body,
+.croquis-map-pin.is-pending .croquis-map-pin__tip {
+  background: #2563eb;
+}
+
+.croquis-map-pin.is-pending .croquis-map-pin__role {
+  background: #2563eb;
+}
+
+.croquis-map-pin.is-pending .croquis-map-pin__pulse {
+  background: rgba(37, 99, 235, 0.55);
+}
+
+@media (max-width: 639px) {
+  .croquis-map-pin__role {
+    right: 2px;
+    top: -4px;
+  }
+}
+
+
+/* Marcadores refinados: referencias discretas, proyectos destacados */
+.croquis-map-pin--origin,
+.croquis-map-pin--sector {
+  width: 38px;
+  height: 46px;
+}
+
+.croquis-map-pin--origin .croquis-map-pin__body,
+.croquis-map-pin--sector .croquis-map-pin__body {
+  min-width: 30px;
+  height: 30px;
+  border-width: 3px;
+  border-radius: 999px;
+  font-size: 9px;
+}
+
+.croquis-map-pin--origin .croquis-map-pin__tip,
+.croquis-map-pin--sector .croquis-map-pin__tip {
+  top: 24px;
+  width: 12px;
+  height: 12px;
+  border-right-width: 3px;
+  border-bottom-width: 3px;
+}
+
+.croquis-map-pin--origin .croquis-map-pin__pulse,
+.croquis-map-pin--sector .croquis-map-pin__pulse {
+  width: 20px;
+  height: 8px;
+}
+
+.croquis-map-pin--project .croquis-map-pin__body {
+  min-width: 44px;
+  height: 44px;
+  border-color: #f5aa17;
+  border-width: 3px;
+  border-radius: 16px;
+  background: linear-gradient(145deg, #174f83, #0b2947);
+  font-size: 11px;
+  box-shadow:
+    0 14px 32px rgba(0, 0, 0, 0.38),
+    inset 0 1px 0 rgba(255, 255, 255, 0.18);
+}
+
+.croquis-map-pin--project .croquis-map-pin__tip {
+  top: 36px;
+  border-right-color: #f5aa17;
+  border-bottom-color: #f5aa17;
+  background: #0b2947;
+}
+
+.croquis-marker-label--reference {
+  opacity: 0.9;
+}
+
+.croquis-marker-label--project {
+  border-color: rgba(245, 170, 23, 0.85) !important;
+  background: rgba(7, 28, 49, 0.94) !important;
+  color: #ffffff !important;
+  font-size: 10px !important;
+  letter-spacing: 0.01em;
+}
+
+.croquis-marker-label--project::before {
+  border-top-color: rgba(7, 28, 49, 0.94) !important;
+}
+
+/* Cuando no hay ruta activa, no se conserva ningún trazo visual. */
+.leaflet-container {
+  cursor: crosshair;
+}
