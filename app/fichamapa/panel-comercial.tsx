@@ -2372,7 +2372,12 @@ export default function PanelComercial() {
                     proyectoSlug={proyecto.slug}
                     lotes={proyecto.lotes}
                     lotesFiltrados={lotesFiltrados}
-                    onSeleccionar={(lote: Lote) => abrirFicha(lote)}
+                    onSeleccionar={(lote) => {
+                      const loteCompleto = proyecto.lotes.find(
+                        (l) => l.id === lote.id
+                      );
+                      if (loteCompleto) abrirFicha(loteCompleto);
+                    }}
                   />
                 ) : (
                   <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 md:grid-cols-4 xl:grid-cols-5 2xl:grid-cols-6">
