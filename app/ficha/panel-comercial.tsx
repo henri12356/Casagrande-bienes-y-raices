@@ -16,8 +16,10 @@ import {
   FolderSync,
   HardDrive,
   History,
+  Mail,
   MapPin,
   Pencil,
+  Phone,
   RefreshCw,
   Save,
   ShieldCheck,
@@ -25,6 +27,7 @@ import {
   ShieldAlert,
   Trash2,
   Undo2,
+  UserPlus,
   UserRound,
   Users,
   WalletCards,
@@ -65,6 +68,7 @@ type Cliente = {
   nombres: string;
   dni: string;
   celular: string;
+  correo: string;
   asesor: string;
   observaciones: string;
 };
@@ -113,6 +117,7 @@ type MovimientoLote = {
   accion: AccionMovimiento;
   descripcion: string;
   cliente?: Cliente;
+  clienteSecundario?: Cliente;
   operacion?: Operacion;
 };
 
@@ -123,6 +128,7 @@ type Lote = {
   precioLista: number;
   estado: EstadoLote;
   cliente?: Cliente;
+  clienteSecundario?: Cliente;
   operacion?: Operacion;
   movimientos?: MovimientoLote[];
   actualizadoEn?: string;
@@ -148,9 +154,19 @@ type FormularioFicha = {
   nombres: string;
   dni: string;
   celular: string;
+  correo: string;
+
+  agregarSegundoCliente: boolean;
+  nombres2: string;
+  dni2: string;
+  celular2: string;
+  correo2: string;
+
   asesor: string;
   observaciones: string;
 
+  // Se conserva internamente por compatibilidad. En la interfaz solo se usa
+  // "Fecha de pago de la reserva" y ambos valores se mantienen sincronizados.
   fechaOperacion: string;
   precioVenta: string;
   montoReserva: string;
@@ -171,8 +187,9 @@ type FormularioFicha = {
   liberacionAutomatica: boolean;
 };
 
-const STORAGE_KEY = "casagrande-panel-clientes-lotes-v5";
+const STORAGE_KEY = "casagrande-panel-clientes-lotes-v6";
 const STORAGE_KEYS_ANTERIORES = [
+  "casagrande-panel-clientes-lotes-v5",
   "casagrande-panel-clientes-lotes-v4",
   "casagrande-panel-clientes-lotes-v3",
   "casagrande-panel-clientes-lotes-v2",
@@ -453,6 +470,23 @@ function diasHasta(fechaISO?: string) {
   return Math.round((objetivo.getTime() - hoy.getTime()) / 86_400_000);
 }
 
+/**
+ * Una fecha de compromiso es válida durante TODO el día seleccionado.
+ * Ejemplo: 2026-08-30 vence recién al pasar las 23:59:59.999.
+ */
+function finDelDiaLocal(fechaISO?: string) {
+  const fecha = parsearFechaISO(fechaISO);
+  if (!fecha) return null;
+  fecha.setHours(23, 59, 59, 999);
+  return fecha;
+}
+
+function compromisoYaVencio(fechaISO?: string, ahora = new Date()) {
+  const fin = finDelDiaLocal(fechaISO);
+  if (!fin) return false;
+  return ahora.getTime() > fin.getTime();
+}
+
 function fechaEsValida(valor?: string) {
   return parsearFechaISO(valor) !== null;
 }
@@ -477,6 +511,7 @@ function crearMovimiento(
   descripcion: string,
   cliente?: Cliente,
   operacion?: Operacion,
+  clienteSecundario?: Cliente,
 ): MovimientoLote {
   return {
     id: idSeguro(),
@@ -484,6 +519,7 @@ function crearMovimiento(
     accion,
     descripcion,
     cliente: clonarCliente(cliente),
+    clienteSecundario: clonarCliente(clienteSecundario),
     operacion: clonarOperacion(operacion),
   };
 }
@@ -580,8 +616,20 @@ function normalizarLoteGuardado(lote: Lote): Lote {
         nombres: String(lote.cliente.nombres ?? ""),
         dni: String(lote.cliente.dni ?? ""),
         celular: String(lote.cliente.celular ?? ""),
+        correo: String(lote.cliente.correo ?? ""),
         asesor: String(lote.cliente.asesor ?? ""),
         observaciones: String(lote.cliente.observaciones ?? ""),
+      }
+    : undefined;
+
+  const clienteSecundario = lote.clienteSecundario
+    ? {
+        nombres: String(lote.clienteSecundario.nombres ?? ""),
+        dni: String(lote.clienteSecundario.dni ?? ""),
+        celular: String(lote.clienteSecundario.celular ?? ""),
+        correo: String(lote.clienteSecundario.correo ?? ""),
+        asesor: String(lote.clienteSecundario.asesor ?? ""),
+        observaciones: String(lote.clienteSecundario.observaciones ?? ""),
       }
     : undefined;
 
@@ -726,6 +774,8 @@ function normalizarLoteGuardado(lote: Lote): Lote {
     ...lote,
     estado,
     cliente: estado === "disponible" ? undefined : cliente,
+    clienteSecundario:
+      estado === "disponible" ? undefined : clienteSecundario,
     area: Number(lote.area) || 0,
     precioLista: Number(lote.precioLista) || 0,
     movimientos: Array.isArray(lote.movimientos) ? lote.movimientos : [],
@@ -822,7 +872,9 @@ function reservaDebeLiberarse(lote: Lote) {
   if (compromisoPagoCumplido(operacion)) return false;
   if (operacion?.liberacionAutomatica === false) return false;
 
-  return fechaCompromiso != null && fechaCompromiso < fechaActualISO();
+  // Se mantiene reservado hasta las 23:59:59.999 del día pactado.
+  // A partir de las 00:00 del día siguiente ya corresponde liberarlo.
+  return compromisoYaVencio(fechaCompromiso);
 }
 
 function liberarReservasVencidas(proyectos: Proyecto[]) {
@@ -844,12 +896,14 @@ function liberarReservasVencidas(proyectos: Proyecto[]) {
         } no fue confirmado.`,
         lote.cliente,
         lote.operacion,
+        lote.clienteSecundario,
       );
 
       return {
         ...lote,
         estado: "disponible" as EstadoLote,
         cliente: undefined,
+        clienteSecundario: undefined,
         operacion: undefined,
         movimientos: agregarMovimiento(lote, movimiento),
         actualizadoEn: new Date().toISOString(),
@@ -907,6 +961,14 @@ function formularioVacio(lote?: Lote): FormularioFicha {
     nombres: lote?.cliente?.nombres ?? "",
     dni: lote?.cliente?.dni ?? "",
     celular: lote?.cliente?.celular ?? "",
+    correo: lote?.cliente?.correo ?? "",
+
+    agregarSegundoCliente: Boolean(lote?.clienteSecundario?.nombres),
+    nombres2: lote?.clienteSecundario?.nombres ?? "",
+    dni2: lote?.clienteSecundario?.dni ?? "",
+    celular2: lote?.clienteSecundario?.celular ?? "",
+    correo2: lote?.clienteSecundario?.correo ?? "",
+
     asesor: lote?.cliente?.asesor ?? "",
     observaciones: lote?.cliente?.observaciones ?? "",
 
@@ -1203,8 +1265,23 @@ export default function PanelComercial() {
     };
 
     revisar();
-    const intervalo = window.setInterval(revisar, 60_000);
-    return () => window.clearInterval(intervalo);
+
+    // Revisión corta para que, al pasar las 00:00 del día siguiente,
+    // el lote cambie a Disponible prácticamente de inmediato.
+    const intervalo = window.setInterval(revisar, 15_000);
+    const alRecuperarFoco = () => revisar();
+    const alCambiarVisibilidad = () => {
+      if (document.visibilityState === "visible") revisar();
+    };
+
+    window.addEventListener("focus", alRecuperarFoco);
+    document.addEventListener("visibilitychange", alCambiarVisibilidad);
+
+    return () => {
+      window.clearInterval(intervalo);
+      window.removeEventListener("focus", alRecuperarFoco);
+      document.removeEventListener("visibilitychange", alCambiarVisibilidad);
+    };
   }, [hidratado]);
 
   useEffect(() => {
@@ -1242,17 +1319,12 @@ export default function PanelComercial() {
       reservado: 0,
       vendido: 0,
     };
-    let valorVendido = 0;
     let reservasConPago = 0;
     let reservasPorVencer = 0;
     let cuotasVencidas = 0;
 
     proyecto?.lotes.forEach((lote) => {
       conteo[lote.estado] += 1;
-
-      if (lote.estado === "vendido") {
-        valorVendido += lote.operacion?.precioVenta ?? lote.precioLista;
-      }
 
       if (lote.estado === "reservado") {
         if ((lote.operacion?.montoReserva ?? 0) > 0) {
@@ -1279,7 +1351,6 @@ export default function PanelComercial() {
 
     return {
       ...conteo,
-      valorVendido,
       reservasConPago,
       reservasPorVencer,
       cuotasVencidas,
@@ -1324,7 +1395,12 @@ export default function PanelComercial() {
         lote.cliente?.nombres,
         lote.cliente?.dni,
         lote.cliente?.celular,
+        lote.cliente?.correo,
         lote.cliente?.asesor,
+        lote.clienteSecundario?.nombres,
+        lote.clienteSecundario?.dni,
+        lote.clienteSecundario?.celular,
+        lote.clienteSecundario?.correo,
         fechaCompromisoOperacion(lote.operacion),
         ...(lote.operacion?.cuotasMensuales ?? []).flatMap((cuota) => [
           cuota.fechaVencimiento,
@@ -1380,7 +1456,7 @@ export default function PanelComercial() {
       fechaCompromisoPago:
         estado === "reservado" && !actual.fechaCompromisoPago
           ? sumarDiasISO(
-              actual.fechaOperacion || fechaActualISO(),
+              actual.fechaPagoReserva || fechaActualISO(),
               DIAS_COMPROMISO_POR_DEFECTO,
             )
           : actual.fechaCompromisoPago,
@@ -1407,7 +1483,7 @@ export default function PanelComercial() {
       const fechaCompromisoPago =
         actual.fechaCompromisoPago ||
         sumarDiasISO(
-          actual.fechaOperacion || fechaActualISO(),
+          actual.fechaPagoReserva || fechaActualISO(),
           DIAS_COMPROMISO_POR_DEFECTO,
         );
 
@@ -1450,6 +1526,33 @@ export default function PanelComercial() {
     ) {
       return "El celular debe tener 9 dígitos.";
     }
+    if (
+      formulario.correo &&
+      !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formulario.correo.trim())
+    ) {
+      return "El correo electrónico del titular principal no es válido.";
+    }
+
+    if (formulario.agregarSegundoCliente) {
+      if (!formulario.nombres2.trim()) {
+        return "Ingresa los nombres y apellidos del segundo titular o quita esa opción.";
+      }
+      if (formulario.dni2 && !/^\d{8}$/.test(formulario.dni2.trim())) {
+        return "El DNI del segundo titular debe tener exactamente 8 dígitos.";
+      }
+      if (
+        formulario.celular2 &&
+        !/^\d{9}$/.test(formulario.celular2.replace(/\s/g, ""))
+      ) {
+        return "El celular del segundo titular debe tener 9 dígitos.";
+      }
+      if (
+        formulario.correo2 &&
+        !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formulario.correo2.trim())
+      ) {
+        return "El correo electrónico del segundo titular no es válido.";
+      }
+    }
     if (requiereCliente && precioVenta <= 0) {
       return "El precio acordado debe ser mayor que cero.";
     }
@@ -1459,19 +1562,16 @@ export default function PanelComercial() {
     if (montoReserva > precioVenta && precioVenta > 0) {
       return "La reserva no puede superar el precio acordado.";
     }
-    if (!fechaEsValida(formulario.fechaOperacion)) {
-      return "Indica la fecha en que se realizó la reserva.";
-    }
     if (!fechaEsValida(formulario.fechaPagoReserva)) {
-      return "Indica la fecha en que se recibió el pago de la reserva.";
+      return "Indica la fecha de pago de la reserva.";
     }
     if (!fechaEsValida(formulario.fechaCompromisoPago)) {
       return formulario.modalidadPago === "Contado"
         ? "Indica cuándo regresará el cliente para cancelar el saldo total."
         : "Indica cuándo regresará el cliente para completar la inicial.";
     }
-    if (formulario.fechaCompromisoPago < formulario.fechaOperacion) {
-      return "La fecha del próximo pago no puede ser anterior a la reserva.";
+    if (formulario.fechaCompromisoPago < formulario.fechaPagoReserva) {
+      return "La fecha del próximo pago no puede ser anterior al pago de la reserva.";
     }
 
     const compromisoConfirmado =
@@ -1488,13 +1588,6 @@ export default function PanelComercial() {
     }
 
     if (formulario.modalidadPago === "Contado") {
-      if (
-        formulario.pagoTotalConfirmado &&
-        !fechaEsValida(formulario.fechaPagoTotal)
-      ) {
-        return "Indica la fecha en que se recibió el pago total.";
-      }
-
       if (
         formulario.estado === "vendido" &&
         !formulario.pagoTotalConfirmado
@@ -1525,12 +1618,6 @@ export default function PanelComercial() {
       }
       if (formulario.cuotasMensuales.length !== cantidadCuotas) {
         return "No se pudo generar correctamente el cronograma mensual.";
-      }
-      if (
-        formulario.pagoInicialConfirmado &&
-        !fechaEsValida(formulario.fechaPagoInicial)
-      ) {
-        return "Indica la fecha en que se completó la inicial.";
       }
       if (
         formulario.estado === "vendido" &&
@@ -1583,12 +1670,14 @@ export default function PanelComercial() {
                 "El lote fue marcado como disponible manualmente.",
                 lote.cliente,
                 lote.operacion,
+                lote.clienteSecundario,
               );
 
               return {
                 ...lote,
                 estado: "disponible",
                 cliente: undefined,
+                clienteSecundario: undefined,
                 operacion: undefined,
                 movimientos: agregarMovimiento(lote, movimiento),
                 actualizadoEn: ahora,
@@ -1599,12 +1688,25 @@ export default function PanelComercial() {
               nombres: formulario.nombres.trim(),
               dni: formulario.dni.trim(),
               celular: formulario.celular.replace(/\s/g, ""),
+              correo: formulario.correo.trim().toLowerCase(),
               asesor: formulario.asesor.trim(),
               observaciones: formulario.observaciones.trim(),
             };
 
+            const clienteSecundario: Cliente | undefined =
+              formulario.agregarSegundoCliente && formulario.nombres2.trim()
+                ? {
+                    nombres: formulario.nombres2.trim(),
+                    dni: formulario.dni2.trim(),
+                    celular: formulario.celular2.replace(/\s/g, ""),
+                    correo: formulario.correo2.trim().toLowerCase(),
+                    asesor: "",
+                    observaciones: "",
+                  }
+                : undefined;
+
             const operacion: Operacion = {
-              fechaOperacion: formulario.fechaOperacion,
+              fechaOperacion: formulario.fechaPagoReserva,
               precioVenta,
               montoReserva,
               fechaPagoReserva: formulario.fechaPagoReserva,
@@ -1717,12 +1819,14 @@ export default function PanelComercial() {
               descripcion,
               cliente,
               operacion,
+              clienteSecundario,
             );
 
             return {
               ...lote,
               estado: formulario.estado,
               cliente,
+              clienteSecundario,
               operacion,
               movimientos: agregarMovimiento(lote, movimiento),
               actualizadoEn: ahora,
@@ -1772,11 +1876,13 @@ export default function PanelComercial() {
                   "El lote fue liberado manualmente.",
                   lote.cliente,
                   lote.operacion,
+                  lote.clienteSecundario,
                 );
                 return {
                   ...lote,
                   estado: "disponible" as EstadoLote,
                   cliente: undefined,
+                  clienteSecundario: undefined,
                   operacion: undefined,
                   movimientos: agregarMovimiento(lote, movimiento),
                   actualizadoEn: new Date().toISOString(),
@@ -2259,7 +2365,7 @@ export default function PanelComercial() {
               </div>
             </div>
 
-            <div className="mt-6 grid gap-3 sm:grid-cols-2 xl:grid-cols-6">
+            <div className="mt-6 grid gap-3 sm:grid-cols-2 xl:grid-cols-5">
               <ResumenCard
                 icono={<Building2 className="h-5 w-5" />}
                 titulo="Total"
@@ -2299,12 +2405,6 @@ export default function PanelComercial() {
                 valor={resumenProyecto.vendido}
                 detalle="Operaciones cerradas"
               />
-              <ResumenCard
-                icono={<CircleDollarSign className="h-5 w-5" />}
-                titulo="Valor vendido"
-                valor={moneda(resumenProyecto.valorVendido)}
-                detalle="Precio registrado"
-              />
             </div>
 
             {reservasPorVencer.length > 0 && (
@@ -2339,7 +2439,7 @@ export default function PanelComercial() {
                 <input
                   value={busqueda}
                   onChange={(evento) => setBusqueda(evento.target.value)}
-                  placeholder="Buscar lote, cliente, DNI, celular, asesor o fecha..."
+                  placeholder="Buscar lote, cliente, DNI, celular, correo, asesor o fecha..."
                   className="h-11 w-full rounded-xl border border-slate-300 bg-white pl-10 pr-4 text-sm outline-none transition focus:border-[#123B68] focus:ring-4 focus:ring-[#123B68]/10"
                 />
               </label>
@@ -2364,7 +2464,7 @@ export default function PanelComercial() {
           <div className="mt-5 rounded-3xl border border-slate-200 bg-white p-4 shadow-sm sm:p-6">
             {vista === "lotes" ? (
               lotesFiltrados.length > 0 ? (
-                <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 md:grid-cols-4 xl:grid-cols-5 2xl:grid-cols-6">
+                <div className="grid grid-cols-1 gap-3 min-[420px]:grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 2xl:grid-cols-6">
                   {lotesFiltrados.map((lote) => (
                     <LoteCard key={lote.id} lote={lote} onClick={() => abrirFicha(lote)} />
                   ))}
@@ -2376,7 +2476,7 @@ export default function PanelComercial() {
                 />
               )
             ) : clientesProyecto.length > 0 ? (
-              <div className="grid gap-4 xl:grid-cols-2">
+              <div className="space-y-4">
                 {clientesProyecto.map((lote) => (
                   <ClienteCard key={lote.id} lote={lote} onEditar={() => abrirFicha(lote)} />
                 ))}
@@ -2511,6 +2611,9 @@ export default function PanelComercial() {
                               {movimiento.cliente?.nombres && (
                                 <p className="mt-1 text-slate-500">
                                   Cliente: {movimiento.cliente.nombres}
+                                  {movimiento.clienteSecundario?.nombres
+                                    ? ` + ${movimiento.clienteSecundario.nombres}`
+                                    : ""}
                                 </p>
                               )}
                             </div>
@@ -2531,48 +2634,162 @@ export default function PanelComercial() {
                   >
                     <legend className="mb-4 flex items-center gap-2 text-base font-black text-slate-950">
                       <UserRound className="h-5 w-5 text-[#123B68]" />
-                      Datos del cliente
+                      Datos de los titulares
                     </legend>
 
-                    <div className="grid gap-4 sm:grid-cols-2">
-                      <Campo
-                        label="Nombres y apellidos"
-                        value={formulario.nombres}
-                        onChange={(valor) => actualizarCampo("nombres", valor)}
-                        placeholder="Ej. Juan Pérez Quispe"
-                        className="sm:col-span-2"
-                      />
-                      <Campo
-                        label="DNI"
-                        value={formulario.dni}
-                        onChange={(valor) =>
-                          actualizarCampo("dni", valor.replace(/\D/g, ""))
-                        }
-                        placeholder="8 dígitos"
-                        inputMode="numeric"
-                        maxLength={8}
-                      />
-                      <Campo
-                        label="Celular"
-                        value={formulario.celular}
-                        onChange={(valor) =>
-                          actualizarCampo(
-                            "celular",
-                            valor.replace(/\D/g, ""),
-                          )
-                        }
-                        placeholder="9 dígitos"
-                        inputMode="tel"
-                        maxLength={9}
-                      />
-                      <Campo
-                        label="Asesor responsable"
-                        value={formulario.asesor}
-                        onChange={(valor) => actualizarCampo("asesor", valor)}
-                        placeholder="Ej. Cinthia"
-                        className="sm:col-span-2"
-                      />
+                    <div className="rounded-2xl border border-slate-200 bg-slate-50 p-4 sm:p-5">
+                      <div className="mb-4 flex items-center justify-between gap-3">
+                        <div>
+                          <p className="text-sm font-black text-slate-950">
+                            Titular principal
+                          </p>
+                          <p className="mt-0.5 text-xs text-slate-500">
+                            Cliente responsable de la operación.
+                          </p>
+                        </div>
+                        <span className="rounded-full bg-[#123B68]/10 px-2.5 py-1 text-[10px] font-black uppercase tracking-wide text-[#123B68]">
+                          Obligatorio
+                        </span>
+                      </div>
+
+                      <div className="grid gap-4 sm:grid-cols-2">
+                        <Campo
+                          label="Nombres y apellidos"
+                          value={formulario.nombres}
+                          onChange={(valor) => actualizarCampo("nombres", valor)}
+                          placeholder="Ej. Juan Pérez Quispe"
+                          className="sm:col-span-2"
+                        />
+                        <Campo
+                          label="DNI"
+                          value={formulario.dni}
+                          onChange={(valor) =>
+                            actualizarCampo("dni", valor.replace(/\D/g, ""))
+                          }
+                          placeholder="8 dígitos"
+                          inputMode="numeric"
+                          maxLength={8}
+                        />
+                        <Campo
+                          label="Celular"
+                          value={formulario.celular}
+                          onChange={(valor) =>
+                            actualizarCampo(
+                              "celular",
+                              valor.replace(/\D/g, ""),
+                            )
+                          }
+                          placeholder="9 dígitos"
+                          inputMode="tel"
+                          maxLength={9}
+                        />
+                        <Campo
+                          label="Correo / Gmail"
+                          type="email"
+                          value={formulario.correo}
+                          onChange={(valor) => actualizarCampo("correo", valor)}
+                          placeholder="cliente@gmail.com"
+                          className="sm:col-span-2"
+                        />
+                      </div>
                     </div>
+
+                    {!formulario.agregarSegundoCliente ? (
+                      <button
+                        type="button"
+                        onClick={() =>
+                          actualizarCampo("agregarSegundoCliente", true)
+                        }
+                        className="inline-flex w-full items-center justify-center gap-2 rounded-2xl border border-dashed border-[#123B68]/30 bg-[#123B68]/5 px-4 py-3 text-sm font-black text-[#123B68] transition hover:border-[#123B68]/50 hover:bg-[#123B68]/10"
+                      >
+                        <UserPlus className="h-4 w-4" />
+                        Agregar segundo titular
+                        <span className="font-semibold text-slate-500">
+                          (opcional)
+                        </span>
+                      </button>
+                    ) : (
+                      <div className="rounded-2xl border border-sky-200 bg-sky-50/70 p-4 sm:p-5">
+                        <div className="mb-4 flex items-center justify-between gap-3">
+                          <div>
+                            <p className="text-sm font-black text-slate-950">
+                              Segundo titular
+                            </p>
+                            <p className="mt-0.5 text-xs text-slate-500">
+                              Solo complétalo cuando la compra tenga dos titulares.
+                            </p>
+                          </div>
+                          <button
+                            type="button"
+                            onClick={() =>
+                              setFormulario((actual) => ({
+                                ...actual,
+                                agregarSegundoCliente: false,
+                                nombres2: "",
+                                dni2: "",
+                                celular2: "",
+                                correo2: "",
+                              }))
+                            }
+                            className="rounded-xl border border-slate-200 bg-white px-3 py-2 text-xs font-black text-slate-500 transition hover:border-rose-200 hover:text-rose-600"
+                          >
+                            Quitar
+                          </button>
+                        </div>
+
+                        <div className="grid gap-4 sm:grid-cols-2">
+                          <Campo
+                            label="Nombres y apellidos"
+                            value={formulario.nombres2}
+                            onChange={(valor) =>
+                              actualizarCampo("nombres2", valor)
+                            }
+                            placeholder="Ej. María Pérez Quispe"
+                            className="sm:col-span-2"
+                          />
+                          <Campo
+                            label="DNI"
+                            value={formulario.dni2}
+                            onChange={(valor) =>
+                              actualizarCampo("dni2", valor.replace(/\D/g, ""))
+                            }
+                            placeholder="8 dígitos"
+                            inputMode="numeric"
+                            maxLength={8}
+                          />
+                          <Campo
+                            label="Celular"
+                            value={formulario.celular2}
+                            onChange={(valor) =>
+                              actualizarCampo(
+                                "celular2",
+                                valor.replace(/\D/g, ""),
+                              )
+                            }
+                            placeholder="9 dígitos"
+                            inputMode="tel"
+                            maxLength={9}
+                          />
+                          <Campo
+                            label="Correo / Gmail"
+                            type="email"
+                            value={formulario.correo2}
+                            onChange={(valor) =>
+                              actualizarCampo("correo2", valor)
+                            }
+                            placeholder="cliente2@gmail.com"
+                            className="sm:col-span-2"
+                          />
+                        </div>
+                      </div>
+                    )}
+
+                    <Campo
+                      label="Asesor responsable"
+                      value={formulario.asesor}
+                      onChange={(valor) => actualizarCampo("asesor", valor)}
+                      placeholder="Ej. Cinthia"
+                    />
                   </fieldset>
 
                   <fieldset
@@ -2586,14 +2803,15 @@ export default function PanelComercial() {
 
                     <div className="grid gap-4 sm:grid-cols-2">
                       <Campo
-                        label="Fecha de reserva"
+                        label="Fecha de pago de la reserva"
                         type="date"
-                        value={formulario.fechaOperacion}
+                        value={formulario.fechaPagoReserva}
                         onChange={(valor) =>
                           setFormulario((actual) => {
                             if (!fechaEsValida(valor)) {
                               return {
                                 ...actual,
+                                fechaPagoReserva: valor,
                                 fechaOperacion: valor,
                               };
                             }
@@ -2605,12 +2823,8 @@ export default function PanelComercial() {
 
                             return {
                               ...actual,
+                              fechaPagoReserva: valor,
                               fechaOperacion: valor,
-                              fechaPagoReserva: fechaEsValida(
-                                actual.fechaPagoReserva,
-                              )
-                                ? actual.fechaPagoReserva
-                                : valor,
                               fechaCompromisoPago: nuevoCompromiso,
                               fechaPrimeraCuota:
                                 actual.cuotasMensuales.some(
@@ -2644,15 +2858,6 @@ export default function PanelComercial() {
                         min="0"
                         step="0.01"
                         placeholder="1000"
-                      />
-
-                      <Campo
-                        label="Fecha de pago de la reserva"
-                        type="date"
-                        value={formulario.fechaPagoReserva}
-                        onChange={(valor) =>
-                          actualizarCampo("fechaPagoReserva", valor)
-                        }
                       />
 
                       <label className="block sm:col-span-2">
@@ -2721,13 +2926,14 @@ export default function PanelComercial() {
                               )
                             }
                             min={
-                              formulario.fechaOperacion ||
+                              formulario.fechaPagoReserva ||
                               fechaActualISO()
                             }
                           />
 
-                          <ToggleCard
-                            checked={formulario.pagoTotalConfirmado}
+                          <div className="sm:col-span-2">
+                            <ToggleCard
+                              checked={formulario.pagoTotalConfirmado}
                             onChange={(checked) => {
                               actualizarCampo(
                                 "pagoTotalConfirmado",
@@ -2741,21 +2947,12 @@ export default function PanelComercial() {
                                   : "",
                               );
                             }}
-                            titulo="Pago total confirmado"
-                            descripcion="El cliente ya canceló todo el precio acordado."
-                            icono={<BadgeCheck className="h-5 w-5" />}
-                          />
+                              titulo="Pago total confirmado"
+                              descripcion="Marca esta opción cuando el cliente haya cancelado el saldo completo."
+                              icono={<BadgeCheck className="h-5 w-5" />}
+                            />
+                          </div>
 
-                          <Campo
-                            label="Fecha real del pago total"
-                            type="date"
-                            value={formulario.fechaPagoTotal}
-                            onChange={(valor) =>
-                              actualizarCampo("fechaPagoTotal", valor)
-                            }
-                            disabled={!formulario.pagoTotalConfirmado}
-                            className="sm:col-span-2"
-                          />
                         </div>
                       </div>
                     ) : (
@@ -2802,7 +2999,7 @@ export default function PanelComercial() {
                                 }))
                               }
                               min={
-                                formulario.fechaOperacion ||
+                                formulario.fechaPagoReserva ||
                                 fechaActualISO()
                               }
                             />
@@ -2818,8 +3015,9 @@ export default function PanelComercial() {
                               </p>
                             </div>
 
-                            <ToggleCard
-                              checked={formulario.pagoInicialConfirmado}
+                            <div className="sm:col-span-2">
+                              <ToggleCard
+                                checked={formulario.pagoInicialConfirmado}
                               onChange={(checked) => {
                                 actualizarCampo(
                                   "pagoInicialConfirmado",
@@ -2833,24 +3031,12 @@ export default function PanelComercial() {
                                     : "",
                                 );
                               }}
-                              titulo="Inicial completada"
-                              descripcion="La reserva y el resto de la inicial ya fueron pagados."
-                              icono={<BadgeCheck className="h-5 w-5" />}
-                            />
+                                titulo="Inicial completada"
+                                descripcion="Marca esta opción cuando la inicial acordada ya esté completamente pagada."
+                                icono={<BadgeCheck className="h-5 w-5" />}
+                              />
+                            </div>
 
-                            <Campo
-                              label="Fecha real de pago de la inicial"
-                              type="date"
-                              value={formulario.fechaPagoInicial}
-                              onChange={(valor) =>
-                                actualizarCampo(
-                                  "fechaPagoInicial",
-                                  valor,
-                                )
-                              }
-                              disabled={!formulario.pagoInicialConfirmado}
-                              className="sm:col-span-2"
-                            />
                           </div>
                         </div>
 
@@ -2895,7 +3081,7 @@ export default function PanelComercial() {
                               }
                               min={
                                 formulario.fechaCompromisoPago ||
-                                formulario.fechaOperacion ||
+                                formulario.fechaPagoReserva ||
                                 fechaActualISO()
                               }
                             />
@@ -2943,64 +3129,58 @@ export default function PanelComercial() {
                               )
                             }
                             titulo="Liberar automáticamente al vencer"
-                            descripcion={`Fecha límite: ${textoFecha(
+                            descripcion={`Reservado hasta las 23:59 del ${textoFecha(
                               formulario.fechaCompromisoPago,
-                            )}`}
+                            )}; se libera desde el día siguiente.`}
                             icono={<AlarmClock className="h-5 w-5" />}
                           />
                         </div>
                       </div>
                     )}
 
-                    <div className="grid gap-3 rounded-2xl border border-slate-200 bg-slate-50 p-4 sm:grid-cols-2 xl:grid-cols-3">
-                      <Calculo
-                        label="Precio acordado"
-                        value={moneda(resumenFormularioActual.precio)}
-                      />
-                      <Calculo
-                        label="Reserva pagada"
-                        value={moneda(resumenFormularioActual.reserva)}
-                      />
-                      <Calculo
-                        label={
-                          formulario.modalidadPago === "Financiado"
-                            ? "Inicial total"
-                            : "Pago pendiente al contado"
-                        }
-                        value={moneda(
-                          formulario.modalidadPago === "Financiado"
-                            ? resumenFormularioActual.inicialTotal
-                            : resumenFormularioActual.pagoPendienteContado,
-                        )}
-                      />
-                      <Calculo
-                        label="Total pagado"
-                        value={moneda(
-                          resumenFormularioActual.totalPagado,
-                        )}
-                      />
-                      <Calculo
-                        label="Saldo pendiente"
-                        value={moneda(
-                          resumenFormularioActual.saldoPendiente,
-                        )}
-                      />
-                      <Calculo
-                        label={
-                          formulario.modalidadPago === "Financiado"
-                            ? "Cuota mensual"
-                            : "Fecha de pago total"
-                        }
-                        value={
-                          formulario.modalidadPago === "Financiado"
-                            ? moneda(
-                                resumenFormularioActual.cuotaMensual,
-                              )
-                            : textoFecha(
-                                formulario.fechaCompromisoPago,
-                              )
-                        }
-                      />
+                    <div className="rounded-2xl border border-slate-200 bg-slate-50 p-4">
+                      <div className="mb-3 flex items-center justify-between gap-3">
+                        <div>
+                          <p className="text-sm font-black text-slate-900">
+                            Resumen de la operación
+                          </p>
+                          <p className="mt-0.5 text-xs text-slate-500">
+                            Solo los datos necesarios para revisar rápidamente la operación.
+                          </p>
+                        </div>
+                        <span className="rounded-full bg-white px-2.5 py-1 text-[10px] font-black uppercase tracking-wide text-slate-500">
+                          {formulario.modalidadPago}
+                        </span>
+                      </div>
+
+                      <div className="grid gap-3 sm:grid-cols-2 xl:grid-cols-4">
+                        <Calculo
+                          label="Precio acordado"
+                          value={moneda(resumenFormularioActual.precio)}
+                        />
+                        <Calculo
+                          label="Reserva"
+                          value={moneda(resumenFormularioActual.reserva)}
+                        />
+                        <Calculo
+                          label="Saldo pendiente"
+                          value={moneda(
+                            resumenFormularioActual.saldoPendiente,
+                          )}
+                        />
+                        <Calculo
+                          label={
+                            formulario.modalidadPago === "Financiado"
+                              ? "Cuota mensual"
+                              : "Próximo pago"
+                          }
+                          value={
+                            formulario.modalidadPago === "Financiado"
+                              ? moneda(resumenFormularioActual.cuotaMensual)
+                              : textoFecha(formulario.fechaCompromisoPago)
+                          }
+                        />
+                      </div>
                     </div>
 
                     {formulario.modalidadPago === "Financiado" && (
@@ -3078,111 +3258,80 @@ export default function PanelComercial() {
 
 function LoteCard({ lote, onClick }: { lote: Lote; onClick: () => void }) {
   const config = ESTADO_CONFIG[lote.estado];
-  const operacion = lote.operacion;
-  const fechaCompromiso = fechaCompromisoOperacion(operacion);
-  const dias = diasHasta(fechaCompromiso);
-  const compromisoCumplido = compromisoPagoCumplido(operacion);
-  const siguienteCuota = siguienteCuotaPendiente(
-    operacion?.cuotasMensuales,
-  );
-  const vencidas =
-    operacion?.cuotasMensuales?.filter(cuotaEstaVencida).length ?? 0;
+  const nombreCliente = lote.cliente?.nombres?.trim();
+  const modalidad = lote.operacion?.modalidadPago;
+  const ocupado = lote.estado !== "disponible";
 
   return (
     <button
       type="button"
       onClick={onClick}
-      className={`group min-h-44 rounded-2xl border p-4 text-left transition hover:-translate-y-0.5 hover:shadow-md ${config.card}`}
+      className={`group relative flex min-h-[158px] flex-col overflow-hidden rounded-[20px] border text-left shadow-sm transition duration-200 hover:-translate-y-0.5 hover:shadow-lg ${config.card}`}
+      title={`Abrir ficha de ${lote.numero}`}
     >
-      <div className="flex items-start justify-between gap-2">
-        <span className="text-xl font-black text-slate-950">{lote.numero}</span>
-        <span className={`h-3 w-3 rounded-full ${config.dot}`} />
-      </div>
+      <span
+        className={`absolute inset-x-0 top-0 h-1 ${config.dot}`}
+        aria-hidden="true"
+      />
 
-      <p className="mt-2 text-sm font-semibold text-slate-600">
-        {lote.area} m²
-      </p>
-      <p className="mt-1 text-xs text-slate-500">
-        {moneda(operacion?.precioVenta ?? lote.precioLista)}
-      </p>
+      <div className="flex flex-1 flex-col p-4 pt-5">
+        <div className="flex items-start justify-between gap-2">
+          <div className="min-w-0">
+            <span className="block whitespace-nowrap text-[19px] font-black leading-none tracking-tight text-slate-950">
+              {lote.numero}
+            </span>
 
-      <div className="mt-3">
-        <span
-          className={`inline-flex rounded-full px-2.5 py-1 text-[11px] font-black ${config.badge}`}
-        >
-          {config.label}
-        </span>
-      </div>
+            <div className="mt-2 flex flex-wrap items-center gap-1.5">
+              <span className="whitespace-nowrap text-[13px] font-extrabold text-slate-600">
+                {lote.area} m²
+              </span>
 
-      {lote.estado === "reservado" && (
-        <div
-          className={`mt-3 rounded-lg px-2.5 py-2 text-[11px] font-bold ${
-            compromisoCumplido
-              ? "bg-emerald-100 text-emerald-800"
-              : dias !== null && dias <= 1
-                ? "bg-rose-100 text-rose-800"
-                : "bg-white/70 text-amber-900"
-          }`}
-        >
-          {compromisoCumplido
-            ? operacion?.modalidadPago === "Contado"
-              ? "Pago total confirmado"
-              : "Inicial completada"
-            : dias === null
-              ? "Sin fecha de próximo pago"
-              : dias < 0
-                ? "Compromiso vencido"
-                : dias === 0
-                  ? `${
-                      operacion?.modalidadPago === "Contado"
-                        ? "Pago total"
-                        : "Inicial"
-                    } vence hoy`
-                  : `${
-                      operacion?.modalidadPago === "Contado"
-                        ? "Pago total"
-                        : "Inicial"
-                    } en ${dias} día${dias === 1 ? "" : "s"}`}
-        </div>
-      )}
+              {ocupado && modalidad && (
+                <>
+                  <span className="h-1 w-1 rounded-full bg-slate-300" />
+                  <span className="whitespace-nowrap text-[11px] font-black text-[#123B68]">
+                    {modalidad}
+                  </span>
+                </>
+              )}
+            </div>
+          </div>
 
-      {lote.estado === "vendido" &&
-        operacion?.modalidadPago === "Financiado" && (
-          <div
-            className={`mt-3 rounded-lg px-2.5 py-2 text-[11px] font-bold ${
-              vencidas > 0
-                ? "bg-rose-100 text-rose-800"
-                : "bg-white/70 text-slate-700"
-            }`}
+          <span
+            className={`shrink-0 rounded-full px-2.5 py-1 text-[9px] font-black leading-none ${config.badge}`}
           >
-            {vencidas > 0
-              ? `${vencidas} cuota${vencidas === 1 ? "" : "s"} vencida${
-                  vencidas === 1 ? "" : "s"
-                }`
-              : siguienteCuota
-                ? `Próxima: ${textoFecha(
-                    siguienteCuota.fechaVencimiento,
-                  )} · ${moneda(siguienteCuota.monto)}`
-                : "Plan de cuotas completado"}
-          </div>
-        )}
+            {config.label}
+          </span>
+        </div>
 
-      {lote.estado === "vendido" &&
-        operacion?.modalidadPago === "Contado" && (
-          <div className="mt-3 rounded-lg bg-emerald-100 px-2.5 py-2 text-[11px] font-bold text-emerald-800">
-            Pago total confirmado
-          </div>
-        )}
-
-      {lote.cliente?.nombres && (
-        <p className="mt-3 line-clamp-2 text-xs font-semibold text-slate-700">
-          {lote.cliente.nombres}
-        </p>
-      )}
+        <div className="mt-auto pt-4">
+          {ocupado ? (
+            <div className="border-t border-black/5 pt-3">
+              <p className="text-[9px] font-black uppercase tracking-[0.14em] text-slate-400">
+                Cliente
+              </p>
+              <div className="mt-1.5 flex items-center gap-2">
+                <div className="flex h-6 w-6 shrink-0 items-center justify-center rounded-lg bg-white/75 text-[#123B68] shadow-sm">
+                  <UserRound className="h-3.5 w-3.5" />
+                </div>
+                <p className="min-w-0 truncate text-sm font-black text-slate-900">
+                  {nombreCliente || "Sin registrar"}
+                </p>
+              </div>
+            </div>
+          ) : (
+            <div className="border-t border-emerald-200/70 pt-3">
+              <div className="inline-flex items-center gap-1.5 text-[11px] font-black text-emerald-700">
+                <CheckCircle2 className="h-3.5 w-3.5" />
+                Disponible para separar
+              </div>
+            </div>
+          )}
+        </div>
+      </div>
     </button>
   );
 }
-
 
 function ClienteCard({
   lote,
@@ -3198,157 +3347,172 @@ function ClienteCard({
   const cuotasPagadas = cuotas.filter((cuota) => cuota.pagada).length;
   const cuotasVencidas = cuotas.filter(cuotaEstaVencida).length;
   const proximaCuota = siguienteCuotaPendiente(cuotas);
-  const totalPagado = totalPagadoOperacion(operacion);
-  const reserva = operacion?.montoReserva ?? 0;
-  const inicial = operacion?.inicial ?? 0;
+  const segundoTitular = lote.clienteSecundario;
+
+  const etiquetaEstado = lote.estado === "vendido" ? "Vendido" : "Reserva";
+
+  const proximoCompromiso =
+    lote.estado === "vendido" && operacion?.modalidadPago === "Contado"
+      ? "Operación completada"
+      : operacion?.modalidadPago === "Financiado"
+        ? operacion.pagoInicialConfirmado
+          ? proximaCuota
+            ? `Cuota ${String(proximaCuota.numero).padStart(2, "0")} · ${textoFecha(
+                proximaCuota.fechaVencimiento,
+              )}`
+            : "Plan de cuotas completado"
+          : `Completar inicial · ${textoFecha(fechaCompromiso)}`
+        : operacion?.pagoTotalConfirmado
+          ? "Pago total confirmado"
+          : `Cancelar saldo · ${textoFecha(fechaCompromiso)}`;
+
+  const alertaCompromiso =
+    lote.estado === "reservado" &&
+    !compromisoPagoCumplido(operacion) &&
+    dias !== null &&
+    dias <= 1;
 
   return (
-    <article className="rounded-2xl border border-slate-200 bg-slate-50 p-5">
-      <div className="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
-        <div className="flex items-start gap-3">
-          <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-[#123B68] text-white">
-            <UserRound className="h-5 w-5" />
-          </div>
-          <div>
-            <h3 className="font-black text-slate-950">
-              {lote.cliente?.nombres}
-            </h3>
-            <p className="mt-1 text-sm text-slate-500">
-              DNI: {lote.cliente?.dni || "No registrado"}
-            </p>
-          </div>
-        </div>
+    <article className="overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm transition duration-200 hover:border-[#123B68]/25 hover:shadow-md">
+      <div className="p-4 sm:p-5">
+        <div className="flex flex-col gap-4 lg:flex-row lg:items-start lg:justify-between">
+          <div className="flex min-w-0 flex-1 items-start gap-3">
+            <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl bg-[#123B68] text-white shadow-sm">
+              <UserRound className="h-5 w-5" />
+            </div>
 
-        <div className="flex items-center gap-2">
-          <span
-            className={`rounded-full px-3 py-1 text-xs font-black ${ESTADO_CONFIG[lote.estado].badge}`}
-          >
-            {ESTADO_CONFIG[lote.estado].label}
-          </span>
+            <div className="min-w-0 flex-1">
+              <div className="flex flex-wrap items-center gap-2">
+                <h3 className="truncate text-lg font-black tracking-tight text-slate-950">
+                  {lote.cliente?.nombres || "Cliente sin nombre"}
+                </h3>
+
+                <span
+                  className={`rounded-full px-2.5 py-1 text-[10px] font-black ${ESTADO_CONFIG[lote.estado].badge}`}
+                >
+                  {etiquetaEstado}
+                </span>
+
+                {operacion?.modalidadPago && (
+                  <span className="rounded-full border border-[#123B68]/15 bg-[#123B68]/5 px-2.5 py-1 text-[10px] font-black text-[#123B68]">
+                    {operacion.modalidadPago}
+                  </span>
+                )}
+
+                {segundoTitular?.nombres && (
+                  <span className="rounded-full bg-sky-100 px-2.5 py-1 text-[10px] font-black text-sky-700">
+                    2 titulares
+                  </span>
+                )}
+              </div>
+
+              <div className="mt-2 flex flex-wrap gap-x-4 gap-y-1.5 text-xs text-slate-500">
+                <span>
+                  DNI <strong className="text-slate-700">{lote.cliente?.dni || "—"}</strong>
+                </span>
+                <span className="inline-flex items-center gap-1.5">
+                  <Phone className="h-3.5 w-3.5" />
+                  {lote.cliente?.celular || "Sin celular"}
+                </span>
+                <span className="inline-flex min-w-0 items-center gap-1.5">
+                  <Mail className="h-3.5 w-3.5 shrink-0" />
+                  <span className="max-w-[280px] truncate">
+                    {lote.cliente?.correo || "Sin correo"}
+                  </span>
+                </span>
+              </div>
+
+              {segundoTitular?.nombres && (
+                <div className="mt-3 rounded-xl border border-sky-100 bg-sky-50/70 px-3 py-2">
+                  <div className="flex flex-wrap items-center gap-x-3 gap-y-1 text-[11px] text-slate-600">
+                    <span className="font-black text-[#123B68]">Segundo titular</span>
+                    <strong className="text-slate-800">{segundoTitular.nombres}</strong>
+                    <span>DNI {segundoTitular.dni || "—"}</span>
+                    {segundoTitular.celular && <span>{segundoTitular.celular}</span>}
+                    {segundoTitular.correo && (
+                      <span className="max-w-[240px] truncate">{segundoTitular.correo}</span>
+                    )}
+                  </div>
+                </div>
+              )}
+            </div>
+          </div>
+
           <button
             type="button"
             onClick={onEditar}
-            className="rounded-lg border border-slate-300 bg-white p-2 text-slate-600 transition hover:text-[#123B68]"
-            aria-label={`Editar lote ${lote.numero}`}
+            className="inline-flex shrink-0 items-center justify-center gap-2 rounded-xl border border-[#123B68]/15 bg-[#123B68]/5 px-3 py-2 text-xs font-black text-[#123B68] transition hover:bg-[#123B68] hover:text-white"
+            aria-label={`Abrir ficha del lote ${lote.numero}`}
           >
             <Pencil className="h-4 w-4" />
+            Ver ficha
           </button>
         </div>
       </div>
 
-      <dl className="mt-5 grid gap-3 text-sm sm:grid-cols-2">
-        <FichaDato etiqueta="Lote" valor={`${lote.numero} · ${lote.area} m²`} />
-        <FichaDato
-          etiqueta="Precio acordado"
-          valor={moneda(operacion?.precioVenta ?? lote.precioLista)}
-        />
-        <FichaDato etiqueta="Reserva pagada" valor={moneda(reserva)} />
-        <FichaDato
-          etiqueta="Modalidad"
-          valor={operacion?.modalidadPago ?? "No registrada"}
-        />
-        <FichaDato etiqueta="Total pagado" valor={moneda(totalPagado)} />
-        <FichaDato
-          etiqueta="Saldo pendiente"
-          valor={moneda(operacion?.saldo ?? 0)}
-        />
-        <FichaDato
-          etiqueta="Celular"
-          valor={lote.cliente?.celular || "No registrado"}
-        />
-        <FichaDato
-          etiqueta="Asesor"
-          valor={lote.cliente?.asesor || "No registrado"}
-        />
+      <div className="grid border-t border-slate-100 bg-slate-50/70 md:grid-cols-[1fr_1.35fr_.9fr]">
+        <div className="border-b border-slate-100 px-4 py-3.5 md:border-b-0 md:border-r sm:px-5">
+          <p className="text-[9px] font-black uppercase tracking-[0.14em] text-slate-400">
+            Lote asignado
+          </p>
+          <div className="mt-1 flex items-baseline gap-2">
+            <strong className="text-base font-black text-slate-950">{lote.numero}</strong>
+            <span className="text-sm font-bold text-slate-500">{lote.area} m²</span>
+          </div>
+        </div>
 
-        {lote.estado === "reservado" &&
-          operacion?.modalidadPago === "Contado" && (
-            <>
-              <FichaDato
-                etiqueta="Pagará el saldo total"
-                valor={textoFecha(fechaCompromiso)}
-              />
-              <FichaDato
-                etiqueta="Situación"
-                valor={
-                  operacion.pagoTotalConfirmado
-                    ? "Pago total confirmado"
-                    : dias === 0
-                      ? "Pago pendiente · vence hoy"
-                      : dias !== null && dias > 0
-                        ? `Pago pendiente · ${dias} día${
-                            dias === 1 ? "" : "s"
-                          }`
-                        : "Pago pendiente"
-                }
-              />
-            </>
+        <div className="border-b border-slate-100 px-4 py-3.5 md:border-b-0 md:border-r sm:px-5">
+          <div className="flex items-center justify-between gap-3">
+            <p className="text-[9px] font-black uppercase tracking-[0.14em] text-slate-400">
+              Situación de la operación
+            </p>
+            <span className={`h-2.5 w-2.5 shrink-0 rounded-full ${ESTADO_CONFIG[lote.estado].dot}`} />
+          </div>
+          <p
+            className={`mt-1 text-sm font-black ${
+              cuotasVencidas > 0
+                ? "text-rose-700"
+                : alertaCompromiso
+                  ? "text-amber-700"
+                  : "text-slate-900"
+            }`}
+          >
+            {proximoCompromiso}
+          </p>
+          <div className="mt-1.5 flex flex-wrap items-center gap-2 text-[11px] font-semibold text-slate-500">
+            <span>{etiquetaEstado}</span>
+            {operacion?.modalidadPago && (
+              <>
+                <span className="text-slate-300">•</span>
+                <span>{operacion.modalidadPago}</span>
+              </>
+            )}
+            {operacion?.modalidadPago === "Financiado" && cuotas.length > 0 && (
+              <>
+                <span className="text-slate-300">•</span>
+                <span>{cuotasPagadas}/{cuotas.length} cuotas</span>
+              </>
+            )}
+          </div>
+        </div>
+
+        <div className="px-4 py-3.5 sm:px-5">
+          <p className="text-[9px] font-black uppercase tracking-[0.14em] text-slate-400">
+            Asesor
+          </p>
+          <p className="mt-1 text-sm font-black text-slate-900">
+            {lote.cliente?.asesor || "No registrado"}
+          </p>
+          {cuotasVencidas > 0 && (
+            <p className="mt-1 text-[11px] font-black text-rose-700">
+              {cuotasVencidas} cuota{cuotasVencidas === 1 ? "" : "s"} vencida{cuotasVencidas === 1 ? "" : "s"}
+            </p>
           )}
-
-        {operacion?.modalidadPago === "Financiado" && (
-          <>
-            <FichaDato
-              etiqueta="Inicial total"
-              valor={moneda(inicial)}
-            />
-            <FichaDato
-              etiqueta="Falta para la inicial"
-              valor={moneda(
-                operacion.pagoInicialConfirmado
-                  ? 0
-                  : Math.max(inicial - reserva, 0),
-              )}
-            />
-            <FichaDato
-              etiqueta="Fecha para completar inicial"
-              valor={textoFecha(fechaCompromiso)}
-            />
-            <FichaDato
-              etiqueta="Financiamiento"
-              valor={`${operacion.cuotas || cuotas.length} meses`}
-            />
-            <FichaDato
-              etiqueta="Cuota mensual"
-              valor={moneda(cuotas[0]?.monto ?? 0)}
-            />
-            <FichaDato
-              etiqueta="Cuotas pagadas"
-              valor={`${cuotasPagadas}/${cuotas.length}`}
-            />
-            <FichaDato
-              etiqueta="Próxima cuota"
-              valor={
-                proximaCuota
-                  ? `${textoFecha(
-                      proximaCuota.fechaVencimiento,
-                    )} · ${moneda(proximaCuota.monto)}`
-                  : operacion.pagoInicialConfirmado
-                    ? "Plan completado"
-                    : "Pendiente de completar inicial"
-              }
-            />
-          </>
-        )}
-      </dl>
-
-      {cuotasVencidas > 0 && (
-        <div className="mt-4 rounded-xl border border-rose-200 bg-rose-50 p-3 text-sm font-bold text-rose-800">
-          {cuotasVencidas} cuota{cuotasVencidas === 1 ? "" : "s"} vencida
-          {cuotasVencidas === 1 ? "" : "s"} pendiente
-          {cuotasVencidas === 1 ? "" : "s"}.
         </div>
-      )}
-
-      {lote.cliente?.observaciones && (
-        <div className="mt-4 rounded-xl border border-slate-200 bg-white p-3 text-sm text-slate-600">
-          <strong className="text-slate-800">Observaciones: </strong>
-          {lote.cliente.observaciones}
-        </div>
-      )}
+      </div>
     </article>
   );
 }
-
 
 function EstadoReservaPreview({ formulario }: { formulario: FormularioFicha }) {
   const dias = diasHasta(formulario.fechaCompromisoPago);
@@ -3385,19 +3549,15 @@ function EstadoReservaPreview({ formulario }: { formulario: FormularioFicha }) {
       <p className="mt-2 leading-6">
         {cumplido
           ? formulario.modalidadPago === "Contado"
-            ? `El pago total fue confirmado el ${textoFecha(
-                formulario.fechaPagoTotal,
-              )}.`
-            : `La inicial fue completada el ${textoFecha(
-                formulario.fechaPagoInicial,
-              )}.`
+            ? "El pago total ya fue confirmado."
+            : "La inicial acordada ya fue confirmada."
           : formulario.liberacionAutomatica
-            ? `El lote volverá a disponible después del ${textoFecha(
+            ? `El lote permanecerá reservado durante todo el ${textoFecha(
                 formulario.fechaCompromisoPago,
-              )} si el cliente no cumple el pago acordado.`
+              )}. Si el pago no se confirma, desde las 00:00 del día siguiente volverá automáticamente a Disponible.`
             : `El pago está programado para el ${textoFecha(
                 formulario.fechaCompromisoPago,
-              )}, pero la liberación automática está desactivada.`}
+              )}. La liberación automática está desactivada.`}
       </p>
     </div>
   );
