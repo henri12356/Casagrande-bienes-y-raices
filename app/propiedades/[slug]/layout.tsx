@@ -27,6 +27,7 @@ type ProjectJson = {
   slug: string;
   tipo: string;
   titulo: string;
+  estado?: string;
   subtitulo: string;
   categoria: string;
   ubicacion: string;
@@ -38,8 +39,39 @@ type ProjectJson = {
   descripcion: string;
   equipamiento?: string[];
   stockLotes?: { total: number; restantes: number; actualizado?: string };
+  planos?: {
+    titulo: string;
+    imagen: string;
+    pdf?: string;
+    nota?: string;
+  };
+  lotes?: {
+    titulo: string;
+    imagen: string;
+    nota?: string;
+  };
+  futuro?: {
+    titulo: string;
+    imagen: string;
+    nota?: string;
+  };
   caracteristicas?: Array<{ label: string; value: string }>;
+  galeria?: {
+    fotos: string[];
+    youtubeId?: string;
+  };
+  ubicacionImagen?: string;
   mapsUrl?: string;
+  descuento?: {
+    titulo: string;
+    imagen: string;
+  };
+  contacto?: {
+    whatsapp: string;
+    telefono: string;
+    direccion: string;
+    horario: string;
+  };
 };
 
 type PropertyMeta = {
@@ -62,6 +94,96 @@ type PropertyMeta = {
 };
 
 const proyectosJson: ProjectJson[] = [
+  {
+    slug: "el-mirador-de-ccorihuillca-ayacucho",
+    tipo: "proyecto",
+    titulo: "EL MIRADOR DE CCORIHUILLCA",
+    estado: "preventa",
+    subtitulo: "",
+    categoria: "Proyecto",
+    ubicacion: "Sector Ccorihuillca, a 15 minutos del Grifo Ayacucho",
+    precioDesdeSol: "S/ 20,000",
+    imagen: "/MIRADOR/MIRADOR01.webp",
+    etiquetas: ["Preventa", "Lotes desde 200 m²", "Acceso vehicular"],
+    descripcion:
+      "EL MIRADOR DE CCORIHUILLCA es un nuevo proyecto inmobiliario ubicado en el sector de Ccorihuillca, a solo 15 minutos del Grifo Ayacucho y a 4 minutos del centro de Ccorihuillca Chico. El proyecto se encuentra en etapa de preventa y cuenta con 70 lotes de 200 m², 500 m² y 1,000 m². Los lotes de 200 m² están disponibles desde S/ 20,000. Todos los terrenos cuentan con acceso vehicular y se encuentran en un sector con servicios de agua, luz, centro educativo initial, posta médica, parque y cancha de fútbol. Es una excelente alternativa para construir una casa de campo, vivienda familiar o realizar una inversión con proyección de valorización.",
+    equipamiento: ["Acceso vehicular", "Agua", "Luz"],
+    stockLotes: {
+      total: 64,
+      restantes: 64,
+      actualizado: "30/07/2026",
+    },
+    planos: {
+      titulo: "Plano general del proyecto",
+      imagen: "/BUNGAVILIA/BUNGAVILIAPLANO.webp",
+      pdf: "/EL-MIRADOR-DE-CCORIHUILLCA/EL-MIRADOR-DE-CCORIHUILLCA.pdf",
+      nota: "Plano referencial del proyecto",
+    },
+    lotes: {
+      titulo: "Plano de disponibilidad",
+      imagen: "/ELMIRADOR/ELMIRADOR-DISPONIBILIDAD.webp",
+      nota: "Disponibilidad referencial sujeta a actualización",
+    },
+    futuro: {
+      titulo: "Proyección del proyecto a futuro",
+      imagen: "/ELMIRADOR/ELMIRADOR-PROYECCION.webp",
+      nota: "Vista referencial",
+    },
+    caracteristicas: [
+      { label: "Áreas disponibles", value: "200 m²" },
+      { label: "Cantidad de lotes", value: "70 lotes" },
+      { label: "Precio desde", value: "S/ 18,000" },
+      { label: "Lote desde", value: "200 m²" },
+      { label: "Etapa del proyecto", value: "Preventa" },
+      { label: "Ubicación", value: "Sector Ccorihuillca" },
+      { label: "Distancia", value: "A 15 minutos del Grifo Ayacucho" },
+      {
+        label: "Referencia",
+        value: "A 4 minutos del centro de Ccorihuillca Chico",
+      },
+      {
+        label: "Tipo de uso",
+        value: "Casa de campo / vivienda / inversión",
+      },
+      { label: "Servicios", value: "Agua y luz" },
+      {
+        label: "Accesos",
+        value: "Todos los lotes cuentan con acceso vehicular",
+      },
+      {
+        label: "Equipamiento cercano",
+        value:
+          "Centro educativo inicial, posta médica, parque y cancha de fútbol",
+      },
+      {
+        label: "Entorno",
+        value: "Zona tranquila con proyección de crecimiento y valorización",
+      },
+    ],
+    galeria: {
+      fotos: [
+        "/MIRADOR/MIRADOR01.webp",
+        "/MIRADOR/MIRADOR02.webp",
+        "/MIRADOR/MIRADOR03.webp",
+        "/MIRADOR/MIRADOR04.webp",
+        "/MIRADOR/MIRADOR05.webp",
+      ],
+      youtubeId: "",
+    },
+    ubicacionImagen: "/hero03.webp",
+    mapsUrl: "https://maps.app.goo.gl/QHiL6G21HVgjy6pL6",
+    descuento: {
+      titulo:
+        "Preventa: lotes de 200 m² en El Mirador de Ccorihuillca desde S/ 18,000",
+      imagen: "/ELMIRADOR/ELMIRADOR-PROMO.webp",
+    },
+    contacto: {
+      whatsapp: "51919156035",
+      telefono: "+51 919 156 035",
+      direccion: "Jr. Quinua N° 570, Ayacucho",
+      horario: "Lun–Sáb 9:00 AM – 7:00 PM",
+    },
+  },
     {
     slug: "el-golf-de-ccorihuillca-ayacucho",
     tipo: "proyecto",
@@ -274,9 +396,14 @@ function toNumberFromMoneyPEN(input?: string): number | undefined {
 function areaFromCaracteristicas(
   caracteristicas?: Array<{ label: string; value: string }>
 ): number | undefined {
-  const area = caracteristicas?.find((c) =>
-    c.label.toLowerCase().includes("área típica")
-  )?.value;
+  const area = caracteristicas?.find((c) => {
+    const label = c.label.toLowerCase();
+    return (
+      label.includes("área típica") ||
+      label.includes("áreas disponibles") ||
+      label.includes("lote desde")
+    );
+  })?.value;
   if (!area) return undefined;
   const m = area.match(/(\d+(\.\d+)?)/);
   if (!m) return undefined;
@@ -312,7 +439,9 @@ function makeMetaFromProject(p: ProjectJson): PropertyMeta {
   const availability =
     restantes > 0 ? "https://schema.org/InStock" : "https://schema.org/SoldOut";
 
-  const title = `${p.titulo} | Lotes en ${p.subtitulo} (${p.ubicacion})`;
+  const title = p.subtitulo
+    ? `${p.titulo} | Lotes en ${p.subtitulo} (${p.ubicacion})`
+    : `${p.titulo} | Lotes en Ayacucho (${p.ubicacion})`;
   const description = p.descripcion;
 
   return {

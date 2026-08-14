@@ -14,7 +14,9 @@
     "equipamiento": [
      "Acceso vehicular",
       "Agua",
-      "Luz"
+      "Luz",
+      "Parques recreativos",
+      "Mirador panorámico"
     ],
     "stockLotes": {
       "total": 64,
@@ -95,7 +97,9 @@
       "fotos": [
         "/MIRADOR/MIRADOR01.webp",
         "/MIRADOR/MIRADOR02.webp",
-        "/MIRADOR/MIRADOR03.webp"
+        "/MIRADOR/MIRADOR03.webp",
+        "/MIRADOR/MIRADOR04.webp",
+        "/MIRADOR/MIRADOR05.webp"
         
       ],
       "youtubeId": ""
@@ -107,8 +111,8 @@
       "imagen": "/ELMIRADOR/ELMIRADOR-PROMO.webp"
     },
     "contacto": {
-      "whatsapp": "51916194372",
-      "telefono": "+51 916 194 372",
+      "whatsapp": "51919156035",
+      "telefono": "+51 919 156 035",
       "direccion": "Jr. Quinua N° 570, Ayacucho",
       "horario": "Lun–Sáb 9:00 AM – 7:00 PM"
     }
@@ -209,8 +213,8 @@
       "imagen": "/ELGOLFDECCORIHUILLCA/ELGOLFDECCORIHUILLCA-PROMO.webp"
     },
     "contacto": {
-      "whatsapp": "51916194372",
-      "telefono": "+51 916 194 372",
+      "whatsapp": "51919156035",
+      "telefono": "+51 919 156 035",
       "direccion": "Jr. Quinua N° 570, Ayacucho",
       "horario": "Lun–Sab 9:00 AM – 7:00 PM"
     }
@@ -383,8 +387,8 @@
       "imagen": "/prueba01.webp"
     },
     "contacto": {
-      "whatsapp": "51916194372",
-      "telefono": "+51 916 194 372",
+      "whatsapp": "51919156035",
+      "telefono": "+51 919 156 035",
       "direccion": "Jr. Quinua N° 570, Ayacucho",
       "horario": "Lun–Sab 9:00 AM – 7:00 PM"
     }
