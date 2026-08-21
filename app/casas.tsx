@@ -15,9 +15,58 @@ interface Proyecto {
   etiqueta: string;
   servicios: string[];
   link: string;
+  estado?: "vendido" | "disponible";
 }
 
 const proyectosData: Proyecto[] = [
+  {
+    id: 2,
+    nombre: "Cañones",
+    subtitulo: "",
+    ubicacion:
+    "Al Frente de los cañones de Ccorihuillca, a 15 minutos del grifo Ayacucho",
+    precioDesdeSol: "S/ 25,000",
+    imagenSrc: "/CAÑONES/CAÑONES03.webp",
+    etiqueta: "LOTES",
+    servicios: ["Agua", "Luz", "Acceso vehicular", "200 m²"],
+    link: "/proyectos/cañones-ayacucho-qorihuillca",
+  },
+  {
+    id: 3,
+    nombre: "Ccorihuillca Centro",
+    subtitulo: "",
+    ubicacion:
+    "Ccorihuillca Centro, a 15 minutos del Grifo Ayacucho",
+    precioDesdeSol: "S/ 56,000",
+    imagenSrc: "/CCORIHUILLCA01/CCORIHUILLCA01-01.webp",
+    etiqueta: "LOTES",
+    servicios: ["Agua", "Luz", "Acceso vehicular", "250 m²"],
+    link: "/proyectos/terreno-ccorihuillca-centro-ayacucho",
+  },
+  {
+    id: 4,
+    nombre: "Ccorihuillca Centro",
+    subtitulo: "",
+    ubicacion:
+    "Ccorihuillca Centro, a 12 minutos del Grifo Ayacucho",
+    precioDesdeSol: "S/ 32,000",
+    imagenSrc: "/CCORIHUILLCA02/CCORIHUILLCA02-01.webp",
+    etiqueta: "LOTES",
+    servicios: ["Agua", "Luz", "Acceso vehicular", "150 m²"],
+    link: "/proyectos/terreno-ccorihuillca-02-ayacucho",
+  },
+  {
+    id: 5,
+    nombre: "Ccorihuillca Centro",
+    subtitulo: "",
+    ubicacion:
+    "Ccorihuillca Centro, a 12 minutos del Grifo Ayacucho",
+    precioDesdeSol: "S/ 28,000",
+    imagenSrc: "/CCORIHUILLCA03/CCORIHUILLCA03-01.webp",
+    etiqueta: "LOTES",
+    servicios: ["Agua", "Luz", "Acceso vehicular", "150 m²"],
+    link: "/proyectos/terreno-ccorihuillca-03-ayacucho",
+  },
   {
     id: 1,
     nombre: "Corihuillca",
@@ -29,55 +78,9 @@ const proyectosData: Proyecto[] = [
     etiqueta: "LOTES",
     servicios: ["Agua", "Luz", "Acceso vehicular", "200 m²"],
      link: "/proyectos/lotes-pampahocha-ayacucho",
-  },
-   {
-    id: 2,
-    nombre: "Cañones",
-    subtitulo: "",
-    ubicacion:
-      "Al Frente de los cañones de Ccorihuillca, a 15 minutos del grifo Ayacucho",
-    precioDesdeSol: "S/ 25,000",
-    imagenSrc: "/CAÑONES/CAÑONES03.webp",
-    etiqueta: "LOTES",
-    servicios: ["Agua", "Luz", "Acceso vehicular", "200 m²"],
-     link: "/proyectos/cañones-ayacucho-qorihuillca",
-  },
-   {
-    id: 3,
-    nombre: "Ccorihuillca Centro",
-    subtitulo: "",
-    ubicacion:
-      "Ccorihuillca Centro, a 15 minutos del Grifo Ayacucho",
-    precioDesdeSol: "S/ 56,000",
-    imagenSrc: "/CCORIHUILLCA01/CCORIHUILLCA01-01.webp",
-    etiqueta: "LOTES",
-    servicios: ["Agua", "Luz", "Acceso vehicular", "250 m²"],
-     link: "/proyectos/terreno-ccorihuillca-centro-ayacucho",
-  },
-   {
-    id: 4,
-    nombre: "Ccorihuillca Centro",
-    subtitulo: "",
-    ubicacion:
-      "Ccorihuillca Centro, a 12 minutos del Grifo Ayacucho",
-    precioDesdeSol: "S/ 32,000",
-    imagenSrc: "/CCORIHUILLCA02/CCORIHUILLCA02-01.webp",
-    etiqueta: "LOTES",
-    servicios: ["Agua", "Luz", "Acceso vehicular", "150 m²"],
-     link: "/proyectos/terreno-ccorihuillca-02-ayacucho",
-  },
-  {
-    id: 5,
-    nombre: "Ccorihuillca Centro",
-    subtitulo: "",
-    ubicacion:
-      "Ccorihuillca Centro, a 12 minutos del Grifo Ayacucho",
-    precioDesdeSol: "S/ 28,000",
-    imagenSrc: "/CCORIHUILLCA03/CCORIHUILLCA03-01.webp",
-    etiqueta: "LOTES",
-    servicios: ["Agua", "Luz", "Acceso vehicular", "150 m²"],
-     link: "/proyectos/terreno-ccorihuillca-03-ayacucho",
-  },
+     estado: "vendido",
+     
+  }
 ];
 
 const SvgIcon: FC<{ path: string; className?: string }> = ({
@@ -147,6 +150,20 @@ const ProjectCard: FC<{ p: Proyecto }> = ({ p }) => (
           }}
         />
         <div className="absolute inset-0 bg-gradient-to-t from-black/35 via-black/0 to-black/0" />
+
+        {p.estado === "vendido" && (
+          <>
+            {/* Capa roja sobre toda la fotografía */}
+            <div className="absolute inset-0 z-10 bg-red-700/70" />
+
+            {/* Sello diagonal de vendido */}
+            <div className="absolute inset-0 z-20 flex items-center justify-center px-6">
+              <div className="-rotate-12 border-[4px] border-white px-7 py-2 text-center text-3xl font-black uppercase tracking-[0.12em] text-white drop-shadow-lg sm:text-4xl">
+                Vendido
+              </div>
+            </div>
+          </>
+        )}
         <div className="absolute left-3 top-3 inline-flex items-center rounded-full bg-[#FFB200] px-3 py-1.5 text-[11px] font-extrabold uppercase text-[#005BBB] shadow">
           {p.etiqueta}
         </div>
