@@ -11,31 +11,36 @@ const slidesData: {
   imageSrc: string; 
   buttonLink: string;
 }[] = [
-  { 
-    id: 8, 
-    imageSrc: "/hero08.webp", 
+   { 
+    id: 9, 
+    imageSrc: "/hero09.webp", 
     buttonLink: "/inmuebles", 
   },
- { 
-    id: 7, 
-    imageSrc: "/hero07.webp", 
-    buttonLink: "/inmuebles", 
-  },
+//   { 
+//     id: 8, 
+//     imageSrc: "/hero08.webp", 
+//     buttonLink: "/inmuebles", 
+//   },
+//  { 
+//     id: 7, 
+//     imageSrc: "/hero07.webp", 
+//     buttonLink: "/inmuebles", 
+//   },
   // { 
   //   id: 6, 
   //   imageSrc: "/hero06.webp", 
   //   buttonLink: "/inmuebles", 
   // },
-  { 
-    id: 5, 
-    imageSrc: "/hero05.webp", 
-    buttonLink: "/inmuebles", 
-  },
-  { 
-    id: 4, 
-    imageSrc: "/hero04.webp", 
-    buttonLink: "/inmuebles", 
-  },
+  // { 
+  //   id: 5, 
+  //   imageSrc: "/hero05.webp", 
+  //   buttonLink: "/inmuebles", 
+  // },
+  // { 
+  //   id: 4, 
+  //   imageSrc: "/hero04.webp", 
+  //   buttonLink: "/inmuebles", 
+  // },
   // { 
   //   id: 1, 
   //   imageSrc: "/hero01.webp", 
@@ -91,7 +96,7 @@ export default function HeroCarousel() {
   useEffect(() => {
     const interval = setInterval(() => {
       paginate(1);
-    }, 5000);
+    }, 500000);
     return () => clearInterval(interval);
   }, [paginate]);
 
