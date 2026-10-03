@@ -11,11 +11,16 @@ const slidesData: {
   imageSrc: string; 
   buttonLink: string;
 }[] = [
-   { 
+  { 
     id: 9, 
-    imageSrc: "/hero09.webp", 
+    imageSrc: "/hero10.webp", 
     buttonLink: "/inmuebles", 
   },
+  //  { 
+  //   id: 9, 
+  //   imageSrc: "/hero09.webp", 
+  //   buttonLink: "/inmuebles", 
+  // },
 //   { 
 //     id: 8, 
 //     imageSrc: "/hero08.webp", 
