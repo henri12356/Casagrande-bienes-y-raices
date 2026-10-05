@@ -20,8 +20,8 @@
     ],
     "stockLotes": {
       "total": 64,
-      "restantes": 64,
-      "actualizado": "30/07/2026"
+      "restantes": 50,
+      "actualizado": "05/10/2026"
     },
     "planos": {
       "titulo": "Plano general del proyecto",
@@ -110,8 +110,8 @@
       "imagen": "/ELMIRADOR/ELMIRADOR-PROMO.webp"
     },
     "contacto": {
-      "whatsapp": "51919156035",
-      "telefono": "+51 919 156 035",
+      "whatsapp": "51916194372",
+      "telefono": "+51 916 194 372",
       "direccion": "Jr. Quinua N° 570, Ayacucho",
       "horario": "Lun–Sáb 9:00 AM – 7:00 PM"
     }
@@ -137,7 +137,7 @@
     ],
     "stockLotes": {
       "total": 55,
-      "restantes": 2,
+      "restantes": 1,
       "actualizado": "04/08/2026"
     },
     "planos": {
@@ -212,8 +212,8 @@
       "imagen": "/ELGOLFDECCORIHUILLCA/ELGOLFDECCORIHUILLCA-PROMO.webp"
     },
     "contacto": {
-      "whatsapp": "51919156035",
-      "telefono": "+51 919 156 035",
+      "whatsapp": "51916194372",
+      "telefono": "+51 916 194 372",
       "direccion": "Jr. Quinua N° 570, Ayacucho",
       "horario": "Lun–Sab 9:00 AM – 7:00 PM"
     }
@@ -239,7 +239,7 @@
     ],
     "stockLotes": {
       "total": 18,
-      "restantes": 10,
+      "restantes": 4,
       "actualizado": "04/08/2026"
     },
 
@@ -386,8 +386,8 @@
       "imagen": "/prueba01.webp"
     },
     "contacto": {
-      "whatsapp": "51919156035",
-      "telefono": "+51 919 156 035",
+      "whatsapp": "51916194372",
+      "telefono": "+51 916 194 372",
       "direccion": "Jr. Quinua N° 570, Ayacucho",
       "horario": "Lun–Sab 9:00 AM – 7:00 PM"
     }

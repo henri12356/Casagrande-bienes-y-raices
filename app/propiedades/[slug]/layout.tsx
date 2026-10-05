@@ -178,8 +178,8 @@ const proyectosJson: ProjectJson[] = [
       imagen: "/ELMIRADOR/ELMIRADOR-PROMO.webp",
     },
     contacto: {
-      whatsapp: "51919156035",
-      telefono: "+51 919 156 035",
+      whatsapp: "51916194372",
+      telefono: "+51 916 194 372",
       direccion: "Jr. Quinua N° 570, Ayacucho",
       horario: "Lun–Sáb 9:00 AM – 7:00 PM",
     },

@@ -30,6 +30,7 @@ const proyectosData: Proyecto[] = [
     etiqueta: "LOTES",
     servicios: ["Agua", "Luz", "Acceso vehicular", "200 m²"],
     link: "/proyectos/cañones-ayacucho-qorihuillca",
+    estado: "vendido",
   },
   {
     id: 3,
@@ -42,6 +43,7 @@ const proyectosData: Proyecto[] = [
     etiqueta: "LOTES",
     servicios: ["Agua", "Luz", "Acceso vehicular", "250 m²"],
     link: "/proyectos/terreno-ccorihuillca-centro-ayacucho",
+    estado: "vendido",
   },
   {
     id: 4,
@@ -54,6 +56,7 @@ const proyectosData: Proyecto[] = [
     etiqueta: "LOTES",
     servicios: ["Agua", "Luz", "Acceso vehicular", "150 m²"],
     link: "/proyectos/terreno-ccorihuillca-02-ayacucho",
+    estado: "vendido",
   },
   {
     id: 5,
@@ -66,6 +69,7 @@ const proyectosData: Proyecto[] = [
     etiqueta: "LOTES",
     servicios: ["Agua", "Luz", "Acceso vehicular", "150 m²"],
     link: "/proyectos/terreno-ccorihuillca-03-ayacucho",
+    estado: "vendido",
   },
   {
     id: 1,
