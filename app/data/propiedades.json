@@ -7,7 +7,7 @@
     "subtitulo": "",
     "categoria": "Proyecto",
     "ubicacion": "Sector Ccorihuillca, a 15 minutos del Grifo Ayacucho",
-    "precioDesdeSol": "S/ 20,000",
+    "precioDesdeSol": "S/ 24,000",
     "imagen": "/MIRADOR/MIRADOR01.webp",
     "etiquetas": ["Preventa", "Lotes desde 200 m²", "Acceso vehicular"],
     "descripcion": "EL MIRADOR DE CCORIHUILLCA es un nuevo proyecto inmobiliario ubicado en el sector de Ccorihuillca, a solo 15 minutos del Grifo Ayacucho y a 4 minutos del centro de Ccorihuillca Chico. El proyecto se encuentra en etapa de preventa y cuenta con 70 lotes de 200 m², 500 m² y 1,000 m². Los lotes de 200 m² están disponibles desde S/ 20,000. Todos los terrenos cuentan con acceso vehicular y se encuentran en un sector con servicios de agua, luz, centro educativo initial, posta médica, parque y cancha de fútbol. Es una excelente alternativa para construir una casa de campo, vivienda familiar o realizar una inversión con proyección de valorización.",
@@ -20,7 +20,7 @@
     ],
     "stockLotes": {
       "total": 64,
-      "restantes": 50,
+      "restantes": 30,
       "actualizado": "05/10/2026"
     },
     "planos": {
@@ -50,7 +50,7 @@
       },
       {
         "label": "Precio desde",
-        "value": "S/ 18,000"
+        "value": "S/ 20,000"
       },
       {
         "label": "Lote desde",
@@ -106,7 +106,7 @@
     "ubicacionImagen": "/hero03.webp",
     "mapsUrl": "https://maps.app.goo.gl/QHiL6G21HVgjy6pL6",
     "descuento": {
-      "titulo": "Preventa: lotes de 200 m² en El Mirador de Ccorihuillca desde S/ 18,000",
+      "titulo": "Preventa: lotes de 200 m² en El Mirador de Ccorihuillca desde S/ 20,000",
       "imagen": "/ELMIRADOR/ELMIRADOR-PROMO.webp"
     },
     "contacto": {

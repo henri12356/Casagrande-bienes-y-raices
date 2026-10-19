@@ -1,3 +1,4 @@
+
 "use client";
 
 import Image from "next/image";
@@ -30,9 +31,9 @@ export default function LanzamientoPopup() {
     return () => clearTimeout(timer);
   }, []);
 
-  // CONTADOR
+  // CONTADOR - 8 DE NOVIEMBRE DE 2026, 9:00 AM
   useEffect(() => {
-    const fechaEvento = new Date("2026-10-11T09:00:00-05:00");
+    const fechaEvento = new Date("2026-11-08T09:00:00-05:00");
 
     const actualizarContador = () => {
       const ahora = new Date();
@@ -46,11 +47,12 @@ export default function LanzamientoPopup() {
           segundos: 0,
           finalizado: true,
         });
-
         return;
       }
 
-      const dias = Math.floor(diferencia / (1000 * 60 * 60 * 24));
+      const dias = Math.floor(
+        diferencia / (1000 * 60 * 60 * 24)
+      );
 
       const horas = Math.floor(
         (diferencia / (1000 * 60 * 60)) % 24
@@ -88,7 +90,7 @@ export default function LanzamientoPopup() {
   const numeroWhatsapp = "51916194372";
 
   const mensajeWhatsapp = encodeURIComponent(
-    "Hola, vi la invitación de la Gran Preventa de El Mirador de Ccorihuillca y deseo confirmar mi asistencia."
+    "Hola, vi la invitación del Gran Tour Inmobiliario del 8 de noviembre de Casagrande Bienes Raíces y deseo confirmar mi asistencia."
   );
 
   const whatsappUrl = `https://wa.me/${numeroWhatsapp}?text=${mensajeWhatsapp}`;
@@ -99,7 +101,7 @@ export default function LanzamientoPopup() {
     <section
       role="dialog"
       aria-modal="true"
-      aria-label="Gran Preventa El Mirador de Ccorihuillca"
+      aria-label="Gran Tour Inmobiliario - 8 de noviembre"
       onClick={(e) => {
         if (e.target === e.currentTarget) {
           cerrarPopup();
@@ -107,7 +109,7 @@ export default function LanzamientoPopup() {
       }}
       className="fixed inset-0 z-[9999] flex items-end justify-center bg-[#001B4D]/75 px-0 backdrop-blur-md sm:items-center sm:px-4"
     >
-      <div className="relative w-full max-w-[430px] overflow-hidden rounded-t-[28px] bg-white shadow-2xl sm:rounded-[28px]">
+      <div className="relative max-h-[95dvh] w-full max-w-[430px] overflow-y-auto rounded-t-[28px] bg-white shadow-2xl sm:rounded-[28px]">
 
         {/* BOTÓN CERRAR */}
         <button
@@ -122,8 +124,8 @@ export default function LanzamientoPopup() {
         {/* IMAGEN PROMOCIONAL */}
         <div className="relative w-full">
           <Image
-            src="/preventa.webp"
-            alt="Gran Preventa El Mirador de Ccorihuillca"
+            src="/tour.webp"
+            alt="Gran Tour Inmobiliario Casagrande - 8 de noviembre"
             width={1200}
             height={1200}
             priority
@@ -143,17 +145,18 @@ export default function LanzamientoPopup() {
         <div className="px-5 py-5 sm:px-6">
 
           {/* TÍTULO */}
-          <h3 className="text-center text-[23px] font-black text-[#01338C]">
-            ¡Estás invitado!
+          <h3 className="text-center text-[23px] font-black leading-tight text-[#01338C]">
+            ¡Gran Tour Inmobiliario!
           </h3>
 
           {/* TEXTO */}
           <p className="mt-2 text-center text-[14px] leading-relaxed text-gray-600">
-            Acompáñanos este{" "}
-            <strong>11 de octubre</strong>{" "}
-            a nuestra{" "}
+            Este{" "}
+            <strong>domingo 8 de noviembre</strong>{" "}
+            acompáñanos a recorrer nuestros proyectos
+            inmobiliarios y aprovecha un{" "}
             <span className="font-bold text-[#01338C]">
-              Gran Preventa de El Mirador de Ccorihuillca.
+              15% de descuento por pago al contado.
             </span>
           </p>
 
@@ -162,7 +165,7 @@ export default function LanzamientoPopup() {
 
             <div className="rounded-xl bg-[#01338C]/5 px-3 py-2.5 text-center">
               <p className="text-[11px] font-bold text-[#01338C]">
-                💰 Hasta 10% de descuento
+                💰 15% de descuento al contado
               </p>
             </div>
 
@@ -248,12 +251,11 @@ export default function LanzamientoPopup() {
                 </div>
 
               </div>
-
             </div>
           ) : (
             <div className="mt-4 rounded-xl bg-[#FDB515]/15 px-3 py-3 text-center">
               <p className="text-[12px] font-black text-[#01338C]">
-                🔥 ¡La Gran Preventa es hoy!
+                🏡 ¡El Gran Tour Inmobiliario ha comenzado!
               </p>
             </div>
           )}
