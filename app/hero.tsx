@@ -13,7 +13,7 @@ const slidesData: {
 }[] = [
   { 
     id: 9, 
-    imageSrc: "/PORTAOCTUBRE.webp", 
+    imageSrc: "/hero10.jpg", 
     buttonLink: "/inmuebles", 
   },
   //  { 
