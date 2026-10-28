@@ -21,7 +21,7 @@ const URL_PAGINA =
 // Archivo: public/cimenta-compartir-v3.jpg
 
 const IMAGEN_COMPARTIR =
-  `${DOMINIO}/cimenta-compartir-v3.jpg`;
+  `${DOMINIO}/INVITACION.webp`;
 
 // ==========================================
 // INFORMACIÓN DEL EVENTO
