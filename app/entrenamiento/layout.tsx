@@ -24,7 +24,7 @@ const SITE_URL =
 // Archivo físico:
 // public/INVITACION.WEBP
 
-const IMAGEN_COMPARTIR = "/INVITACION.WEBP";
+const IMAGEN_COMPARTIR = "/INVITACION.webp";
 
 // ==========================================
 // INFORMACIÓN DEL EVENTO
