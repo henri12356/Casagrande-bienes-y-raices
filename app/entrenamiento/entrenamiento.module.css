@@ -1,0 +1,1219 @@
+
+/* ==========================================
+   CIMENTA - MEGA ENTRENAMIENTO
+   DISEÑO ORIGINAL + TIPOGRAFÍA MODERNA
+   ========================================== */
+
+.pagina {
+  --azul: #000523;
+  --naranja: #ee600a;
+  --blanco: #ffffff;
+
+  position: relative;
+  isolation: isolate;
+  width: 100%;
+  min-height: 100svh;
+  margin: 0;
+  padding: 0;
+  overflow-x: clip;
+  background: var(--azul);
+  color: var(--blanco);
+
+  font-family:
+    var(--cimenta-body),
+    Arial,
+    sans-serif;
+}
+
+.pagina,
+.pagina * {
+  box-sizing: border-box;
+}
+
+.pagina a:focus-visible {
+  outline: 2px solid #ff9b61;
+  outline-offset: 4px;
+}
+
+/* ==========================================
+   INTRO - FONDO AZUL OSCURO ORIGINAL
+   ========================================== */
+
+.intro {
+  position: fixed;
+  inset: 0;
+  z-index: 2147483000;
+
+  display: flex;
+  width: 100%;
+  height: 100dvh;
+
+  align-items: center;
+  justify-content: center;
+
+  overflow: hidden;
+  padding: 24px 15px;
+
+  background: #000523;
+  color: #ffffff;
+}
+
+.introFondo {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+
+  background:
+    radial-gradient(
+      ellipse at 50% 45%,
+      rgba(29, 79, 169, 0.33),
+      transparent 58%
+    ),
+    radial-gradient(
+      ellipse at 50% 75%,
+      rgba(10, 33, 85, 0.5),
+      transparent 70%
+    ),
+    #000523;
+}
+
+.introFondo::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+
+  background: linear-gradient(
+    180deg,
+    rgba(0, 0, 0, 0.1),
+    transparent 55%,
+    rgba(0, 0, 0, 0.35)
+  );
+}
+
+.introContenido {
+  position: relative;
+  z-index: 2;
+
+  display: flex;
+  width: 100%;
+  max-width: 1120px;
+
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+
+  text-align: center;
+}
+
+.introPresenta {
+  margin: 0 0 30px;
+
+  color: #c0cbe1;
+  font-family: var(--cimenta-body);
+
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: 0.35em;
+}
+
+/* ==========================================
+   TIPOGRAFÍA INTRO
+   ========================================== */
+
+.introLogo {
+  display: flex;
+  width: 100%;
+
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+
+  gap: 10px;
+}
+
+.introPalabraMega,
+.introPalabraEntrenamiento {
+  display: flex;
+  max-width: 100%;
+
+  align-items: center;
+  justify-content: center;
+}
+
+/* MEGA */
+
+.introMega {
+  display: block;
+
+  color: #ffffff;
+
+  font-family:
+    var(--cimenta-display),
+    "Arial Narrow",
+    sans-serif;
+
+  font-size: clamp(95px, 16vw, 220px);
+  font-weight: 900;
+
+  line-height: 0.9;
+  letter-spacing: 0.025em;
+
+  text-transform: uppercase;
+  white-space: nowrap;
+
+  text-rendering: geometricPrecision;
+}
+
+/* ENTRENAMIENTO */
+
+.introEntrenamiento {
+  display: block;
+
+  color: #ffffff;
+
+  font-family:
+    var(--cimenta-display),
+    "Arial Narrow",
+    sans-serif;
+
+  font-size: clamp(46px, 7.6vw, 106px);
+  font-weight: 800;
+
+  line-height: 1.08;
+  letter-spacing: 0.018em;
+
+  text-transform: uppercase;
+  white-space: nowrap;
+
+  text-rendering: geometricPrecision;
+}
+
+/* INMOBILIARIO */
+
+.introInmobiliario {
+  margin: 28px 0 0;
+
+  color: #f3f6ff;
+  font-family: var(--cimenta-body);
+
+  font-size: clamp(13px, 1.75vw, 22px);
+  font-weight: 600;
+
+  letter-spacing: 0.5em;
+  text-indent: 0.5em;
+}
+
+/* LÍNEA NARANJA */
+
+.introLinea {
+  width: min(350px, 68vw);
+  height: 3px;
+
+  margin-top: 32px;
+
+  transform-origin: center;
+  border-radius: 4px;
+
+  background: linear-gradient(
+    90deg,
+    transparent,
+    #ee600a 18%,
+    #ffae75 50%,
+    #ee600a 82%,
+    transparent
+  );
+
+  box-shadow:
+    0 0 15px rgba(238, 96, 10, 0.3);
+}
+
+/* AYACUCHO */
+
+.introCiudad {
+  margin: 23px 0 0;
+
+  color: #ffffff;
+
+  font-size: clamp(15px, 2vw, 23px);
+  font-weight: 800;
+
+  letter-spacing: 0.13em;
+  text-indent: 0.13em;
+}
+
+.introAnio {
+  margin-top: 12px;
+
+  color: #ee600a;
+
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: 0.3em;
+}
+
+/* ==========================================
+   HERO ORIGINAL
+   ========================================== */
+
+.hero {
+  position: relative;
+  isolation: isolate;
+
+  display: flex;
+  width: 100%;
+  min-height: 100svh;
+
+  align-items: center;
+  justify-content: center;
+
+  overflow: hidden;
+
+  padding: 78px 0 85px;
+
+  background: #070b1b;
+  color: #ffffff;
+}
+
+.heroFondo {
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+
+  pointer-events: none;
+
+  background:
+    radial-gradient(
+      ellipse at 78% 42%,
+      rgba(29, 74, 155, 0.23),
+      transparent 55%
+    ),
+    radial-gradient(
+      ellipse at 93% 5%,
+      rgba(238, 96, 10, 0.055),
+      transparent 45%
+    ),
+    linear-gradient(
+      115deg,
+      #050815 0%,
+      #101b36 65%,
+      #070b1b 100%
+    );
+}
+
+.heroFondo::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+
+  background: linear-gradient(
+    180deg,
+    rgba(0, 0, 0, 0.08),
+    transparent 48%,
+    rgba(0, 0, 0, 0.33)
+  );
+}
+
+/* ==========================================
+   DOS COLUMNAS ORIGINALES
+   ========================================== */
+
+.heroContenedor {
+  position: relative;
+  z-index: 2;
+
+  display: grid;
+
+  width: min(
+    1280px,
+    calc(100% - 90px)
+  );
+
+  grid-template-columns:
+    minmax(0, 1.32fr)
+    minmax(0, 0.68fr);
+
+  align-items: center;
+  gap: 50px;
+
+  margin: 0 auto;
+}
+
+.heroContenido {
+  position: relative;
+  z-index: 3;
+  min-width: 0;
+}
+
+.heroPresenta {
+  display: flex;
+  align-items: center;
+  gap: 11px;
+
+  margin-bottom: 28px;
+
+  color: #b2bfd6;
+
+  font-size: 10px;
+  font-weight: 800;
+
+  letter-spacing: 0.15em;
+}
+
+.heroIndicador {
+  display: block;
+
+  width: 24px;
+  height: 3px;
+  flex-shrink: 0;
+
+  border-radius: 4px;
+  background: #ee600a;
+}
+
+/* ==========================================
+   NUEVA TIPOGRAFÍA DEL HERO
+   ========================================== */
+
+.heroTitulo {
+  display: flex;
+  width: 100%;
+
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: center;
+
+  gap: 12px;
+
+  margin: 0;
+  padding: 0;
+
+  color: #ffffff;
+  text-align: left;
+}
+
+/* MEGA */
+
+.heroMega {
+  display: block;
+  max-width: 100%;
+
+  color: #ffffff;
+
+  font-family:
+    var(--cimenta-display),
+    "Arial Narrow",
+    sans-serif;
+
+  font-size: clamp(105px, 11.2vw, 178px);
+  font-weight: 900;
+
+  line-height: 0.92;
+  letter-spacing: 0.02em;
+
+  margin: 0;
+  padding: 0;
+
+  white-space: nowrap;
+  text-transform: uppercase;
+
+  font-kerning: normal;
+  text-rendering: geometricPrecision;
+}
+
+/* ENTRENAMIENTO */
+
+.heroEntrenamiento {
+  display: block;
+  max-width: 100%;
+
+  color: #ffffff;
+
+  font-family:
+    var(--cimenta-display),
+    "Arial Narrow",
+    sans-serif;
+
+  font-size: clamp(48px, 5.45vw, 88px);
+  font-weight: 800;
+
+  line-height: 1.08;
+  letter-spacing: 0.02em;
+
+  margin: 0;
+  padding: 0;
+
+  white-space: nowrap;
+  text-transform: uppercase;
+
+  font-kerning: normal;
+  text-rendering: geometricPrecision;
+}
+
+/* ==========================================
+   CIUDAD Y LÍNEA
+   ========================================== */
+
+.heroCiudad {
+  margin: 31px 0 0;
+
+  color: #ee600a;
+
+  font-size: clamp(19px, 2.1vw, 27px);
+  font-weight: 800;
+
+  line-height: 1.3;
+  letter-spacing: -0.025em;
+}
+
+.heroLinea {
+  width: 83px;
+  height: 3px;
+
+  margin-top: 24px;
+
+  border-radius: 4px;
+  background: #ee600a;
+}
+
+/* ==========================================
+   FECHA Y LUGAR
+   ========================================== */
+
+.heroDatos {
+  display: flex;
+  align-items: center;
+  gap: 27px;
+
+  margin-top: 29px;
+}
+
+.heroFecha {
+  display: flex;
+  flex-shrink: 0;
+  align-items: center;
+  gap: 12px;
+
+  color: inherit;
+  text-decoration: none;
+}
+
+.heroDia {
+  display: block;
+
+  color: #ffffff;
+
+  font-family: var(--cimenta-display);
+  font-size: clamp(76px, 7vw, 103px);
+  font-weight: 800;
+
+  line-height: 0.92;
+  letter-spacing: -0.035em;
+}
+
+.heroMes {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+
+.heroMes strong {
+  color: #ee600a;
+
+  font-size: clamp(22px, 2.35vw, 31px);
+  font-weight: 800;
+
+  line-height: 1;
+}
+
+.heroMes small {
+  color: #acb9d0;
+
+  font-size: 12px;
+  font-weight: 700;
+
+  letter-spacing: 0.1em;
+}
+
+.heroDivisor {
+  display: block;
+
+  width: 1px;
+  height: 87px;
+
+  flex-shrink: 0;
+
+  background: rgba(255, 255, 255, 0.2);
+}
+
+.heroLugar {
+  display: flex;
+  min-width: 0;
+
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: center;
+
+  gap: 8px;
+}
+
+.heroDatoEtiqueta {
+  color: #a6b5cd;
+
+  font-size: 10px;
+  font-weight: 800;
+  letter-spacing: 0.13em;
+}
+
+.heroLugar strong {
+  color: #ffffff;
+
+  font-size: clamp(18px, 2vw, 26px);
+  font-weight: 800;
+
+  line-height: 1.2;
+  letter-spacing: -0.035em;
+}
+
+.heroHora {
+  color: #b7c4d9;
+
+  font-size: 12px;
+  font-weight: 600;
+}
+
+/* ==========================================
+   BOTÓN GOOGLE MAPS
+   ========================================== */
+
+.heroMapa {
+  display: inline-flex;
+  min-height: 37px;
+
+  align-items: center;
+  justify-content: center;
+  gap: 9px;
+
+  margin-top: 3px;
+  padding: 8px 12px;
+
+  border: 1px solid rgba(238, 96, 10, 0.48);
+  border-radius: 8px;
+
+  background: rgba(238, 96, 10, 0.055);
+  color: #ffffff;
+
+  font-size: 11px;
+  font-weight: 800;
+
+  line-height: 1.2;
+  text-decoration: none;
+
+  transition:
+    background 0.25s ease,
+    border-color 0.25s ease,
+    transform 0.25s ease;
+}
+
+.heroMapa svg {
+  flex-shrink: 0;
+  color: #ee600a;
+}
+
+.heroMapa:hover {
+  transform: translateY(-2px);
+
+  border-color: #ee600a;
+  background: #ee600a;
+}
+
+.heroMapa:hover svg {
+  color: #ffffff;
+}
+
+/* ==========================================
+   CONTADOR - DISEÑO ORIGINAL
+   ========================================== */
+
+.contador {
+  display: flex;
+  width: fit-content;
+  max-width: 100%;
+
+  flex-direction: column;
+  align-items: flex-start;
+
+  margin-top: 30px;
+  padding-top: 21px;
+
+  border-top: 1px solid rgba(255, 255, 255, 0.18);
+}
+
+.contadorCabecera {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+
+  color: #b1bfd6;
+
+  font-size: 10px;
+  font-weight: 800;
+
+  letter-spacing: 0.12em;
+}
+
+.contadorCabecera svg {
+  flex-shrink: 0;
+  color: #ee600a;
+}
+
+.contadorUnidades {
+  display: flex;
+  align-items: flex-start;
+
+  margin-top: 18px;
+}
+
+.contadorGrupo {
+  display: flex;
+  align-items: flex-start;
+}
+
+.contadorUnidad {
+  display: flex;
+  min-width: 78px;
+
+  flex-direction: column;
+  align-items: center;
+  gap: 7px;
+}
+
+.contadorNumero {
+  color: #ffffff;
+
+  font-family: var(--cimenta-body);
+  font-size: clamp(38px, 3.6vw, 54px);
+  font-weight: 800;
+
+  line-height: 1;
+  letter-spacing: -0.06em;
+
+  font-variant-numeric: tabular-nums;
+}
+
+.contadorEtiqueta {
+  color: #a8b6cd;
+
+  font-size: 9px;
+  font-weight: 800;
+
+  letter-spacing: 0.12em;
+}
+
+.contadorSeparador {
+  display: block;
+  margin: 0 8px;
+
+  color: #ee600a;
+
+  font-size: 33px;
+  font-weight: 600;
+  line-height: 1;
+}
+
+/* ==========================================
+   BOTÓN WHATSAPP DEL HERO
+   ========================================== */
+
+.heroAcciones {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+
+  margin-top: 28px;
+}
+
+.heroWhatsapp {
+  display: inline-flex;
+  min-height: 49px;
+
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+
+  padding: 12px 19px;
+
+  border: 1px solid #ee600a;
+  border-radius: 9px;
+
+  background: #ee600a;
+  color: #ffffff;
+
+  font-size: 12px;
+  font-weight: 800;
+
+  text-decoration: none;
+  line-height: 1.25;
+
+  box-shadow: 0 9px 24px rgba(238, 96, 10, 0.1);
+
+  transition:
+    transform 0.25s ease,
+    background 0.25s ease,
+    box-shadow 0.25s ease;
+}
+
+.heroWhatsapp svg {
+  flex-shrink: 0;
+}
+
+.heroWhatsapp:hover {
+  transform: translateY(-3px);
+  background: #ff7931;
+
+  box-shadow:
+    0 14px 30px rgba(238, 96, 10, 0.2);
+}
+
+/* ==========================================
+   DECORACIÓN DERECHA ORIGINAL
+   ========================================== */
+
+.heroDecoracion {
+  position: relative;
+
+  display: flex;
+  width: 100%;
+  min-height: 400px;
+
+  align-items: center;
+  justify-content: center;
+
+  pointer-events: none;
+}
+
+.heroCirculo {
+  position: relative;
+
+  display: flex;
+
+  width: min(31vw, 360px);
+  height: min(31vw, 360px);
+
+  align-items: center;
+  justify-content: center;
+
+  border: 1px solid rgba(73, 136, 242, 0.22);
+  border-radius: 50%;
+
+  background: radial-gradient(
+    circle,
+    rgba(25, 90, 193, 0.09),
+    transparent 69%
+  );
+}
+
+.heroCirculo::before {
+  content: "";
+
+  position: absolute;
+  inset: 16px;
+
+  border: 1px solid rgba(255, 255, 255, 0.07);
+  border-radius: 50%;
+}
+
+.heroCirculo span {
+  color: transparent;
+
+  font-family: var(--cimenta-display);
+  font-size: clamp(140px, 16vw, 260px);
+  font-weight: 800;
+
+  line-height: 1;
+  letter-spacing: -0.04em;
+
+  -webkit-text-stroke:
+    1px rgba(121, 176, 255, 0.17);
+}
+
+.heroDecoracionTexto {
+  position: absolute;
+  bottom: 0;
+
+  display: flex;
+  gap: 15px;
+
+  color: #819ccc;
+
+  font-size: 10px;
+  font-weight: 800;
+  letter-spacing: 0.19em;
+}
+
+.heroLineaInferior {
+  position: absolute;
+  right: 4%;
+  bottom: 28px;
+
+  width: 88px;
+  height: 2px;
+
+  background: linear-gradient(
+    90deg,
+    #ee600a,
+    transparent
+  );
+}
+
+/* ==========================================
+   TABLETS
+   ========================================== */
+
+@media (max-width: 1080px) {
+  .heroContenedor {
+    width: calc(100% - 80px);
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .heroDecoracion {
+    display: none;
+  }
+
+  .heroMega {
+    font-size: clamp(100px, 15vw, 165px);
+  }
+
+  .heroEntrenamiento {
+    font-size: clamp(48px, 7vw, 82px);
+  }
+
+  .introMega {
+    font-size: clamp(100px, 18vw, 175px);
+  }
+
+  .introEntrenamiento {
+    font-size: clamp(43px, 8vw, 90px);
+  }
+}
+
+/* ==========================================
+   CELULARES
+   ========================================== */
+
+@media (max-width: 600px) {
+  /* INTRO */
+
+  .intro {
+    padding: 20px 9px;
+  }
+
+  .introPresenta {
+    margin-bottom: 26px;
+
+    font-size: 9px;
+    letter-spacing: 0.24em;
+  }
+
+  .introLogo {
+    gap: 8px;
+  }
+
+  .introMega {
+    font-size: clamp(84px, 23vw, 133px);
+    letter-spacing: 0.015em;
+  }
+
+  .introEntrenamiento {
+    font-size: clamp(35px, 9.8vw, 55px);
+    letter-spacing: 0.005em;
+  }
+
+  .introInmobiliario {
+    margin-top: 26px;
+
+    font-size: 11px;
+    letter-spacing: 0.27em;
+    text-indent: 0.27em;
+  }
+
+  .introLinea {
+    width: min(230px, 68vw);
+    margin-top: 25px;
+  }
+
+  .introCiudad {
+    margin-top: 20px;
+
+    font-size: 13px;
+    letter-spacing: 0.1em;
+  }
+
+  .introAnio {
+    font-size: 10px;
+  }
+
+  /* HERO */
+
+  .hero {
+    padding: 70px 0 90px;
+  }
+
+  .heroContenedor {
+    width: calc(100% - 38px);
+  }
+
+  .heroPresenta {
+    margin-bottom: 25px;
+    font-size: 9px;
+    letter-spacing: 0.09em;
+  }
+
+  .heroTitulo {
+    gap: 11px;
+  }
+
+  .heroMega {
+    font-size: clamp(94px, 25vw, 140px);
+    letter-spacing: 0.005em;
+  }
+
+  .heroEntrenamiento {
+    font-size: clamp(33px, 9.3vw, 53px);
+    letter-spacing: 0.005em;
+  }
+
+  .heroCiudad {
+    margin-top: 26px;
+
+    font-size: 20px;
+  }
+
+  .heroLinea {
+    margin-top: 21px;
+  }
+
+  /* FECHA Y HOTEL */
+
+  .heroDatos {
+    gap: 14px;
+    margin-top: 25px;
+  }
+
+  .heroFecha {
+    gap: 8px;
+  }
+
+  .heroDia {
+    font-size: 76px;
+  }
+
+  .heroMes strong {
+    font-size: 22px;
+  }
+
+  .heroMes small {
+    font-size: 10px;
+  }
+
+  .heroDivisor {
+    height: 91px;
+  }
+
+  .heroLugar {
+    gap: 6px;
+  }
+
+  .heroDatoEtiqueta {
+    font-size: 9px;
+  }
+
+  .heroLugar strong {
+    font-size: 16px;
+  }
+
+  .heroHora {
+    font-size: 11px;
+  }
+
+  .heroMapa {
+    min-height: 34px;
+    padding: 7px 10px;
+    gap: 7px;
+    font-size: 10px;
+  }
+
+  .heroMapa svg {
+    width: 14px;
+    height: 14px;
+  }
+
+  /* CONTADOR */
+
+  .contador {
+    width: 100%;
+    margin-top: 28px;
+  }
+
+  .contadorCabecera {
+    font-size: 9px;
+  }
+
+  .contadorUnidades {
+    width: 100%;
+    justify-content: space-between;
+  }
+
+  .contadorGrupo {
+    flex: 1 1 0;
+    min-width: 0;
+    justify-content: center;
+  }
+
+  .contadorUnidad {
+    min-width: 0;
+    flex: 1;
+  }
+
+  .contadorNumero {
+    font-size: clamp(29px, 8vw, 43px);
+  }
+
+  .contadorEtiqueta {
+    font-size: 8px;
+    letter-spacing: 0.04em;
+  }
+
+  .contadorSeparador {
+    margin: 0 3px;
+    font-size: 26px;
+  }
+
+  /* WHATSAPP */
+
+  .heroAcciones {
+    margin-top: 25px;
+  }
+
+  .heroWhatsapp {
+    min-height: 48px;
+    padding: 12px 16px;
+    font-size: 12px;
+  }
+
+  .heroLineaInferior {
+    bottom: 23px;
+  }
+}
+
+/* ==========================================
+   CELULARES PEQUEÑOS
+   ========================================== */
+
+@media (max-width: 380px) {
+  .introMega {
+    font-size: 22vw;
+  }
+
+  .introEntrenamiento {
+    font-size: 9.1vw;
+  }
+
+  .heroMega {
+    font-size: 24vw;
+  }
+
+  .heroEntrenamiento {
+    font-size: 8.8vw;
+  }
+
+  .heroCiudad {
+    font-size: 18px;
+  }
+
+  .heroDatos {
+    gap: 10px;
+  }
+
+  .heroDia {
+    font-size: 66px;
+  }
+
+  .heroMes strong {
+    font-size: 19px;
+  }
+
+  .heroLugar strong {
+    font-size: 14px;
+  }
+
+  .heroHora {
+    font-size: 10px;
+  }
+
+  .heroMapa {
+    padding: 7px 8px;
+    font-size: 10px;
+  }
+
+  .contadorNumero {
+    font-size: 27px;
+  }
+
+  .contadorSeparador {
+    margin: 0 2px;
+  }
+}
+
+/* ==========================================
+   PANTALLAS DE POCA ALTURA
+   ========================================== */
+
+@media (max-height: 680px) and (min-width: 601px) {
+  .hero {
+    padding: 65px 0;
+  }
+
+  .heroMega {
+    font-size: clamp(95px, 9vw, 145px);
+  }
+
+  .heroEntrenamiento {
+    font-size: clamp(43px, 4.5vw, 74px);
+  }
+
+  .heroPresenta {
+    margin-bottom: 20px;
+  }
+
+  .heroCiudad {
+    margin-top: 23px;
+  }
+
+  .heroDatos {
+    margin-top: 23px;
+  }
+
+  .contador {
+    margin-top: 23px;
+  }
+
+  .heroAcciones {
+    margin-top: 20px;
+  }
+
+  .heroDecoracion {
+    min-height: 320px;
+  }
+}
+
+/* ==========================================
+   ACCESIBILIDAD
+   ========================================== */
+
+@media (prefers-reduced-motion: reduce) {
+  .heroWhatsapp,
+  .heroMapa {
+    transition: none;
+  }
+}
