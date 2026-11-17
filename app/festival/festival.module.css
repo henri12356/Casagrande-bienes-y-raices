@@ -1,0 +1,245 @@
+/* ============================================================
+   Festival de Lotes — popup de lanzamiento
+   Paleta y medidas agrupadas en variables para poder adaptar
+   este mismo componente a futuros lanzamientos sin reescribirlo.
+   ============================================================ */
+
+.intro {
+  --acento: #ffb200;
+  --acento-suave: rgba(255, 178, 0, 0.35);
+  --texto: #f5f3ef;
+  --texto-tenue: rgba(245, 243, 239, 0.64);
+  --vidrio: rgba(255, 255, 255, 0.05);
+  --borde-vidrio: rgba(255, 255, 255, 0.13);
+
+  position: fixed;
+  inset: 0;
+  z-index: 100;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 100dvh;
+  overflow: hidden;
+  outline: none;
+}
+
+/* ---------- Fondo ---------- */
+/* Degradado sobrio + una textura muy sutil de cuadrícula (referencia
+   a un plano de lotes) en vez de manchas de color genéricas. */
+
+.introFondo {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  cursor: pointer;
+  background:
+    radial-gradient(ellipse 60% 48% at 50% 36%, var(--acento-suave) 0%, transparent 70%),
+    radial-gradient(ellipse 120% 90% at 50% 105%, #171c28 0%, transparent 60%),
+    linear-gradient(180deg, #0b0e14 0%, #06070a 100%);
+}
+
+.introFondo::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  opacity: 0.05;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='72' height='72'%3E%3Cpath d='M72 0H0V72' fill='none' stroke='%23F5F3EF' stroke-width='1'/%3E%3C/svg%3E");
+  background-size: 72px 72px;
+  mask-image: radial-gradient(ellipse 80% 65% at 50% 38%, #000 40%, transparent 85%);
+  -webkit-mask-image: radial-gradient(ellipse 80% 65% at 50% 38%, #000 40%, transparent 85%);
+}
+
+/* ---------- Botón cerrar ---------- */
+
+.introCerrar {
+  position: absolute;
+  top: clamp(14px, 3vw, 26px);
+  right: clamp(14px, 3vw, 26px);
+  z-index: 20;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 38px;
+  height: 38px;
+  border-radius: 999px;
+  border: 1px solid var(--borde-vidrio);
+  background: var(--vidrio);
+  color: var(--texto);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  cursor: pointer;
+  transition:
+    border-color 0.25s ease,
+    color 0.25s ease,
+    transform 0.3s ease;
+}
+
+.introCerrar:hover {
+  border-color: var(--acento);
+  color: var(--acento);
+  transform: rotate(90deg);
+}
+
+.introCerrar:focus-visible,
+.introSaltar:focus-visible {
+  outline: 2px solid var(--acento);
+  outline-offset: 3px;
+}
+
+/* ---------- Tarjeta ---------- */
+
+.introContenido {
+  position: relative;
+  z-index: 10;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  width: 100%;
+  padding: clamp(32px, 6vw, 60px) clamp(20px, 6vw, 68px);
+  border-radius: 28px;
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.065), rgba(255, 255, 255, 0.025));
+  border: 1px solid var(--borde-vidrio);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  box-shadow:
+    0 30px 70px -24px rgba(0, 0, 0, 0.65),
+    inset 0 1px 0 rgba(255, 255, 255, 0.07);
+}
+
+/* ---------- Insignia ---------- */
+
+.introInsignia {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 22px;
+  padding: 7px 16px;
+  border-radius: 999px;
+  border: 1px solid var(--borde-vidrio);
+  background: var(--vidrio);
+}
+
+.iconoAcento {
+  color: var(--acento);
+  flex-shrink: 0;
+}
+
+.introPresenta {
+  margin: 0;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.18em;
+  color: var(--texto-tenue);
+}
+
+/* ---------- Logo ---------- */
+
+.introLogoContenedor {
+  width: 100%;
+  max-width: 620px;
+  margin-bottom: 18px;
+  perspective: 800px;
+}
+
+.introLogo {
+  width: 100%;
+  height: auto;
+  filter: drop-shadow(0 20px 40px rgba(0, 0, 0, 0.45));
+}
+
+/* ---------- Línea ---------- */
+
+.introLinea {
+  width: 110px;
+  height: 3px;
+  margin: 2px 0 22px;
+  border-radius: 999px;
+  background: linear-gradient(90deg, transparent, var(--acento), transparent);
+  box-shadow: 0 0 16px var(--acento-suave);
+  transform-origin: center;
+}
+
+/* ---------- Oferta ---------- */
+
+.introOferta {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  margin-bottom: 16px;
+}
+
+.ofertaPrecio {
+  font-size: clamp(19px, 4vw, 28px);
+  font-weight: 600;
+  color: var(--texto);
+}
+
+.ofertaDescuento {
+  font-size: clamp(13px, 3vw, 15px);
+  font-weight: 800;
+  letter-spacing: 0.03em;
+  color: #0b0e14;
+  background: var(--acento);
+  padding: 6px 14px;
+  border-radius: 999px;
+}
+
+/* ---------- Fecha ---------- */
+
+.introFecha {
+  margin: 0;
+  font-size: 13px;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  color: var(--texto-tenue);
+}
+
+/* ---------- CTA ---------- */
+
+.introSaltar {
+  position: absolute;
+  left: 50%;
+  bottom: clamp(20px, 5vh, 42px);
+  transform: translateX(-50%);
+  z-index: 20;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 13px 26px;
+  border-radius: 14px;
+  border: 1px solid var(--borde-vidrio);
+  background: var(--vidrio);
+  color: var(--texto);
+  font-size: 13px;
+  font-weight: 800;
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  cursor: pointer;
+  transition:
+    border-color 0.3s ease,
+    color 0.3s ease;
+}
+
+.introSaltar:hover {
+  border-color: var(--acento);
+  color: var(--acento);
+}
+
+.introSaltar:hover .iconoFlecha {
+  transform: translateX(4px);
+}
+
+.iconoFlecha {
+  transition: transform 0.3s ease;
+}
+
+/* ---------- Responsive ---------- */
+
+@media (max-width: 480px) {
+  .introContenido {
+    border-radius: 22px;
+  }
+}
