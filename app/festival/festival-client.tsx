@@ -44,13 +44,9 @@ const CONFIG = {
   // DURACIÓN DE INTRO
   duracionIntro: 3000,
 
-  // FECHA PROVISIONAL DEL CONTADOR
-  // Actualmente cuenta hasta el inicio del 6 de
-  // diciembre. Actualiza la hora al confirmarla.
-  fechaEvento: "2026-12-06T00:00:00-05:00",
-
-  // HORA VISIBLE, CUANDO SE CONFIRME
-  horaEvento: "",
+  // DOMINGO 06 DE DICIEMBRE DE 2026, 9:00 A. M. (PERÚ)
+  fechaEvento: "2026-12-06T09:00:00-05:00",
+  horaEvento: "9:00 a. m.",
 
   // PROMOCIÓN
   // El precio aparece primero como "precioInicial"
@@ -81,7 +77,7 @@ const DESCUENTO_PORCENTAJE =
   (AHORRO / CONFIG.precioInicial) * 100;
 
 const MENSAJE_WHATSAPP =
-  `Hola, vi la invitación al Festival de Lotes de Casagrande del domingo 6 de diciembre. ` +
+  `Hola, vi la invitación al Festival de Lotes de Casagrande del domingo 6 de diciembre a las 9:00 a. m. ` +
   `Deseo confirmar mi asistencia y recibir información sobre los lotes desde ` +
   `S/ ${formatoPrecio(CONFIG.precioDesde)}.`;
 
@@ -190,7 +186,7 @@ function LogoCasagrande() {
             priority
             unoptimized
             onError={() => setDisponible(false)}
-            className="h-auto max-h-[42px] w-auto max-w-[180px] object-contain sm:max-w-[220px]"
+            className="h-auto max-h-[35px] w-auto max-w-[150px] object-contain sm:max-h-[42px] sm:max-w-[220px]"
           />
         </div>
       ) : (
@@ -240,7 +236,7 @@ function IntroFestival({
         duration: reducirMovimiento ? 0 : 0.85,
         ease: EASE,
       }}
-      className="fixed inset-0 z-[99999] flex min-h-dvh items-center justify-center overflow-hidden bg-[#01338C] px-5 text-white"
+      className="fixed inset-0 z-[99999] flex min-h-dvh items-center justify-center overflow-y-auto overflow-x-hidden bg-[#01338C] px-4 py-20 text-white sm:px-5"
     >
       {/* FONDO DE INTRO */}
 
@@ -283,7 +279,7 @@ function IntroFestival({
           transition={{
             duration: 0.6,
           }}
-          className="mb-7 text-[10px] font-extrabold tracking-[0.2em] text-blue-100 sm:text-[13px]"
+          className="mb-3 text-[9px] font-extrabold tracking-[0.12em] text-blue-100 sm:mb-7 sm:text-[13px] sm:tracking-[0.2em]"
         >
           CASAGRANDE INMOBILIARIA PRESENTA
         </motion.p>
@@ -341,7 +337,7 @@ function IntroFestival({
             duration: 0.65,
             delay: reducirMovimiento ? 0 : 1.1,
           }}
-          className="mt-7 h-[2px] w-[min(340px,65vw)] origin-center bg-gradient-to-r from-transparent via-[#FFB200] to-transparent"
+          className="mt-4 h-[2px] w-[min(340px,65vw)] origin-center bg-gradient-to-r from-transparent via-[#FFB200] to-transparent sm:mt-7"
         />
 
         {/* PROMOCIÓN */}
@@ -360,7 +356,7 @@ function IntroFestival({
             duration: 0.65,
             delay: reducirMovimiento ? 0 : 1.4,
           }}
-          className="mt-7 flex flex-wrap items-center justify-center gap-x-5 gap-y-2 text-[14px] font-black sm:text-[22px]"
+          className="mt-4 flex flex-col items-center justify-center gap-x-5 gap-y-1 text-[12px] font-black sm:mt-7 sm:flex-row sm:flex-wrap sm:gap-y-2 sm:text-[22px]"
         >
           <span>PRECIOS QUE TE VAN A SORPRENDER</span>
 
@@ -382,9 +378,9 @@ function IntroFestival({
             delay: reducirMovimiento ? 0 : 1.8,
             duration: 0.6,
           }}
-          className="mt-5 text-[11px] font-bold tracking-[0.12em] text-blue-100 sm:text-[14px]"
+          className="mt-3 text-[10px] font-bold tracking-[0.08em] text-blue-100 sm:mt-5 sm:text-[14px] sm:tracking-[0.12em]"
         >
-          DOMINGO 06 DE DICIEMBRE · AYACUCHO
+          DOMINGO 06 DE DICIEMBRE · 9:00 A. M. · AYACUCHO
         </motion.p>
       </div>
 
@@ -393,7 +389,7 @@ function IntroFestival({
       <button
         type="button"
         onClick={onClose}
-        className="absolute right-5 bottom-6 z-20 flex cursor-pointer items-center gap-2 rounded-lg border border-white/25 bg-white/10 px-4 py-3 text-[12px] font-bold text-white transition hover:bg-white/20"
+        className="absolute right-3 bottom-4 z-20 flex min-h-11 cursor-pointer items-center gap-2 rounded-lg border border-white/25 bg-white/10 px-3 py-2 text-[12px] font-bold text-white transition hover:bg-white/20 sm:right-5 sm:bottom-6 sm:px-4 sm:py-3"
       >
         Ver invitación
         <ArrowRight size={17} />
@@ -502,18 +498,18 @@ function CuentaRegresiva() {
       <div
         role="timer"
         aria-live="off"
-        className="grid grid-cols-4 gap-0 rounded-lg border-2 border-white/85 bg-black/10 px-1 py-5 backdrop-blur-[3px] sm:px-3 sm:py-6"
+        className="grid grid-cols-4 gap-0 rounded-lg border border-white/70 bg-black/10 px-1 py-3 backdrop-blur-[3px] sm:border-2 sm:px-3 sm:py-6"
       >
         {unidades.map((item, index) => (
           <div
             key={item.nombre}
-            className={`flex min-w-0 flex-col items-center justify-center gap-2 ${
+            className={`flex min-w-0 flex-col items-center justify-center gap-1 sm:gap-2 ${
               index > 0
                 ? "border-l border-white/20"
                 : ""
             }`}
           >
-            <strong className="text-[clamp(25px,4vw,49px)] leading-none font-black tracking-[-0.06em] text-white tabular-nums">
+            <strong className="text-[clamp(22px,6.6vw,49px)] leading-none font-black tracking-[-0.06em] text-white tabular-nums sm:text-[clamp(25px,4vw,49px)]">
               {item.valor}
             </strong>
 
@@ -524,11 +520,11 @@ function CuentaRegresiva() {
         ))}
       </div>
 
-      <p className="mt-3 flex items-center justify-center gap-2 text-[10px] font-bold tracking-[0.08em] text-blue-100">
+      <p className="mt-2 flex items-center justify-center gap-2 text-[9px] font-bold tracking-[0.06em] text-blue-100 sm:mt-3 sm:text-[10px]">
         <Clock3 size={14} className="text-[#FFB200]" />
         {tiempo?.finalizado
           ? "LA FECHA DEL FESTIVAL HA LLEGADO"
-          : "FALTAN PARA EL 06 DE DICIEMBRE"}
+          : "FALTAN PARA EL 06 DE DICIEMBRE · 9:00 A. M."}
       </p>
     </div>
   );
@@ -589,12 +585,12 @@ function PrecioOferta({ activo }: { activo: boolean }) {
 
   return (
     // Mismo tamaño aproximado del precio original, sin contenedor.
-    <div className="mt-5 flex w-full flex-wrap items-center justify-center gap-x-3 gap-y-1 sm:mt-6 sm:gap-x-5">
+    <div className="mt-5 flex w-full flex-wrap items-center justify-center gap-x-2 gap-y-1 sm:mt-6 sm:gap-x-5">
       <div className="flex items-baseline justify-center gap-1.5 sm:gap-2">
-        <span className="whitespace-nowrap text-[11px] font-extrabold text-white/85 sm:text-[12px]">
+        <span className="whitespace-nowrap text-[10px] font-extrabold text-white/85 min-[375px]:text-[11px] sm:text-[12px]">
           LOTES DESDE
         </span>
-        <span className="text-[19px] font-black text-white sm:text-[21px]">
+        <span className="text-[17px] font-black text-white min-[375px]:text-[19px] sm:text-[21px]">
           S/
         </span>
         <motion.strong
@@ -609,7 +605,7 @@ function PrecioOferta({ activo }: { activo: boolean }) {
               ? { type: "spring", stiffness: 350, damping: 17 }
               : { duration: 0.35, ease: EASE }
           }
-          className="relative inline-block whitespace-nowrap text-[clamp(35px,5vw,52px)] leading-none font-black tracking-[-0.06em] tabular-nums"
+          className="relative inline-block whitespace-nowrap text-[clamp(31px,8.6vw,52px)] leading-none font-black tracking-[-0.06em] tabular-nums sm:text-[clamp(35px,5vw,52px)]"
         >
           {formatoPrecio(valor)}
 
@@ -623,7 +619,7 @@ function PrecioOferta({ activo }: { activo: boolean }) {
               y: mostrarPrecioAnterior ? 0 : 5,
             }}
             transition={{ duration: reducirMovimiento ? 0 : 0.32, ease: EASE }}
-            className="pointer-events-none absolute -top-[17px] right-0 flex items-center gap-1 whitespace-nowrap text-[10px] font-bold leading-none tracking-normal text-white/85 sm:-top-[19px] sm:text-[11px]"
+            className="pointer-events-none absolute -top-[15px] right-0 flex items-center gap-1 whitespace-nowrap text-[9px] font-bold leading-none tracking-normal text-white/85 min-[375px]:-top-[17px] min-[375px]:text-[10px] sm:-top-[19px] sm:text-[11px]"
           >
             <span>ANTES</span>
             <span className="line-through decoration-[#FFB200] decoration-2">
@@ -665,7 +661,7 @@ function PrecioOferta({ activo }: { activo: boolean }) {
       <span aria-hidden="true" className="hidden h-9 w-px bg-white/40 sm:block" />
 
       {/* Se reserva una altura mínima para evitar saltos de diseño. */}
-      <div className="flex min-h-[41px] flex-col items-center justify-center sm:items-start">
+      <div className="flex min-h-[36px] flex-col items-center justify-center sm:min-h-[41px] sm:items-start">
         <AnimatePresence mode="wait" initial={false}>
           {terminado ? (
             <motion.div
@@ -676,7 +672,7 @@ function PrecioOferta({ activo }: { activo: boolean }) {
               transition={{ duration: reducirMovimiento ? 0 : 0.38, ease: EASE }}
               className="flex flex-col items-center leading-tight sm:items-start"
             >
-              <strong className="whitespace-nowrap text-[clamp(19px,3vw,27px)] font-black text-[#FFB200]">
+              <strong className="whitespace-nowrap text-[17px] font-black text-[#FFB200] sm:text-[clamp(19px,3vw,27px)]">
                 {DESCUENTO_PORCENTAJE}% OFF
               </strong>
               <span className="whitespace-nowrap text-[10px] font-extrabold tracking-[0.03em] text-white/90 sm:text-[11px]">
@@ -689,7 +685,7 @@ function PrecioOferta({ activo }: { activo: boolean }) {
               initial={{ opacity: 1 }}
               exit={{ opacity: 0, x: 8 }}
               transition={{ duration: 0.18 }}
-              className="whitespace-nowrap text-[12px] font-extrabold text-[#FFB200] sm:text-[14px]"
+              className="whitespace-nowrap text-[11px] font-extrabold text-[#FFB200] sm:text-[14px]"
             >
               PRECIO FESTIVAL
             </motion.span>
@@ -735,7 +731,7 @@ function ColumnaIzquierda({
         transition={{
           duration: 0.7,
         }}
-        className="mb-4 text-[12px] font-bold tracking-[0.13em] text-white/90 sm:text-[15px]"
+        className="mb-2 text-[11px] font-bold tracking-[0.11em] text-white/90 sm:mb-4 sm:text-[15px] sm:tracking-[0.13em]"
       >
         CASAGRANDE PRESENTA
       </motion.p>
@@ -755,7 +751,7 @@ function ColumnaIzquierda({
           repeat: Infinity,
           ease: "easeInOut",
         }}
-        className="relative w-full max-w-[520px]"
+        className="relative w-full max-w-[430px] sm:max-w-[520px]"
       >
         <Image
           src={CONFIG.festivalSvg}
@@ -764,14 +760,14 @@ function ColumnaIzquierda({
           height={694}
           priority
           unoptimized
-          sizes="(max-width: 640px) 94vw, 520px"
+          sizes="(max-width: 640px) calc(100vw - 32px), 520px"
           className="block h-auto w-full object-contain drop-shadow-[0_5px_12px_rgba(255,255,255,0.3)]"
         />
       </motion.div>
 
       {/* UBICACIÓN GENERAL */}
 
-      <div className="mt-4 rounded-md bg-[#FFB200] px-7 py-2 text-[13px] font-black tracking-[0.12em] text-[#063277] sm:text-[16px]">
+      <div className="mt-2 rounded-md bg-[#FFB200] px-4 py-1.5 text-[11px] font-black tracking-[0.07em] text-[#063277] sm:mt-4 sm:px-7 sm:py-2 sm:text-[16px] sm:tracking-[0.12em]">
         CCORIHUILLCA · AYACUCHO
       </div>
 
@@ -791,94 +787,67 @@ function ColumnaDerecha({
   onVerProyecto: () => void;
 }) {
   return (
-    <div className="flex w-full flex-col items-start">
-      {/* TITULAR */}
-
-      <h2 className="text-[clamp(27px,4vw,39px)] leading-tight font-black tracking-[-0.035em] text-white">
+    <div className="flex w-full min-w-0 flex-col items-center text-center sm:items-start sm:text-left">
+      <h2 className="text-[clamp(23px,6vw,39px)] leading-tight font-black tracking-[-0.035em] text-white sm:text-[clamp(27px,4vw,39px)]">
         ¡No te lo pierdas!
       </h2>
 
-      {/* PUNTO DE ENCUENTRO */}
-
-      <div className="mt-2 flex items-start gap-2 text-[15px] text-white sm:text-[19px]">
-        <MapPin
-          size={21}
-          className="mt-0.5 shrink-0 text-[#FFB200]"
-        />
-
+      <div className="mt-1.5 flex items-start gap-2 text-left text-[14px] text-white sm:mt-2 sm:text-[19px]">
+        <MapPin size={19} className="mt-0.5 shrink-0 text-[#FFB200] sm:size-[21px]" />
         <div>
-          <span className="border-b border-white/70 pb-1 font-semibold">
+          <span className="border-b border-white/70 pb-0.5 font-semibold sm:pb-1">
             Parque del Avión · ENACE
           </span>
-
-          <p className="mt-2 text-[12px] text-blue-100">
-            Ayacucho, Perú
-          </p>
+          <p className="mt-1 text-[11px] text-blue-100 sm:mt-2 sm:text-[12px]">Ayacucho, Perú</p>
         </div>
       </div>
 
-      {/* HORA DEL EVENTO SI ESTÁ CONFIRMADA */}
+      <div className="mt-2 flex items-center gap-2 text-[12px] font-bold text-[#FFDC87] sm:mt-4 sm:text-[13px]">
+        <Clock3 size={16} aria-hidden="true" />
+        Domingo 06 de diciembre · {CONFIG.horaEvento}
+      </div>
 
-      {CONFIG.horaEvento && (
-        <div className="mt-4 flex items-center gap-2 text-[13px] font-bold text-[#FFDC87]">
-          <Clock3 size={16} />
-          {CONFIG.horaEvento}
-        </div>
-      )}
-
-      {/* CONTADOR */}
-
-      <div className="mt-7 w-full">
+      <div className="mt-4 w-full sm:mt-7">
         <CuentaRegresiva />
       </div>
 
-      {/* BOTONES */}
-
-      <div className="mt-7 flex w-full flex-col gap-3 sm:flex-row">
+      {/* Celular: CTA principal completo; ubicación y plano en la misma fila. */}
+      <div className="mt-4 grid w-full grid-cols-2 gap-2 sm:mt-7 sm:gap-3">
         <a
           href={URL_WHATSAPP}
           target="_blank"
           rel="noopener noreferrer"
-          className="group flex min-h-[52px] flex-1 items-center justify-center gap-2.5 rounded-lg bg-[#FFB200] px-4 py-3 text-[12px] font-black text-[#05285E] shadow-[0_12px_28px_rgba(255,178,0,0.2)] transition-all hover:-translate-y-1 hover:bg-[#FFD04E] sm:text-[13px]"
+          className="group col-span-2 flex min-h-[48px] min-w-0 items-center justify-center gap-2 rounded-lg bg-[#FFB200] px-3 py-2.5 text-[12px] font-black text-[#05285E] shadow-[0_10px_24px_rgba(255,178,0,0.2)] transition-all hover:-translate-y-0.5 hover:bg-[#FFD04E] sm:col-span-1 sm:min-h-[52px] sm:text-[13px]"
         >
-          <MessageCircle size={19} />
-
-          Confirmar asistencia
-
-          <ArrowRight
-            size={16}
-            className="transition-transform group-hover:translate-x-1"
-          />
+          <MessageCircle size={18} className="shrink-0" aria-hidden="true" />
+          <span>Confirmar asistencia</span>
+          <ArrowRight size={15} className="hidden shrink-0 transition-transform group-hover:translate-x-1 lg:block" aria-hidden="true" />
         </a>
 
         <a
           href={CONFIG.maps}
           target="_blank"
           rel="noopener noreferrer"
-          className="flex min-h-[52px] items-center justify-center gap-2 rounded-lg border border-white/65 bg-white/10 px-4 py-3 text-[12px] font-extrabold text-white transition-all hover:-translate-y-1 hover:bg-white/20 sm:text-[13px]"
+          className="flex min-h-[46px] min-w-0 items-center justify-center gap-1.5 rounded-lg border border-white/65 bg-white/10 px-2 py-2 text-[11px] font-extrabold text-white transition-all hover:-translate-y-0.5 hover:bg-white/20 sm:min-h-[52px] sm:gap-2 sm:px-3 sm:text-[13px]"
         >
-          <Navigation size={17} />
-          Cómo llegar
-          <ArrowUpRight size={15} />
+          <Navigation size={17} className="shrink-0" aria-hidden="true" />
+          <span className="whitespace-nowrap">Cómo llegar</span>
+          <ArrowUpRight size={14} className="hidden shrink-0 lg:block" aria-hidden="true" />
         </a>
+
+        <button
+          type="button"
+          onClick={onVerProyecto}
+          aria-haspopup="dialog"
+          className="flex min-h-[46px] min-w-0 cursor-pointer items-center justify-center gap-2 rounded-lg border border-[#FFB200]/70 bg-[#FFB200]/10 px-2 py-2 text-[11px] font-extrabold text-[#FFDC87] transition-all hover:-translate-y-0.5 hover:bg-[#FFB200]/20 sm:col-span-2 sm:min-h-[52px] sm:text-[13px]"
+        >
+          <Eye size={17} className="shrink-0" aria-hidden="true" />
+          <span className="whitespace-nowrap">Ver proyecto</span>
+        </button>
       </div>
 
-      {/* VER PROYECTO */}
-
-      <button
-        type="button"
-        onClick={onVerProyecto}
-        aria-haspopup="dialog"
-        className="mt-3 flex min-h-[52px] w-full cursor-pointer items-center justify-center gap-2.5 rounded-lg border border-[#FFB200]/70 bg-[#FFB200]/10 px-4 py-3 text-[12px] font-extrabold text-[#FFDC87] transition-all hover:-translate-y-1 hover:bg-[#FFB200]/20 sm:text-[13px]"
-      >
-        <Eye size={18} />
-        Ver proyecto
-      </button>
-
-      {/* CONDICIONES */}
-
-      <p className="mt-4 text-[10px] leading-relaxed text-blue-100/80">
-        Descuento sujeto a condiciones y disponibilidad.
+      <p className="mt-2 text-[9px] leading-relaxed text-blue-100/80 sm:mt-4 sm:text-[10px]">
+        Precio promocional sujeto a condiciones y disponibilidad.
       </p>
     </div>
   );
@@ -950,7 +919,7 @@ function ModalProyecto({
         duration: reducirMovimiento ? 0 : 0.3,
       }}
       onClick={onClose}
-      className="fixed inset-0 z-[9999] flex items-center justify-center bg-[#020B1F]/90 p-4 backdrop-blur-sm sm:p-8"
+      className="fixed inset-0 z-[9999] flex items-center justify-center bg-[#020B1F]/90 p-2 backdrop-blur-sm sm:p-8"
     >
       {/* BOTÓN CERRAR */}
 
@@ -959,7 +928,7 @@ function ModalProyecto({
         type="button"
         onClick={onClose}
         aria-label="Cerrar"
-        className="absolute top-4 right-4 z-10 flex h-11 w-11 cursor-pointer items-center justify-center rounded-full bg-[#FFB200] text-[#05285E] shadow-lg transition hover:scale-110 sm:top-6 sm:right-6"
+        className="absolute top-4 right-3 z-10 flex h-11 w-11 cursor-pointer items-center justify-center rounded-full bg-[#FFB200] text-[#05285E] shadow-lg transition hover:scale-110 sm:top-6 sm:right-6"
       >
         <X size={22} strokeWidth={3} />
       </button>
@@ -993,7 +962,7 @@ function ModalProyecto({
             height={1200}
             unoptimized
             onError={() => setImagenDisponible(false)}
-            className="mx-auto h-auto max-h-[82svh] w-auto max-w-full rounded-xl border border-white/20 object-contain shadow-2xl"
+            className="mx-auto h-auto max-h-[78dvh] w-auto max-w-full rounded-xl border border-white/20 object-contain shadow-2xl sm:max-h-[82svh]"
           />
         ) : (
           <p className="mx-auto w-fit max-w-full rounded-xl border border-white/20 bg-white/10 px-8 py-12 text-center text-[14px] font-bold text-white">
@@ -1072,32 +1041,35 @@ export default function FestivalClient() {
       >
         {/* FRANJA AZUL SUPERIOR */}
 
-        <div className="relative z-20 flex min-h-[56px] items-center justify-center bg-[#01338C] px-4 text-center shadow-[0_3px_18px_rgba(0,0,0,0.25)]">
-          <div className="flex items-center justify-center gap-3">
+        <div className="relative z-20 flex min-h-[58px] items-center justify-center bg-[#01338C] px-3 py-2 text-center shadow-[0_3px_18px_rgba(0,0,0,0.25)] sm:min-h-[56px] sm:px-4">
+          <div className="flex flex-wrap items-center justify-center gap-x-3 gap-y-0.5">
             <CalendarDays
               size={20}
               className="hidden text-[#FFB200] sm:block"
             />
 
-            <span className="text-[clamp(14px,2.2vw,24px)] font-black tracking-[0.01em] text-white">
+            <span className="text-[12px] font-black tracking-[0.01em] text-white sm:text-[clamp(14px,2.2vw,24px)]">
               DOMINGO 06 DE DICIEMBRE DE 2026
+            </span>
+            <span className="whitespace-nowrap text-[12px] font-black text-[#FFCB42] sm:text-[15px]">
+              9:00 A. M.
             </span>
           </div>
         </div>
 
         {/* ESCENARIO PRINCIPAL */}
 
-        <div className="relative isolate flex min-h-[calc(100svh-56px)] flex-1 flex-col">
+        <div className="relative isolate flex min-h-[calc(100svh-58px)] flex-1 flex-col">
           {/* VIDEO */}
 
           <FondoYoutube />
 
           {/* CONTENEDOR DE CONTENIDO */}
 
-          <div className="relative z-10 mx-auto flex w-full max-w-[1260px] flex-1 flex-col px-5 sm:px-8 lg:px-10">
+          <div className="relative z-10 mx-auto flex w-full max-w-[1260px] flex-1 flex-col px-4 sm:px-8 lg:px-10">
             {/* LOGO EMPRESARIAL */}
 
-            <header className="flex items-center justify-start pt-5 sm:pt-7">
+            <header className="flex items-center justify-start pt-3 sm:pt-6 lg:pt-7">
               <LogoCasagrande />
             </header>
 
@@ -1128,7 +1100,7 @@ export default function FestivalClient() {
                 duration: reducirMovimiento ? 0 : 0.9,
                 ease: EASE,
               }}
-              className="grid flex-1 grid-cols-1 items-center gap-12 py-12 lg:grid-cols-[minmax(0,1fr)_1px_minmax(0,1fr)] lg:gap-11 lg:py-8"
+              className="grid flex-1 grid-cols-1 items-center gap-5 py-6 sm:gap-8 sm:py-9 lg:grid-cols-[minmax(0,1fr)_1px_minmax(0,1fr)] lg:gap-10 lg:py-8"
             >
               {/* COLUMNA IZQUIERDA */}
 
@@ -1190,7 +1162,7 @@ export default function FestivalClient() {
 
             {/* PIE INFERIOR */}
 
-            <footer className="flex flex-wrap items-center justify-between gap-3 border-t border-white/15 py-4 text-[10px] font-semibold text-white/70">
+            <footer className="flex flex-wrap items-center justify-center gap-x-4 gap-y-1 border-t border-white/15 py-3 text-center text-[9px] font-semibold text-white/70 sm:justify-between sm:gap-3 sm:py-4 sm:text-[10px]">
               <span>CASAGRANDE INMOBILIARIA</span>
 
               <span>FESTIVAL DE LOTES · AYACUCHO</span>
