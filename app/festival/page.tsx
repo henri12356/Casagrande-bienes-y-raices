@@ -20,7 +20,7 @@ const TITULO =
 
 // DESCRIPCIÓN DE LA INVITACIÓN
 const DESCRIPCION =
-  "|Lotes desde S/ 14,000 y promoción especial del 15% de descuento. " +
+  "|Lotes desde S/ 12,500 y promoción especial del 15% de descuento. " +
   "¡Confirma tu asistencia! Consulta condiciones y disponibilidad.";
 
 // ==========================================
@@ -44,7 +44,7 @@ export const metadata: Metadata = {
     "Casagrande Inmobiliaria",
     "Terrenos en Ayacucho",
     "Lotes en Ccorihuillca",
-    "Terrenos desde 14000 soles",
+    "Terrenos desde 12500 soles",
     "Festival inmobiliario",
     "Inversión inmobiliaria Ayacucho",
   ],
