@@ -1,11 +1,11 @@
-
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import Image from "next/image";
 
 import {
   AnimatePresence,
+  animate,
   motion,
   useReducedMotion,
 } from "framer-motion";
@@ -15,9 +15,12 @@ import {
   ArrowUpRight,
   CalendarDays,
   Clock3,
+  Eye,
   MapPin,
   MessageCircle,
   Navigation,
+  Sparkles,
+  X,
 } from "lucide-react";
 
 // ==================================================
@@ -29,11 +32,14 @@ const CONFIG = {
   videoId: "1czI9RGIRYY",
 
   // CAMBIAR SI QUIERES EMPEZAR MÁS ADELANTE
-  videoInicio: 0,
+  videoInicio: 60,
 
   // IMÁGENES EN PUBLIC
   festivalSvg: "/FESTIVALLOTES.svg",
   logo: "/logo.svg",
+
+  // IMAGEN DEL BOTÓN "VER PROYECTO" (guardarla en public)
+  imagenProyecto: "/EL-MIRADOR-DE-CCORIHUILLCA/PLANOCCORIHUILLCA.webp",
 
   // DURACIÓN DE INTRO
   duracionIntro: 3000,
@@ -47,26 +53,47 @@ const CONFIG = {
   horaEvento: "",
 
   // PROMOCIÓN
-  precioDesde: 14000,
-  descuento: 15,
+  // El precio aparece primero como "precioInicial"
+  // y baja con animación hasta "precioDesde".
+  precioInicial: 20000,
+  precioDesde: 12500,
+
+  // ANIMACIÓN COMPACTA DEL PRECIO (en milisegundos)
+  // Mostrar precio regular → tacharlo → bajar a precio festival.
+  pausaPrecio: 950,
+  pausaTachado: 720,
+  duracionPrecio: 2000,
 
   // WHATSAPP
+  // (el mensaje se arma abajo con el precio y el descuento)
   whatsapp: "51916194372",
-
-  mensaje:
-    "Hola, vi la invitación al Festival de Lotes de Casagrande del domingo 6 de diciembre. Deseo confirmar mi asistencia y recibir información sobre los lotes desde S/ 14,000 y la promoción del 15%.",
 
   // PUNTO DE ENCUENTRO
   maps:
-    "https://www.google.com/maps/search/?api=1&query=Parque%20del%20Avion%20ENACE%20Ayacucho%20Peru",
+    "https://maps.app.goo.gl/aXs8Vfe5SZjAu5e47",
 };
+
+const formatoPrecio = (valor: number) =>
+  valor.toLocaleString("en-US");
+
+const AHORRO = CONFIG.precioInicial - CONFIG.precioDesde;
+const DESCUENTO_PORCENTAJE =
+  (AHORRO / CONFIG.precioInicial) * 100;
+
+const MENSAJE_WHATSAPP =
+  `Hola, vi la invitación al Festival de Lotes de Casagrande del domingo 6 de diciembre. ` +
+  `Deseo confirmar mi asistencia y recibir información sobre los lotes desde ` +
+  `S/ ${formatoPrecio(CONFIG.precioDesde)}.`;
 
 const URL_WHATSAPP =
   `https://wa.me/${CONFIG.whatsapp}?text=${encodeURIComponent(
-    CONFIG.mensaje
+    MENSAJE_WHATSAPP
   )}`;
 
 const EASE = [0.22, 1, 0.36, 1] as const;
+
+// FRENA SUAVE AL LLEGAR AL PRECIO FINAL
+const EASE_PRECIO = [0.33, 1, 0.68, 1] as const;
 
 // ==================================================
 // FONDO: VIDEO DE YOUTUBE
@@ -335,14 +362,12 @@ function IntroFestival({
           }}
           className="mt-7 flex flex-wrap items-center justify-center gap-x-5 gap-y-2 text-[14px] font-black sm:text-[22px]"
         >
-          <span>
-            DESDE S/ 14,000
-          </span>
+          <span>PRECIOS QUE TE VAN A SORPRENDER</span>
 
           <span className="hidden h-7 w-px bg-white/30 sm:block" />
 
           <strong className="text-[#FFB200]">
-            15% DE DESCUENTO
+            SOLO POR EL FESTIVAL
           </strong>
         </motion.div>
 
@@ -510,10 +535,186 @@ function CuentaRegresiva() {
 }
 
 // ==================================================
+// PRECIO ANIMADO COMPACTO, SIN TARJETA NI FONDO
+// ==================================================
+
+type EtapaPrecio = "inicial" | "tachado" | "bajando" | "final";
+
+function PrecioOferta({ activo }: { activo: boolean }) {
+  const reducirMovimiento = Boolean(useReducedMotion());
+  const [etapa, setEtapa] = useState<EtapaPrecio>("inicial");
+  const [valor, setValor] = useState(CONFIG.precioInicial);
+
+  useEffect(() => {
+    // El precio se revela al terminar la intro. No se anima si el
+    // usuario tiene activada la preferencia de reducir movimiento.
+    if (!activo) return;
+    if (reducirMovimiento) {
+      setValor(CONFIG.precioDesde);
+      setEtapa("final");
+      return;
+    }
+
+    let control: { stop: () => void } | undefined;
+
+    const tachar = window.setTimeout(() => {
+      setEtapa("tachado");
+    }, CONFIG.pausaPrecio);
+
+    const bajar = window.setTimeout(() => {
+      setEtapa("bajando");
+      control = animate(CONFIG.precioInicial, CONFIG.precioDesde, {
+        duration: CONFIG.duracionPrecio / 1000,
+        ease: EASE_PRECIO,
+        onUpdate: (numero) => setValor(Math.round(numero)),
+        onComplete: () => {
+          setValor(CONFIG.precioDesde);
+          setEtapa("final");
+        },
+      });
+    }, CONFIG.pausaPrecio + CONFIG.pausaTachado);
+
+    return () => {
+      window.clearTimeout(tachar);
+      window.clearTimeout(bajar);
+      control?.stop();
+    };
+  }, [activo, reducirMovimiento]);
+
+  const terminado = etapa === "final";
+  const tachando = etapa === "tachado";
+  // El precio anterior queda visible, en pequeño y tachado,
+  // desde que comienza a bajar el importe.
+  const mostrarPrecioAnterior = etapa === "bajando" || terminado;
+
+  return (
+    // Mismo tamaño aproximado del precio original, sin contenedor.
+    <div className="mt-5 flex w-full flex-wrap items-center justify-center gap-x-3 gap-y-1 sm:mt-6 sm:gap-x-5">
+      <div className="flex items-baseline justify-center gap-1.5 sm:gap-2">
+        <span className="whitespace-nowrap text-[11px] font-extrabold text-white/85 sm:text-[12px]">
+          LOTES DESDE
+        </span>
+        <span className="text-[19px] font-black text-white sm:text-[21px]">
+          S/
+        </span>
+        <motion.strong
+          initial={false}
+          animate={{
+            color: terminado ? "#FFB200" : "#FFFFFF",
+            scale: tachando ? 0.94 : terminado ? 1.045 : 1,
+            y: tachando ? 2 : 0,
+          }}
+          transition={
+            terminado && !reducirMovimiento
+              ? { type: "spring", stiffness: 350, damping: 17 }
+              : { duration: 0.35, ease: EASE }
+          }
+          className="relative inline-block whitespace-nowrap text-[clamp(35px,5vw,52px)] leading-none font-black tracking-[-0.06em] tabular-nums"
+        >
+          {formatoPrecio(valor)}
+
+          {/* Precio anterior pequeño, visible después de la rebaja.
+              Va sobre los números, sin crear tarjeta ni aumentar el alto. */}
+          <motion.span
+            aria-hidden="true"
+            initial={false}
+            animate={{
+              opacity: mostrarPrecioAnterior ? 1 : 0,
+              y: mostrarPrecioAnterior ? 0 : 5,
+            }}
+            transition={{ duration: reducirMovimiento ? 0 : 0.32, ease: EASE }}
+            className="pointer-events-none absolute -top-[17px] right-0 flex items-center gap-1 whitespace-nowrap text-[10px] font-bold leading-none tracking-normal text-white/85 sm:-top-[19px] sm:text-[11px]"
+          >
+            <span>ANTES</span>
+            <span className="line-through decoration-[#FFB200] decoration-2">
+              S/ {formatoPrecio(CONFIG.precioInicial)}
+            </span>
+          </motion.span>
+
+          {/* Tachado dorado del precio original. Desaparece al bajar. */}
+          <motion.span
+            aria-hidden="true"
+            initial={false}
+            animate={{
+              scaleX: tachando ? 1 : 0,
+              opacity: tachando ? 1 : 0,
+            }}
+            transition={{ duration: 0.48, ease: EASE }}
+            className="pointer-events-none absolute -left-[5%] -right-[5%] top-[52%] h-[3px] origin-left -rotate-[5deg] rounded-full bg-[#FFB200] shadow-[0_0_12px_rgba(255,178,0,0.75)]"
+          />
+
+          {/* Destello final: no ocupa espacio en el diseño. */}
+          <AnimatePresence>
+            {terminado && !reducirMovimiento && (
+              <motion.span
+                key="precio-brillo"
+                aria-hidden="true"
+                initial={{ opacity: 0, scale: 0.3, rotate: -25, y: 10 }}
+                animate={{ opacity: 1, scale: 1, rotate: 12, y: 0 }}
+                exit={{ opacity: 0 }}
+                transition={{ type: "spring", stiffness: 350, damping: 15 }}
+                className="pointer-events-none absolute -right-5 -top-4 text-[#FFD457] sm:-right-7"
+              >
+                <Sparkles size={19} strokeWidth={2.5} />
+              </motion.span>
+            )}
+          </AnimatePresence>
+        </motion.strong>
+      </div>
+
+      <span aria-hidden="true" className="hidden h-9 w-px bg-white/40 sm:block" />
+
+      {/* Se reserva una altura mínima para evitar saltos de diseño. */}
+      <div className="flex min-h-[41px] flex-col items-center justify-center sm:items-start">
+        <AnimatePresence mode="wait" initial={false}>
+          {terminado ? (
+            <motion.div
+              key="precio-ahorro"
+              initial={reducirMovimiento ? false : { opacity: 0, x: -8, scale: 0.88 }}
+              animate={{ opacity: 1, x: 0, scale: 1 }}
+              exit={{ opacity: 0, x: 8 }}
+              transition={{ duration: reducirMovimiento ? 0 : 0.38, ease: EASE }}
+              className="flex flex-col items-center leading-tight sm:items-start"
+            >
+              <strong className="whitespace-nowrap text-[clamp(19px,3vw,27px)] font-black text-[#FFB200]">
+                {DESCUENTO_PORCENTAJE}% OFF
+              </strong>
+              <span className="whitespace-nowrap text-[10px] font-extrabold tracking-[0.03em] text-white/90 sm:text-[11px]">
+                AHORRA S/ {formatoPrecio(AHORRO)}
+              </span>
+            </motion.div>
+          ) : (
+            <motion.span
+              key="precio-espera"
+              initial={{ opacity: 1 }}
+              exit={{ opacity: 0, x: 8 }}
+              transition={{ duration: 0.18 }}
+              className="whitespace-nowrap text-[12px] font-extrabold text-[#FFB200] sm:text-[14px]"
+            >
+              PRECIO FESTIVAL
+            </motion.span>
+          )}
+        </AnimatePresence>
+      </div>
+
+      <span className="sr-only" aria-live="polite" aria-atomic="true">
+        {terminado
+          ? `Precio festival: ${formatoPrecio(CONFIG.precioDesde)} soles. Ahorra ${formatoPrecio(AHORRO)} soles.`
+          : ""}
+      </span>
+    </div>
+  );
+}
+
+// ==================================================
 // COLUMNA IZQUIERDA
 // ==================================================
 
-function ColumnaIzquierda() {
+function ColumnaIzquierda({
+  animar,
+}: {
+  animar: boolean;
+}) {
   const reducirMovimiento =
     Boolean(useReducedMotion());
 
@@ -574,29 +775,8 @@ function ColumnaIzquierda() {
         CCORIHUILLCA · AYACUCHO
       </div>
 
-      {/* PRECIO */}
-
-      <div className="mt-6 flex flex-wrap items-center justify-center gap-x-5 gap-y-2">
-        <div className="flex items-baseline gap-2">
-          <span className="text-[12px] font-extrabold text-white/85">
-            LOTES DESDE
-          </span>
-
-          <span className="text-[21px] font-black text-white">
-            S/
-          </span>
-
-          <strong className="text-[clamp(35px,5vw,52px)] leading-none font-black tracking-[-0.06em] text-white">
-            {CONFIG.precioDesde.toLocaleString("en-US")}
-          </strong>
-        </div>
-
-        <span className="hidden h-9 w-px bg-white/40 sm:block" />
-
-        <span className="text-[clamp(19px,3vw,27px)] font-black text-[#FFB200]">
-          {CONFIG.descuento}% OFF
-        </span>
-      </div>
+      {/* PRECIO SIN FONDO, CON ANIMACIÓN DE TACHADO Y BAJADA */}
+      <PrecioOferta activo={animar} />
     </div>
   );
 }
@@ -605,7 +785,11 @@ function ColumnaIzquierda() {
 // COLUMNA DERECHA
 // ==================================================
 
-function ColumnaDerecha() {
+function ColumnaDerecha({
+  onVerProyecto,
+}: {
+  onVerProyecto: () => void;
+}) {
   return (
     <div className="flex w-full flex-col items-start">
       {/* TITULAR */}
@@ -679,12 +863,145 @@ function ColumnaDerecha() {
         </a>
       </div>
 
+      {/* VER PROYECTO */}
+
+      <button
+        type="button"
+        onClick={onVerProyecto}
+        aria-haspopup="dialog"
+        className="mt-3 flex min-h-[52px] w-full cursor-pointer items-center justify-center gap-2.5 rounded-lg border border-[#FFB200]/70 bg-[#FFB200]/10 px-4 py-3 text-[12px] font-extrabold text-[#FFDC87] transition-all hover:-translate-y-1 hover:bg-[#FFB200]/20 sm:text-[13px]"
+      >
+        <Eye size={18} />
+        Ver proyecto
+      </button>
+
       {/* CONDICIONES */}
 
       <p className="mt-4 text-[10px] leading-relaxed text-blue-100/80">
         Descuento sujeto a condiciones y disponibilidad.
       </p>
     </div>
+  );
+}
+
+// ==================================================
+// VENTANA "VER PROYECTO"
+// ==================================================
+
+function ModalProyecto({
+  onClose,
+}: {
+  onClose: () => void;
+}) {
+  const reducirMovimiento =
+    Boolean(useReducedMotion());
+
+  const botonCerrar =
+    useRef<HTMLButtonElement>(null);
+
+  const [imagenDisponible, setImagenDisponible] =
+    useState(true);
+
+  // CERRAR CON ESCAPE
+  useEffect(() => {
+    const cerrar = (event: KeyboardEvent) => {
+      if (event.key === "Escape") {
+        onClose();
+      }
+    };
+
+    window.addEventListener("keydown", cerrar);
+
+    return () =>
+      window.removeEventListener("keydown", cerrar);
+  }, [onClose]);
+
+  // BLOQUEO DE SCROLL Y MANEJO DEL FOCO
+  useEffect(() => {
+    const html = document.documentElement;
+    const body = document.body;
+
+    const previoHtml = html.style.overflow;
+    const previoBody = body.style.overflow;
+    const previoFoco =
+      document.activeElement as HTMLElement | null;
+
+    html.style.overflow = "hidden";
+    body.style.overflow = "hidden";
+
+    botonCerrar.current?.focus();
+
+    return () => {
+      html.style.overflow = previoHtml;
+      body.style.overflow = previoBody;
+      previoFoco?.focus();
+    };
+  }, []);
+
+  return (
+    <motion.div
+      role="dialog"
+      aria-modal="true"
+      aria-label="Proyecto de Casagrande Inmobiliaria"
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      exit={{ opacity: 0 }}
+      transition={{
+        duration: reducirMovimiento ? 0 : 0.3,
+      }}
+      onClick={onClose}
+      className="fixed inset-0 z-[9999] flex items-center justify-center bg-[#020B1F]/90 p-4 backdrop-blur-sm sm:p-8"
+    >
+      {/* BOTÓN CERRAR */}
+
+      <button
+        ref={botonCerrar}
+        type="button"
+        onClick={onClose}
+        aria-label="Cerrar"
+        className="absolute top-4 right-4 z-10 flex h-11 w-11 cursor-pointer items-center justify-center rounded-full bg-[#FFB200] text-[#05285E] shadow-lg transition hover:scale-110 sm:top-6 sm:right-6"
+      >
+        <X size={22} strokeWidth={3} />
+      </button>
+
+      {/* IMAGEN DEL PROYECTO */}
+
+      <motion.div
+        initial={
+          reducirMovimiento
+            ? false
+            : { opacity: 0, y: 30, scale: 0.94 }
+        }
+        animate={{ opacity: 1, y: 0, scale: 1 }}
+        exit={
+          reducirMovimiento
+            ? { opacity: 0 }
+            : { opacity: 0, y: 20, scale: 0.96 }
+        }
+        transition={{
+          duration: reducirMovimiento ? 0 : 0.45,
+          ease: EASE,
+        }}
+        onClick={(event) => event.stopPropagation()}
+        className="w-full max-w-[1200px]"
+      >
+        {imagenDisponible ? (
+          <Image
+            src={CONFIG.imagenProyecto}
+            alt="Proyecto de Casagrande Inmobiliaria"
+            width={1600}
+            height={1200}
+            unoptimized
+            onError={() => setImagenDisponible(false)}
+            className="mx-auto h-auto max-h-[82svh] w-auto max-w-full rounded-xl border border-white/20 object-contain shadow-2xl"
+          />
+        ) : (
+          <p className="mx-auto w-fit max-w-full rounded-xl border border-white/20 bg-white/10 px-8 py-12 text-center text-[14px] font-bold text-white">
+            La imagen del proyecto no está disponible por ahora.
+          </p>
+        )}
+      </motion.div>
+    </motion.div>
   );
 }
 
@@ -698,6 +1015,9 @@ export default function FestivalClient() {
 
   const [mostrarIntro, setMostrarIntro] =
     useState(true);
+
+  const [mostrarProyecto, setMostrarProyecto] =
+    useState(false);
 
   // CIERRE AUTOMÁTICO DE INTRO
   useEffect(() => {
@@ -830,7 +1150,7 @@ export default function FestivalClient() {
                 }}
                 className="flex min-w-0 items-center justify-center"
               >
-                <ColumnaIzquierda />
+                <ColumnaIzquierda animar={!mostrarIntro} />
               </motion.div>
 
               {/* LÍNEA DIVISORIA VERTICAL */}
@@ -860,7 +1180,11 @@ export default function FestivalClient() {
                 }}
                 className="min-w-0"
               >
-                <ColumnaDerecha />
+                <ColumnaDerecha
+                  onVerProyecto={() =>
+                    setMostrarProyecto(true)
+                  }
+                />
               </motion.div>
             </motion.section>
 
@@ -883,6 +1207,19 @@ export default function FestivalClient() {
             key="intro-festival"
             onClose={() => {
               setMostrarIntro(false);
+            }}
+          />
+        )}
+      </AnimatePresence>
+
+      {/* VENTANA DEL PROYECTO */}
+
+      <AnimatePresence>
+        {mostrarProyecto && (
+          <ModalProyecto
+            key="modal-proyecto"
+            onClose={() => {
+              setMostrarProyecto(false);
             }}
           />
         )}
